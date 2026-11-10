@@ -50,6 +50,7 @@ const ChatContainer = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
     if (!input.trim()) return;
@@ -250,6 +251,7 @@ const ChatContainer = () => {
         </div>
       )}
       <section
+        onClick={() => setSelectedMessageId(null)}
         className={`flex-1 overflow-y-auto px-4 md:px-7 py-5 space-y-3 ${dragActive ? "qc-drop-active" : ""}`}
       >
         {messages.map((msg) => {
@@ -269,49 +271,62 @@ const ChatContainer = () => {
             >
               <div
                 draggable
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMessageId((current) =>
+                    current === msg._id ? null : msg._id,
+                  );
+                }}
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/message-id", msg._id);
                   e.dataTransfer.effectAllowed = "copy";
                 }}
                 className={`qc-message group relative max-w-[84%] md:max-w-[68%] ${mine ? "mine" : "theirs"}`}
               >
-                <div className="qc-message-actions">
-                  <button onClick={() => setReplyTo(msg)} title="Reply">
-                    ↩
-                  </button>
-                  <div className="qc-reaction-menu">
-                    {reactions.map((em) => (
-                      <button
-                        key={em}
-                        onClick={() => updateMessage(msg._id, { emoji: em })}
-                      >
-                        {em}
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => togglePinMessage(msg._id)}
-                    title={msg.isPinned ? "Unpin message" : "Pin message"}
+                {selectedMessageId === msg._id && (
+                  <div
+                    className="qc-message-actions"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    {msg.isPinned ? "📌" : "⌖"}
-                  </button>
-                  {mine && !msg.deletedAt && msg.text && (
-                    <button onClick={() => beginEdit(msg)} title="Edit">
-                      ✎
+                    <button onClick={() => setReplyTo(msg)} title="Reply">
+                      ↩
                     </button>
-                  )}
-                  {mine && !msg.deletedAt && (
+                    <div className="qc-reaction-menu">
+                      {reactions.map((em) => (
+                        <button
+                          key={em}
+                          onClick={() => updateMessage(msg._id, { emoji: em })}
+                        >
+                          {em}
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      onClick={() => {
-                        if (window.confirm("Delete this message for everyone?"))
-                          deleteMessage(msg._id);
-                      }}
-                      title="Delete"
+                      onClick={() => togglePinMessage(msg._id)}
+                      title={msg.isPinned ? "Unpin message" : "Pin message"}
                     >
-                      ⌫
+                      {msg.isPinned ? "📌" : "⌖"}
                     </button>
-                  )}
-                </div>
+                    {mine && !msg.deletedAt && msg.text && (
+                      <button onClick={() => beginEdit(msg)} title="Edit">
+                        ✎
+                      </button>
+                    )}
+                    {mine && !msg.deletedAt && (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm("Delete this message for everyone?")
+                          )
+                            deleteMessage(msg._id);
+                        }}
+                        title="Delete"
+                      >
+                        ⌫
+                      </button>
+                    )}
+                  </div>
+                )}
                 {quoted && (
                   <button
                     onClick={() => scrollTo(quoted._id)}

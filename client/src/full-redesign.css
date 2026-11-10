@@ -1123,3 +1123,19 @@ main.min-h-screen.bg-\[\#0f0d16\],
     margin-right: 10px;
   }
 }
+/* Cleaner message composer focus state */
+.qc-composer input:focus,
+.qc-composer input:focus-visible {
+  outline: none !important;
+  outline-offset: 0;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Subtle composer focus effect */
+.qc-composer:focus-within {
+  border-color: #b9c9e54a !important;
+  box-shadow:
+    0 14px 35px #02061166,
+    inset 0 1px #ffffff0a !important;
+}
