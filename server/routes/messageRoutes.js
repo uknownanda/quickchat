@@ -1,0 +1,13 @@
+import express from "express";
+import { protectRoute } from "../middleware/auth.js";
+import { deleteMessage, togglePinMessage, getMessages, getUsersForSidebar, markMessageAsSeen, searchMessages, sendMessage, updateMessage } from "../controllers/messageController.js";
+const messageRouter = express.Router();
+messageRouter.get("/users", protectRoute, getUsersForSidebar);
+messageRouter.get("/search/:id", protectRoute, searchMessages);
+messageRouter.get("/:id", protectRoute, getMessages);
+messageRouter.put("/mark/:id", protectRoute, markMessageAsSeen);
+messageRouter.post("/send/:id", protectRoute, sendMessage);
+messageRouter.patch("/:id", protectRoute, updateMessage);
+messageRouter.patch("/:id/pin", protectRoute, togglePinMessage);
+messageRouter.delete("/:id", protectRoute, deleteMessage);
+export default messageRouter;

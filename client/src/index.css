@@ -1,0 +1,1237 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "tailwindcss";
+
+* {
+  font-family: "Outfit", sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+:root {
+  color-scheme: dark;
+}
+body {
+  margin: 0;
+  background: #0b0912;
+}
+.qc-sidebar {
+  background: linear-gradient(
+    155deg,
+    rgba(37, 27, 59, 0.96),
+    rgba(15, 13, 25, 0.98)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.qc-chat {
+  background:
+    radial-gradient(
+      ellipse at 80% 0%,
+      rgba(113, 72, 190, 0.14),
+      transparent 42%
+    ),
+    #100d19;
+}
+.qc-chat-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(20, 16, 31, 0.72);
+  backdrop-filter: blur(18px);
+}
+.qc-gradient-text {
+  background: linear-gradient(90deg, #c4a5ff, #8b5cf6);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.qc-icon-btn,
+.qc-tool-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  color: #eee;
+}
+.qc-primary-btn,
+.qc-send-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(110deg, #8b5cf6, #6d45cf);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(124, 82, 220, 0.2);
+}
+.qc-small-btn {
+  border-radius: 8px;
+  padding: 5px 9px;
+  background: rgba(139, 92, 246, 0.2);
+  color: #d8c7ff;
+  font-size: 11px;
+}
+.qc-panel {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+.qc-input {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 9px 11px;
+  color: white;
+  font-size: 12px;
+  outline: none;
+}
+.qc-input:focus {
+  border-color: rgba(167, 139, 250, 0.65);
+}
+.qc-contact {
+  transition:
+    background 0.18s,
+    transform 0.18s;
+}
+.qc-contact:hover {
+  background: rgba(255, 255, 255, 0.055);
+  transform: translateX(2px);
+}
+.qc-contact.active {
+  background: linear-gradient(
+    100deg,
+    rgba(139, 92, 246, 0.25),
+    rgba(139, 92, 246, 0.08)
+  );
+  border: 1px solid rgba(167, 139, 250, 0.16);
+}
+.qc-online-dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #211a32;
+  border-radius: 50%;
+  background: #666;
+}
+.qc-online-dot.online {
+  background: #34d399;
+}
+.qc-count {
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: #8055df;
+  color: white;
+  font-size: 10px;
+  padding: 0 5px;
+}
+.qc-message {
+  padding: 11px 13px;
+  border-radius: 17px;
+  color: #f8f6ff;
+  box-shadow: 0 5px 22px rgba(0, 0, 0, 0.12);
+  cursor: grab;
+}
+.qc-message:active {
+  cursor: grabbing;
+}
+.qc-message.mine {
+  background: linear-gradient(135deg, #7650c5, #5839a2);
+  border-bottom-right-radius: 5px;
+}
+.qc-message.theirs {
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-bottom-left-radius: 5px;
+}
+.qc-quoted,
+.qc-reply-preview {
+  border-left: 3px solid #b69aff;
+  background: rgba(9, 7, 16, 0.25);
+  border-radius: 7px;
+  padding: 7px 9px;
+}
+.qc-composer-wrap {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(17, 13, 27, 0.82);
+  backdrop-filter: blur(18px);
+}
+.qc-composer {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.055);
+}
+.qc-send-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 12px;
+}
+.qc-send-btn:disabled {
+  opacity: 0.35;
+}
+.qc-emoji-popover {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  z-index: 30;
+  width: 220px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  background: #211a32;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 15px 40px #0008;
+}
+.qc-emoji-popover button {
+  padding: 7px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+.qc-emoji-popover button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.qc-drop-active {
+  outline: 2px dashed #a78bfa;
+  outline-offset: -8px;
+  background-color: rgba(139, 92, 246, 0.06);
+}
+.qc-drop-hint {
+  padding: 13px;
+  text-align: center;
+  border-radius: 12px;
+  background: #7049c9;
+  color: white;
+  box-shadow: 0 8px 30px #0008;
+}
+.qc-empty {
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(124, 83, 202, 0.17),
+      transparent 38%
+    ),
+    #100d19;
+}
+.qc-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  color: #d8c7ff;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.35),
+    rgba(139, 92, 246, 0.08)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* QuickChat authentication experience */
+.qc-auth {
+  background:
+    radial-gradient(
+      ellipse at 15% 15%,
+      rgba(117, 74, 196, 0.2),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 85% 85%,
+      rgba(177, 63, 175, 0.12),
+      transparent 35%
+    ),
+    #0b0912;
+}
+.qc-auth-orb {
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+.qc-auth-orb-one {
+  top: -170px;
+  left: -100px;
+  background: #8155e8;
+}
+.qc-auth-orb-two {
+  right: -140px;
+  bottom: -180px;
+  background: #bd4fc2;
+}
+.qc-auth-card {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: linear-gradient(
+    145deg,
+    rgba(34, 26, 51, 0.92),
+    rgba(17, 14, 27, 0.94)
+  );
+  box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.45),
+    inset 0 1px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+}
+.qc-auth-gradient {
+  background: linear-gradient(95deg, #d7c2ff, #a78bfa 45%, #e3a4ec);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.qc-auth-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.qc-auth-input {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(5, 4, 10, 0.32);
+  padding: 12px 13px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.qc-auth-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+.qc-auth-input:focus {
+  border-color: rgba(167, 139, 250, 0.75);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+.qc-username-field,
+.qc-password-field {
+  position: relative;
+}
+.qc-username-field > span {
+  position: absolute;
+  z-index: 1;
+  left: 13px;
+  top: 19px;
+  color: #bda5f7;
+  font-size: 13px;
+}
+.qc-username-field .qc-auth-input {
+  padding-left: 29px;
+}
+.qc-auth-hint {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-weight: 400;
+}
+.qc-auth-hint.good {
+  color: #6ee7b7;
+}
+.qc-auth-hint.bad {
+  color: #fda4af;
+}
+.qc-password-field .qc-auth-input {
+  padding-right: 60px;
+}
+.qc-password-field button {
+  position: absolute;
+  right: 12px;
+  top: 18px;
+  color: #bda5f7;
+  font-size: 11px;
+}
+.qc-strength i {
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.qc-strength i.active {
+  background: linear-gradient(90deg, #8b5cf6, #d28be8);
+}
+.qc-auth-submit {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 12px;
+  padding: 13px 15px;
+  background: linear-gradient(105deg, #8b5cf6, #7044c8 65%, #a34cae);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(124, 82, 220, 0.24);
+  transition:
+    transform 0.2s,
+    filter 0.2s;
+}
+.qc-auth-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+.qc-auth-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Responsive layout refinements */
+.qc-auth {
+  width: 100%;
+  overflow-x: clip;
+}
+.qc-auth-card {
+  box-sizing: border-box;
+}
+.qc-auth-input {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.qc-home {
+  background: #0b0912;
+}
+.qc-home-shell {
+  background: #100d19;
+}
+.qc-sidebar {
+  min-height: 0;
+}
+.qc-chat {
+  min-height: 0;
+}
+
+@media (max-width: 640px) {
+  .qc-auth-card {
+    backdrop-filter: blur(16px);
+  }
+  .qc-auth-orb {
+    width: 220px;
+    height: 220px;
+    filter: blur(70px);
+  }
+  .qc-chat-header {
+    padding: 12px 14px;
+  }
+  .qc-sidebar {
+    border: 0;
+    border-radius: 0;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .qc-auth-card {
+    padding: 14px;
+  }
+  .qc-auth-label {
+    font-size: 11px;
+  }
+  .qc-auth-input {
+    padding: 11px;
+    font-size: 12px;
+  }
+}
+
+/* Message actions stay quiet until the message is hovered or keyboard-focused. */
+.qc-reply-action {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.qc-message:hover .qc-reply-action,
+.qc-message:focus-within .qc-reply-action {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none) {
+  .qc-reply-action {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Compact signup form: all fields fit without an inner/page scroll on common screens. */
+.qc-signup-form .qc-auth-input {
+  padding: 9px 11px;
+  margin-top: 5px;
+}
+.qc-signup-form .qc-username-field > span {
+  top: 16px;
+}
+.qc-signup-form .qc-password-field button {
+  top: 15px;
+}
+.qc-signup-form .qc-strength {
+  margin-top: 0;
+}
+.qc-signup-form textarea.qc-auth-input {
+  min-height: 48px;
+}
+.qc-auth-card > p:last-child {
+  margin-top: 12px;
+}
+@media (max-height: 760px) {
+  .qc-auth {
+    align-items: flex-start;
+  }
+  .qc-auth-card {
+    padding: 14px 18px;
+  }
+  .qc-auth-card > div:first-child {
+    margin-bottom: 10px;
+  }
+  .qc-auth-card > div:nth-child(2) {
+    margin-bottom: 10px;
+  }
+  .qc-signup-form {
+    gap: 8px;
+  }
+  .qc-signup-form .qc-auth-input {
+    padding: 8px 10px;
+  }
+  .qc-signup-form textarea.qc-auth-input {
+    min-height: 40px;
+  }
+  .qc-auth-card > p {
+    margin-top: 10px;
+  }
+}
+
+/* Phase 1 premium messaging controls */
+.qc-chat-header {
+  background: linear-gradient(
+    110deg,
+    rgba(29, 22, 46, 0.96),
+    rgba(19, 15, 31, 0.9)
+  );
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+.qc-message {
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.qc-message:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+.qc-message-actions {
+  position: absolute;
+  left: 8px;
+  right: auto;
+  top: -17px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 11px;
+  background: rgba(24, 19, 37, 0.98);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(3px);
+  transition: 0.16s ease;
+}
+.qc-message:hover .qc-message-actions,
+.qc-message:focus-within .qc-message-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+/* Keep the hovered message and its reaction toolbar above nearby panels */
+.qc-message:hover,
+.qc-message:focus-within {
+  z-index: 30;
+}
+@media (hover: none) {
+  .qc-message-actions {
+    opacity: 1;
+    pointer-events: auto;
+    position: static;
+    justify-content: flex-end;
+    margin: -4px -4px 7px auto;
+    width: max-content;
+    transform: none;
+  }
+}
+.qc-message-actions > button,
+.qc-reaction-menu button {
+  min-width: 25px;
+  height: 25px;
+  border-radius: 7px;
+  color: #eee;
+  font-size: 13px;
+  display: grid;
+  place-items: center;
+}
+.qc-message-actions > button:hover,
+.qc-reaction-menu button:hover {
+  background: rgba(167, 139, 250, 0.2);
+}
+.qc-reaction-menu {
+  display: flex;
+  gap: 1px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 3px;
+}
+.qc-reaction-menu button {
+  font-size: 15px;
+}
+.qc-reaction-chip {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(8, 6, 15, 0.3);
+  padding: 2px 7px;
+  font-size: 12px;
+}
+.qc-search-bar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(22, 17, 34, 0.94);
+}
+.qc-search-results {
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #191429;
+  padding: 5px;
+}
+.qc-edit-input {
+  width: 100%;
+  min-width: 190px;
+  min-height: 70px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  color: white;
+  font-size: 13px;
+  outline: none;
+}
+.qc-mini-primary {
+  border-radius: 8px;
+  background: #8055df;
+  padding: 5px 10px;
+  color: white;
+  font-size: 11px;
+}
+.qc-empty {
+  background:
+    radial-gradient(
+      ellipse at 50% 35%,
+      rgba(142, 99, 230, 0.2),
+      transparent 44%
+    ),
+    linear-gradient(145deg, #151020, #0e0b16);
+}
+.qc-empty img {
+  filter: drop-shadow(0 12px 28px rgba(137, 93, 220, 0.25));
+}
+.qc-composer {
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.18),
+    inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+/* QuickChat auth redesign — editorial midnight / ultraviolet palette */
+.qc-auth-v2 {
+  --ink: #090b16;
+  --panel: #101426;
+  --muted: #8f96ad;
+  --line: rgba(195, 202, 255, 0.13);
+  --violet: #9b8cff;
+  --mint: #9cebd4;
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: #f4f4ff;
+  background:
+    radial-gradient(
+      ellipse at 12% 15%,
+      rgba(111, 87, 220, 0.2),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 85% 82%,
+      rgba(46, 169, 157, 0.11),
+      transparent 32%
+    ),
+    #090b16;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+.qc-auth-noise {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.12;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+}
+.qc-auth-layout {
+  width: min(1240px, 100%);
+  min-height: 100dvh;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 0.86fr);
+  padding: 28px 44px;
+  gap: clamp(35px, 7vw, 105px);
+  align-items: center;
+}
+.qc-auth-story {
+  min-height: calc(100dvh - 56px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0 12px;
+}
+.qc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  color: #f8f7ff;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+.qc-brand-mark,
+.qc-mobile-brand .qc-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #b9adff, #7666e8 58%, #4c9eaa);
+  color: #101324;
+  font-size: 27px;
+  font-weight: 900;
+  box-shadow: 0 8px 28px #7666e844;
+}
+.qc-brand-dot {
+  color: #a99bff;
+}
+.qc-story-copy {
+  max-width: 570px;
+  margin: 60px 0;
+}
+.qc-eyebrow,
+.qc-auth-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #aaa4d7;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 2px;
+}
+.qc-eyebrow i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #91e3c9;
+  box-shadow: 0 0 15px #91e3c9;
+}
+.qc-story-copy h1 {
+  margin: 28px 0 20px;
+  font-size: clamp(48px, 6vw, 78px);
+  line-height: 0.99;
+  letter-spacing: -4px;
+  font-weight: 650;
+}
+.qc-story-copy h1 em,
+.qc-auth-heading h2 em {
+  font-style: normal;
+  color: transparent;
+  background: linear-gradient(95deg, #c5baff 5%, #9383f4 48%, #8edacb 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.qc-story-copy > p {
+  max-width: 440px;
+  color: #9ca3ba;
+  font-size: 15px;
+  line-height: 1.9;
+}
+.qc-story-points {
+  display: grid;
+  gap: 20px;
+  margin-top: 48px;
+}
+.qc-story-points > div {
+  display: flex;
+  gap: 17px;
+  align-items: center;
+}
+.qc-story-points > div > span {
+  color: #8f83db;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.qc-story-points p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.qc-story-points b {
+  font-size: 13px;
+  font-weight: 650;
+  color: #e4e4f4;
+}
+.qc-story-points small {
+  font-size: 11px;
+  color: #7f879f;
+}
+.qc-story-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #777f98;
+  font-size: 11px;
+}
+.qc-story-footer > span {
+  color: #a99bff;
+  font-size: 17px;
+}
+.qc-story-footer i {
+  margin-left: auto;
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: 1.4px;
+  color: #555d75;
+}
+.qc-auth-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.qc-auth-form-shell {
+  width: 100%;
+  max-width: 470px;
+  padding: clamp(25px, 3.2vw, 42px);
+  border: 1px solid rgba(190, 196, 255, 0.15);
+  border-radius: 25px;
+  background: linear-gradient(
+    150deg,
+    rgba(23, 29, 52, 0.94),
+    rgba(14, 18, 34, 0.97)
+  );
+  box-shadow:
+    0 35px 100px #0008,
+    inset 0 1px rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(24px);
+}
+.qc-auth-heading {
+  margin-bottom: 25px;
+}
+.qc-auth-kicker {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: #a99df2;
+}
+.qc-auth-heading h2 {
+  margin: 12px 0 9px;
+  font-size: 37px;
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+  font-weight: 650;
+}
+.qc-auth-heading p {
+  max-width: 340px;
+  margin: 0;
+  color: #929ab2;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.qc-auth-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 23px;
+  border: 1px solid rgba(190, 196, 255, 0.09);
+  border-radius: 12px;
+  background: #0b1020;
+}
+.qc-auth-switch button {
+  padding: 10px 8px;
+  border-radius: 9px;
+  color: #8991a9;
+  font-size: 11px;
+  font-weight: 650;
+  transition: 0.2s;
+}
+.qc-auth-switch button.active {
+  color: #f6f4ff;
+  background: linear-gradient(110deg, #554b94, #383d70);
+  box-shadow: 0 4px 16px #05071188;
+}
+.qc-auth-fields {
+  display: grid;
+  gap: 16px;
+}
+.qc-field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+.qc-field > span {
+  color: #aeb5ca;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+}
+.qc-field > span small {
+  margin-left: 5px;
+  color: #69728b;
+  font-size: 8px;
+}
+.qc-field-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid rgba(173, 185, 224, 0.14);
+  border-radius: 11px;
+  background: rgba(6, 10, 23, 0.56);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+.qc-field-control:focus-within {
+  border-color: #9586ed;
+  background: rgba(12, 16, 34, 0.9);
+  box-shadow: 0 0 0 3px #9181ed20;
+}
+.qc-auth-icon {
+  flex: 0 0 39px;
+  text-align: center;
+  color: #9990d9;
+  font-size: 15px;
+}
+.qc-field-control input,
+.qc-field-control textarea {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 12px 12px 12px 0;
+  color: #f4f4ff;
+  font-size: 12px;
+}
+.qc-field-control input::placeholder,
+.qc-field-control textarea::placeholder {
+  color: #58627c;
+}
+.qc-field-control textarea {
+  resize: vertical;
+  min-height: 65px;
+  padding: 12px;
+}
+.qc-bio-control {
+  align-items: stretch;
+}
+.qc-reveal {
+  padding: 8px 13px;
+  color: #a99df2;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.7px;
+}
+.qc-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+}
+.qc-field-wide {
+  grid-column: 1/-1;
+}
+.qc-field-status {
+  font-size: 10px;
+  color: #9aa3bc;
+}
+.qc-field-status.available {
+  color: #8fe0c2;
+}
+.qc-field-status.taken,
+.qc-field-status.invalid {
+  color: #ff9baf;
+}
+.qc-field-status.checking {
+  color: #b9afff;
+}
+.qc-field-status.error {
+  color: #ffbd8a;
+}
+.qc-password-meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.qc-password-meter > div {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.qc-password-meter i {
+  height: 3px;
+  flex: 1;
+  border-radius: 8px;
+  background: #2a3047;
+}
+.qc-password-meter i.filled {
+  background: linear-gradient(90deg, #8c7bea, #83d9c6);
+}
+.qc-password-meter small {
+  color: #707b96;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.qc-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #8b94ad;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.qc-terms input {
+  margin-top: 1px;
+  accent-color: #9b8cff;
+}
+.qc-auth-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border: 1px solid #b7adff44;
+  border-radius: 11px;
+  background: linear-gradient(105deg, #9a8af0, #726bd0 58%, #579f9f);
+  color: #0b1020;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.1px;
+  box-shadow: 0 10px 30px #7c6de733;
+  transition:
+    transform 0.2s,
+    filter 0.2s;
+}
+.qc-auth-cta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+.qc-auth-cta b {
+  font-size: 18px;
+  font-weight: 500;
+}
+.qc-auth-cta:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.qc-auth-bottom {
+  text-align: center;
+  margin: 21px 0 0;
+  color: #7f89a2;
+  font-size: 10px;
+}
+.qc-auth-bottom button {
+  color: #c1b7ff;
+  font-weight: 750;
+}
+.qc-auth-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 26px;
+  color: #65708b;
+  font-size: 8px;
+  letter-spacing: 1.1px;
+}
+.qc-auth-secure span {
+  color: #a99df2;
+  font-size: 13px;
+}
+.qc-auth-secure i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #58617a;
+}
+.qc-mobile-brand,
+.qc-auth-panel-foot {
+  display: none;
+}
+@media (max-width: 900px) {
+  .qc-auth-layout {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+    padding: 24px 22px;
+  }
+  .qc-auth-story {
+    display: none;
+  }
+  .qc-auth-panel {
+    min-height: calc(100dvh - 48px);
+    flex-direction: column;
+  }
+  .qc-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 20px;
+    font-size: 18px;
+    letter-spacing: -0.6px;
+  }
+  .qc-mobile-brand .qc-brand-mark {
+    width: 35px;
+    height: 35px;
+    border-radius: 11px;
+    font-size: 22px;
+  }
+  .qc-auth-panel-foot {
+    display: block;
+    margin-top: 18px;
+    color: #69728a;
+    font-size: 10px;
+  }
+  .qc-auth-panel-foot span {
+    color: #a99df2;
+  }
+}
+@media (max-width: 520px) {
+  .qc-auth-layout {
+    padding: 15px 13px;
+  }
+  .qc-auth-panel {
+    min-height: calc(100dvh - 30px);
+  }
+  .qc-auth-form-shell {
+    padding: 23px 18px;
+    border-radius: 20px;
+  }
+  .qc-auth-heading h2 {
+    font-size: 32px;
+  }
+  .qc-field-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+  .qc-field-wide {
+    grid-column: auto;
+  }
+  .qc-auth-heading {
+    margin-bottom: 20px;
+  }
+  .qc-auth-fields {
+    gap: 14px;
+  }
+  .qc-auth-secure {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+}
+@media (max-height: 760px) and (min-width: 901px) {
+  .qc-auth-layout {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+  .qc-story-copy {
+    margin: 30px 0;
+  }
+  .qc-story-copy h1 {
+    font-size: 60px;
+  }
+  .qc-auth-form-shell {
+    padding: 23px 30px;
+  }
+  .qc-auth-heading {
+    margin-bottom: 15px;
+  }
+  .qc-auth-heading h2 {
+    font-size: 31px;
+  }
+  .qc-auth-switch {
+    margin-bottom: 14px;
+  }
+  .qc-auth-fields {
+    gap: 11px;
+  }
+  .qc-field-grid {
+    gap: 10px;
+  }
+  .qc-field-control {
+    min-height: 41px;
+  }
+  .qc-auth-secure {
+    margin-top: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qc-auth-v2 * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+/* Fix reaction toolbar appearing behind adjacent panels */
+.qc-message {
+  position: relative;
+  z-index: 1;
+}
+
+.qc-message:hover,
+.qc-message:focus-within {
+  z-index: 30;
+}
+
+.qc-message-actions {
+  z-index: 50;
+}
+/* Received messages: toolbar extends towards the right */
+.qc-message.theirs .qc-message-actions {
+  left: 0;
+  right: auto;
+}
+
+/* Sent messages: toolbar extends towards the left */
+.qc-message.mine .qc-message-actions {
+  right: 0;
+  left: auto;
+}
+
+/* Keep reaction toolbar above neighboring messages */
+.qc-message:hover,
+.qc-message:focus-within {
+  z-index: 30;
+}
+
+.qc-message-actions {
+  z-index: 50;
+}

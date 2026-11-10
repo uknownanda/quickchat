@@ -1,0 +1,10 @@
+import express from "express";
+import { protectRoute } from "../middleware/auth.js";
+import { searchPeople, sendContactRequest, listContactRequests, respondToContactRequest } from "../controllers/contactController.js";
+const router = express.Router();
+router.use(protectRoute);
+router.get("/search", searchPeople);
+router.get("/requests", listContactRequests);
+router.post("/requests/:id", sendContactRequest);
+router.patch("/requests/:id", respondToContactRequest);
+export default router;
