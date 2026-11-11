@@ -507,13 +507,6 @@ const Sidebar = () => {
           </div>
         )}
       </div>
-      <div className="qc-sidebar-footer mt-3 flex items-center justify-between border-t border-white/[0.07] pt-3 text-[10px] text-white/30">
-        <span>QuickChat</span>
-        <span className="inline-flex items-center gap-1.5">
-          <i className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          Connected
-        </span>
-      </div>
     </aside>
   );
 };
