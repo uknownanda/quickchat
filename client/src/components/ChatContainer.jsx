@@ -174,11 +174,18 @@ const ChatContainer = () => {
         >
           ‹
         </button>
-        <ProfileImagePreview
-          src={selectedUser.profilePic || assets.avatar_icon}
-          alt={`${selectedUser.fullName}'s profile picture`}
-          className="w-10 h-10 rounded-full object-cover"
-        />
+        <button
+          type="button"
+          onClick={() => setShowContactAbout(true)}
+          aria-label={`View ${selectedUser.fullName}'s profile`}
+          className="shrink-0 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-400"
+        >
+          <img
+            src={selectedUser.profilePic || assets.avatar_icon}
+            alt={`${selectedUser.fullName}'s profile picture`}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        </button>
         <button
           type="button"
           onClick={() => setShowContactAbout(true)}
