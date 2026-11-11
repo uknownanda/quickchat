@@ -1484,3 +1484,44 @@ body {
     animation: none !important;
   }
 }
+
+/* Sidebar usability refinements: unobtrusive scrolling and compact search */
+.qc-sidebar,
+.qc-sidebar-contact-list,
+.qc-sidebar-reveal,
+.qc-sidebar-contact-list * {
+  scrollbar-width: none;
+}
+.qc-sidebar::-webkit-scrollbar,
+.qc-sidebar-contact-list::-webkit-scrollbar,
+.qc-sidebar-reveal::-webkit-scrollbar,
+.qc-sidebar-contact-list *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.qc-sidebar-contact-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.qc-sidebar-search {
+  min-height: 34px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+.qc-sidebar-search:focus-within {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.qc-sidebar-search input,
+.qc-sidebar-search input:focus,
+.qc-sidebar-search input:focus-visible {
+  min-height: 30px;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
