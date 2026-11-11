@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 let connectionPromise = null;
 
 const connectOptions = {
-    dbName: process.env.MONGODB_DB_NAME || "chat-app",
+    // Respect the database name in MONGODB_URI (for example /quickchat).
+    // Set MONGODB_DB_NAME only when an explicit override is required.
+    ...(process.env.MONGODB_DB_NAME
+        ? { dbName: process.env.MONGODB_DB_NAME }
+        : {}),
     serverSelectionTimeoutMS: 10000,
     socketTimeoutMS: 45000,
     maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE) || 10,
