@@ -1525,3 +1525,97 @@ body {
   box-shadow: none !important;
   --tw-ring-shadow: 0 0 #0000 !important;
 }
+
+/* Contact details panel — balanced profile hierarchy and shared media grid */
+.qc-profile-card {
+  padding: 30px 22px 22px;
+}
+.qc-profile-avatar {
+  width: 116px;
+  height: 116px;
+  border-width: 3px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.qc-profile-avatar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+.qc-profile-name {
+  margin-top: 15px;
+  letter-spacing: -0.025em;
+}
+.qc-profile-seen {
+  margin-top: 3px;
+  font-size: 11px;
+}
+.qc-profile-username {
+  margin-top: 11px;
+  padding: 5px 12px;
+  background: rgba(139, 92, 246, 0.09);
+  border-color: rgba(167, 139, 250, 0.13);
+}
+.qc-profile-bio {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.qc-right-divider {
+  margin: 0 22px;
+  border-color: rgba(255, 255, 255, 0.085);
+}
+.qc-shared-section {
+  padding: 20px 22px 24px;
+}
+.qc-media-count {
+  min-width: 27px;
+  height: 27px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.075);
+  font-size: 10px;
+}
+.qc-media-grid {
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  max-width: 390px;
+}
+.qc-media-item {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.12);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+.qc-media-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(167, 139, 250, 0.28);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+.qc-media-item:focus-visible {
+  outline: 2px solid rgba(183, 163, 255, 0.85);
+  outline-offset: 3px;
+}
+.qc-media-empty {
+  background: rgba(255, 255, 255, 0.018);
+}
+@media (max-width: 767px) {
+  .qc-profile-card {
+    padding-top: 24px;
+  }
+  .qc-profile-avatar {
+    width: 104px;
+    height: 104px;
+  }
+  .qc-shared-section {
+    padding-top: 18px;
+  }
+  .qc-media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(92px, 112px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qc-profile-avatar,
+  .qc-media-item {
+    transition: none !important;
+  }
+}
+
