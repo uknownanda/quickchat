@@ -60,6 +60,7 @@ const ChatContainer = () => {
   } = useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
   const scrollEnd = useRef(null);
+  const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
   const [input, setInput] = useState("");
   const [replyTo, setReplyTo] = useState(null);
@@ -121,6 +122,9 @@ const ChatContainer = () => {
     return () => clearTimeout(t);
   }, [search, searchOpen, selectedUser?._id]);
   useEffect(() => () => clearTimeout(typingTimer.current), []);
+  useEffect(() => {
+    if (replyTo) composerInputRef.current?.focus();
+  }, [replyTo]);
   const replyMessage = (id) =>
     messages.find((m) => m._id === (typeof id === "object" ? id?._id : id));
   const onTyping = (value) => {
@@ -393,7 +397,14 @@ const ChatContainer = () => {
                     className="qc-message-actions"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <button onClick={() => setReplyTo(msg)} title="Reply">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyTo(msg);
+                        setSelectedMessageId(null);
+                      }}
+                      title="Reply"
+                    >
                       ↩
                     </button>
                     <div className="qc-reaction-menu">
@@ -577,6 +588,7 @@ const ChatContainer = () => {
             )}
           </div>
           <input
+            ref={composerInputRef}
             onChange={(e) => onTyping(e.target.value)}
             value={input}
             onKeyDown={(e) => {
