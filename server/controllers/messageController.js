@@ -1,12 +1,30 @@
 import Message from "../models/Message.js";
 import User from "../models/User.js";
+import cloudinary from "../lib/cloudinary.js";
+import { getIO } from "../lib/socket.js";
 import ContactRequest from "../models/ContactRequest.js";
+
+const areContacts = async (a, b) => Boolean(
+    await ContactRequest.exists({
+        status: "accepted",
+        $or: [
+            { sender: a, recipient: b },
+            { sender: b, recipient: a },
+        ],
+    })
+);
 
 const pairQuery = (a, b) => ({
     $or: [
         { senderId: a, receiverId: b },
         { senderId: b, receiverId: a },
     ],
+});
+
+const emitPair = (a, b, event, payload) => {
+    const io = getIO();
+    io.to(`user:${a}`).emit(event, payload);
+    io.to(`user:${b}`).emit(event, payload);
 });
 
 export const getUsersForSidebar = async (req, res) => {
