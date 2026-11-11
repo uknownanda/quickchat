@@ -97,6 +97,11 @@ export const ChatProvider = ({ children }) => {
                         ? prev
                         : [...prev, data.newMessage]
                 );
+                setUsers(prev => prev.map(user =>
+                    user._id === userId
+                        ? { ...user, lastMessage: data.newMessage }
+                        : user
+                ));
             }
         } catch (error) {
             toast.error(
@@ -193,6 +198,12 @@ export const ChatProvider = ({ children }) => {
 
             const isViewingConversation =
                 current?._id === message.senderId && isChatActive();
+
+            setUsers(prev => prev.map(user =>
+                user._id === message.senderId
+                    ? { ...user, lastMessage: message }
+                    : user
+            ));
 
             if (isViewingConversation) {
                 setMessages(prev =>
