@@ -19,18 +19,21 @@ export const ChatProvider = ({ children }) => {
     const isChatActive = () =>
         document.visibilityState === "visible" && document.hasFocus();
 
+    // Keep selected conversation reference updated
     useEffect(() => {
         selectedRef.current = selectedUser;
     }, [selectedUser]);
 
+    // Reset chat data when user changes
     useEffect(() => {
+        selectedRef.current = null;
         setSelectedUser(null);
         setMessages([]);
         setUnseenMessages({});
         setTypingUsers({});
     }, [authUser?._id]);
 
-    // Get users and unread message counts
+    // Get users and unread counts
     const getUsers = async () => {
         try {
             const { data } = await axios.get("/api/messages/users");
@@ -39,12 +42,12 @@ export const ChatProvider = ({ children }) => {
                 setUsers(data.users);
                 setUnseenMessages(data.unseenMessages || {});
             }
-        } catch (e) {
-            console.error("Get Users Error:", e);
+        } catch (error) {
+            console.error("Get Users Error:", error);
         }
     };
 
-    // Get messages for selected conversation
+    // Get messages for a conversation
     const getMessages = async (userId) => {
         if (!userId) return;
 
@@ -76,13 +79,15 @@ export const ChatProvider = ({ children }) => {
 
     // Send message
     const sendMessage = async (messageData) => {
-        if (!selectedRef.current?._id) {
+        const userId = selectedRef.current?._id;
+
+        if (!userId) {
             return toast.error("Select a conversation first");
         }
 
         try {
             const { data } = await axios.post(
-                `/api/messages/send/${selectedRef.current._id}`,
+                `/api/messages/send/${userId}`,
                 messageData
             );
 
@@ -110,8 +115,10 @@ export const ChatProvider = ({ children }) => {
                     prev.map(m => m._id === id ? data.message : m)
                 );
             }
-        } catch (e) {
-            toast.error(e.response?.data?.message || "Message update failed");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Message update failed"
+            );
         }
     };
 
@@ -119,8 +126,10 @@ export const ChatProvider = ({ children }) => {
     const deleteMessage = async (id) => {
         try {
             await axios.delete(`/api/messages/${id}`);
-        } catch (e) {
-            toast.error(e.response?.data?.message || "Message deletion failed");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Message deletion failed"
+            );
         }
     };
 
@@ -134,8 +143,10 @@ export const ChatProvider = ({ children }) => {
                     prev.map(m => m._id === id ? data.message : m)
                 );
             }
-        } catch (e) {
-            toast.error(e.response?.data?.message || "Pin update failed");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Pin update failed"
+            );
         }
     };
 
@@ -148,8 +159,8 @@ export const ChatProvider = ({ children }) => {
             );
 
             return data.messages || [];
-        } catch (e) {
-            toast.error(e.response?.data?.message || "Search failed");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Search failed");
             return [];
         }
     };
@@ -159,10 +170,24 @@ export const ChatProvider = ({ children }) => {
         socket?.emit("typing", { to, isTyping });
     };
 
-    // Socket event listeners
+    // Socket.IO event listeners
     useEffect(() => {
         if (!socket) return;
 
+        // Synchronize after socket reconnects
+        const syncAfterReconnect = () => {
+            if (document.visibilityState !== "visible") return;
+
+            const userId = selectedRef.current?._id;
+
+            if (userId) {
+                getMessages(userId);
+            }
+
+            getUsers();
+        };
+
+        // Incoming message
         const onNew = (message) => {
             const current = selectedRef.current;
 
@@ -187,25 +212,31 @@ export const ChatProvider = ({ children }) => {
             }
         };
 
+        // Updated message
         const onUpdate = (message) => {
             setMessages(prev =>
                 prev.map(m => m._id === message._id ? message : m)
             );
         };
 
+        // Deleted message
         const onDelete = (message) => {
             setMessages(prev =>
                 prev.map(m =>
-                    m._id === message._id ? { ...m, ...message } : m
+                    m._id === message._id
+                        ? { ...m, ...message }
+                        : m
                 )
             );
         };
 
+        // Read receipt
         const onRead = ({ senderId, readerId, readAt }) => {
             if (authUser?._id === senderId) {
                 setMessages(prev =>
                     prev.map(m =>
-                        m.senderId === senderId && m.receiverId === readerId
+                        m.senderId === senderId &&
+                        m.receiverId === readerId
                             ? { ...m, seen: true, readAt }
                             : m
                     )
@@ -213,6 +244,7 @@ export const ChatProvider = ({ children }) => {
             }
         };
 
+        // Typing status
         const onTyping = ({ from, isTyping }) => {
             setTypingUsers(prev => ({
                 ...prev,
@@ -220,6 +252,7 @@ export const ChatProvider = ({ children }) => {
             }));
         };
 
+        // Online presence
         const onPresence = ({ userId, online, lastSeen }) => {
             setUsers(prev =>
                 prev.map(u =>
@@ -244,28 +277,37 @@ export const ChatProvider = ({ children }) => {
             );
         };
 
-        socket.on("presenceUpdated", onPresence);
+        // Register listeners
+        socket.on("connect", syncAfterReconnect);
         socket.on("newMessage", onNew);
         socket.on("messageUpdated", onUpdate);
         socket.on("messageDeleted", onDelete);
         socket.on("messagesRead", onRead);
         socket.on("messageRead", onRead);
         socket.on("typing", onTyping);
+        socket.on("presenceUpdated", onPresence);
         socket.on("contactRequestUpdated", getUsers);
 
+        // Handle already-connected socket
+        if (socket.connected) {
+            syncAfterReconnect();
+        }
+
+        // Cleanup listeners
         return () => {
-            socket.off("presenceUpdated", onPresence);
+            socket.off("connect", syncAfterReconnect);
             socket.off("newMessage", onNew);
             socket.off("messageUpdated", onUpdate);
             socket.off("messageDeleted", onDelete);
             socket.off("messagesRead", onRead);
             socket.off("messageRead", onRead);
             socket.off("typing", onTyping);
+            socket.off("presenceUpdated", onPresence);
             socket.off("contactRequestUpdated", getUsers);
         };
     }, [socket, authUser?._id]);
 
-    // Contact selection behavior - unchanged
+    // Existing contact-selection behavior - unchanged
     useEffect(() => {
         if (selectedUser?._id) {
             setUnseenMessages(prev => ({
@@ -279,30 +321,32 @@ export const ChatProvider = ({ children }) => {
         }
     }, [selectedUser?._id]);
 
-    // Refresh current conversation when returning to QuickChat tab
+    // Refresh conversation when returning to browser tab
     useEffect(() => {
-    const refreshMessages = () => {
-        if (document.visibilityState !== "visible") return;
+        const refreshMessages = () => {
+            if (document.visibilityState !== "visible") return;
 
-        const userId = selectedRef.current?._id;
+            const userId = selectedRef.current?._id;
 
-        if (userId) {
-            getMessages(userId);
-        }
-    };
+            if (userId) {
+                getMessages(userId);
+            }
 
-    document.addEventListener("visibilitychange", refreshMessages);
-    window.addEventListener("focus", refreshMessages);
-    window.addEventListener("pageshow", refreshMessages);
+            getUsers();
+        };
 
-    return () => {
-        document.removeEventListener("visibilitychange", refreshMessages);
-        window.removeEventListener("focus", refreshMessages);
-        window.removeEventListener("pageshow", refreshMessages);
-    };
-}, []);
+        document.addEventListener("visibilitychange", refreshMessages);
+        window.addEventListener("focus", refreshMessages);
+        window.addEventListener("pageshow", refreshMessages);
 
-    // Browser tab title with total unread messages
+        return () => {
+            document.removeEventListener("visibilitychange", refreshMessages);
+            window.removeEventListener("focus", refreshMessages);
+            window.removeEventListener("pageshow", refreshMessages);
+        };
+    }, []);
+
+    // Browser tab title with unread count
     useEffect(() => {
         const totalUnread = Object.values(unseenMessages).reduce(
             (total, count) => total + (Number(count) || 0),
