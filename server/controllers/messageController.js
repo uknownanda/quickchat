@@ -136,6 +136,14 @@ export const getMessages = async (req, res) => {
         const rawLimit = Number.parseInt(req.query.limit, 10);
         const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 100) : 50;
         const before = req.query.before ? String(req.query.before) : null;
+        const after = req.query.after ? String(req.query.after) : null;
+
+        if (before && after) {
+            return res.status(400).json({
+                success: false,
+                message: "Use either a before or after cursor",
+            });
+        }
 
         if (!(await areContacts(myId, id))) {
             return res.status(403).json({
@@ -174,11 +182,56 @@ export const getMessages = async (req, res) => {
                     },
                 ],
             }];
+        } else if (after) {
+            if (!Message.db.base.Types.ObjectId.isValid(after)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid message cursor",
+                });
+            }
+
+            const cursorMessage = await Message.findOne({
+                _id: after,
+                ...pairQuery(myId, id),
+            }).select("_id createdAt").lean();
+
+            if (!cursorMessage) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Message cursor was not found in this conversation",
+                });
+            }
+
+            conversationQuery.$and = [{
+                $or: [
+                    { createdAt: { $gt: cursorMessage.createdAt } },
+                    {
+                        createdAt: cursorMessage.createdAt,
+                        _id: { $gt: cursorMessage._id },
+                    },
+                ],
+            }];
         } else {
             // Mark incoming messages as read only when opening the latest page.
             const now = new Date();
             const changed = await Message.updateMany(
                 { senderId: id, receiverId: myId, seen: false },
+                { $set: { seen: true, readAt: now, deliveredAt: now } }
+            );
+
+            if (changed.modifiedCount) {
+                emitPair(myId.toString(), id.toString(), "messagesRead", {
+                    readerId: myId.toString(),
+                    senderId: id.toString(),
+                    readAt: now,
+                });
+            }
+        }
+
+        if (after) {
+            const now = new Date();
+            const changed = await Message.updateMany(
+                { ...conversationQuery, senderId: id, receiverId: myId, seen: false },
                 { $set: { seen: true, readAt: now, deliveredAt: now } }
             );
 
