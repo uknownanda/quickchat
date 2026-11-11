@@ -17,6 +17,8 @@ export const ChatProvider = ({ children }) => {
     const { socket, axios, authUser } = useContext(AuthContext);
 
     const selectedRef = useRef(null);
+    const messagesRef = useRef(messages);
+    messagesRef.current = messages;
 
     const isChatActive = () =>
         document.visibilityState === "visible" && document.hasFocus();
@@ -52,18 +54,33 @@ export const ChatProvider = ({ children }) => {
     };
 
     // Get messages for a conversation
-    const getMessages = async (userId) => {
+    const getMessages = async (userId, { sync = false } = {}) => {
         if (!userId) return;
 
         try {
-            const { data } = await axios.get(`/api/messages/${userId}`);
+            const latestKnownMessage = messagesRef.current[messagesRef.current.length - 1];
+            const shouldCatchUp = sync && latestKnownMessage?._id;
+            const { data } = await axios.get(`/api/messages/${userId}`, {
+                params: shouldCatchUp ? { after: latestKnownMessage._id, limit: 100 } : undefined,
+            });
 
             if (
                 data.success &&
                 selectedRef.current?._id === userId
             ) {
-                setMessages(data.messages);
-                setHasOlderMessages(Boolean(data.pageInfo?.hasMore));
+                if (shouldCatchUp) {
+                    setMessages((current) => {
+                        const existingIds = new Set(current.map((message) => message._id));
+                        const incoming = data.messages.filter((message) => !existingIds.has(message._id));
+                        return [...current, ...incoming].sort((a, b) =>
+                            new Date(a.createdAt) - new Date(b.createdAt) ||
+                            String(a._id).localeCompare(String(b._id))
+                        );
+                    });
+                } else {
+                    setMessages(data.messages);
+                    setHasOlderMessages(Boolean(data.pageInfo?.hasMore));
+                }
             }
         } catch (error) {
             console.error("Get Messages Error:", error);
@@ -219,7 +236,7 @@ export const ChatProvider = ({ children }) => {
             const userId = selectedRef.current?._id;
 
             if (userId) {
-                getMessages(userId);
+                getMessages(userId, { sync: true });
             }
 
             getUsers();
