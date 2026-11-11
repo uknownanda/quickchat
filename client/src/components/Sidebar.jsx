@@ -379,7 +379,7 @@ const Sidebar = () => {
           }}
           placeholder="Search contacts"
           aria-label="Search contacts"
-          className="w-full min-w-0 bg-transparent py-2.5 text-xs text-white outline-none placeholder:text-white/35"
+          className="w-full min-w-0 bg-transparent py-1.5 text-[11px] leading-4 text-white outline-none ring-0 placeholder:text-white/35 focus:outline-none focus:ring-0"
         />
         {query && !showDiscover && (
           <button
