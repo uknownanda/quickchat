@@ -205,7 +205,7 @@ const ChatContainer = () => {
         <img
   src={assets.logo_icon}
   alt="QuickChat"
-  className="w-7 h-7 object-contain opacity-90 ml-2"
+  className="w-5 h-5 object-contain opacity-90 ml-2"
 />
       </header>
       {pinnedMessages.length > 0 && (
