@@ -50,6 +50,20 @@ export const ChatProvider = ({ children }) => {
         return () => { socket.off("presenceUpdated", onPresence); socket.off("newMessage", onNew); socket.off("messageUpdated", onUpdate); socket.off("messageDeleted", onDelete); socket.off("messagesRead", onRead); socket.off("messageRead", onRead); socket.off("typing", onTyping); socket.off("contactRequestUpdated", getUsers); };
     }, [socket, authUser?._id]);
     useEffect(() => { if (selectedUser?._id) { setUnseenMessages(prev => ({ ...prev, [selectedUser._id]: 0 })); getMessages(selectedUser._id); } else setMessages([]); }, [selectedUser?._id]);
+    // Update browser tab title with total unread messages
+useEffect(() => {
+    const totalUnread = Object.values(unseenMessages).reduce(
+        (total, count) => total + (Number(count) || 0),
+        0
+    );
 
+    document.title = totalUnread > 0
+        ? `(${totalUnread}) QuickChat`
+        : "QuickChat";
+
+    return () => {
+        document.title = "QuickChat";
+    };
+}, [unseenMessages]);
     return <ChatContext.Provider value={{ messages, users, selectedUser, getUsers, getMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages, typingUsers, sendTyping, updateMessage, deleteMessage, searchMessages, togglePinMessage }}>{children}</ChatContext.Provider>;
 };
