@@ -1386,3 +1386,101 @@ body {
   }
 }
 
+
+/* Sidebar redesign — compact conversation rows and animated controls */
+.qc-sidebar-search {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(4, 3, 10, 0.22);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.qc-sidebar-search:focus-within {
+  border-color: rgba(167, 139, 250, 0.28);
+  background: rgba(4, 3, 10, 0.34);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.06);
+}
+.qc-sidebar-filters {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.18);
+}
+.qc-sidebar-filter {
+  min-width: 0;
+  border-radius: 8px;
+  padding: 7px 5px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10px;
+  font-weight: 600;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+.qc-sidebar-filter:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+}
+.qc-sidebar-filter.active {
+  color: #eee9ff;
+  background: linear-gradient(110deg, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0.13));
+  box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.13);
+}
+.qc-sidebar-unread {
+  border: 1px solid rgba(167, 139, 250, 0.16);
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.12);
+  padding: 4px 8px;
+  color: #cbbaff;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.qc-sidebar-contact {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.qc-sidebar-contact:hover {
+  background: rgba(255, 255, 255, 0.045);
+  transform: translateX(2px);
+}
+.qc-sidebar-contact.active {
+  border-color: rgba(167, 139, 250, 0.16);
+  background: linear-gradient(100deg, rgba(139, 92, 246, 0.22), rgba(139, 92, 246, 0.07));
+}
+.qc-sidebar-preview {
+  max-width: 100%;
+  line-height: 1.35;
+}
+.qc-account-menu {
+  transform-origin: top right;
+  animation: qc-sidebar-menu-in 0.16s ease both;
+}
+.qc-sidebar-reveal {
+  animation: qc-sidebar-reveal 0.2s ease both;
+}
+.qc-sidebar-contact-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 139, 250, 0.2) transparent;
+}
+.qc-sidebar-contact:focus-visible,
+.qc-sidebar-filter:focus-visible,
+.qc-account-menu button:focus-visible {
+  outline: 2px solid rgba(183, 163, 255, 0.85);
+  outline-offset: 2px;
+}
+@keyframes qc-sidebar-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes qc-sidebar-reveal {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qc-sidebar-contact,
+  .qc-sidebar-filter,
+  .qc-sidebar-search {
+    transition: none !important;
+  }
+  .qc-account-menu,
+  .qc-sidebar-reveal {
+    animation: none !important;
+  }
+}
