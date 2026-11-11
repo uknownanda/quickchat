@@ -43,7 +43,23 @@ const Sidebar = () => {
       </section>}
       {!!requests.received?.length && <section className="qc-panel p-3 mb-4"><div className="flex justify-between mb-2"><p className="font-semibold text-sm">Invitations</p><span className="qc-count">{requests.received.length}</span></div>{requests.received.map(r => <div key={r._id} className="flex items-center gap-2 py-2"><ProfileImagePreview src={r.sender?.profilePic || assets.avatar_icon} alt={`${r.sender?.fullName || "Contact"}'s profile picture`} className="w-8 h-8 rounded-full object-cover"/><p className="flex-1 text-xs truncate">{r.sender?.fullName}</p><button onClick={() => respond(r._id, 'accept')} className="qc-small-btn">Accept</button><button onClick={() => respond(r._id, 'reject')} className="text-xs text-white/45">×</button></div>)}</section>}
       <div className="flex items-center justify-between mb-3"><p className="text-xs uppercase tracking-[.18em] text-white/45">Your contacts</p><span className="text-xs text-white/35">{users.length}</span></div>
-      <div className="space-y-1">{users.map(user => <button onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })); }} key={user._id} className={`qc-contact w-full text-left flex items-center gap-3 p-2.5 rounded-xl ${selectedUser?._id === user._id ? 'active' : ''}`}><span className="relative"><ProfileImagePreview src={user.profilePic || assets.avatar_icon} alt={`${user.fullName}'s profile picture`} className="w-10 h-10 rounded-full object-cover"/><i className={`qc-online-dot ${onlineUsers.includes(user._id) ? 'online' : ''}`}/></span><span className="min-w-0 flex-1"><span className="block text-sm truncate">{user.fullName}</span><span className={`block text-[11px] truncate ${onlineUsers.includes(user._id) ? 'text-emerald-300' : 'text-white/40'}`}>{onlineUsers.includes(user._id) ? 'Online' : 'Offline'}</span></span>{unseenMessages[user._id] > 0 && <span className="qc-count">{unseenMessages[user._id]}</span>}</button>)}{!users.length && <p className="text-center text-xs text-white/40 py-8">No contacts yet. Find people and send an invitation.</p>}</div>
+      <div className="space-y-1">{users.map(user => <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setSelectedUser(user);
+            setUnseenMessages(prev => ({ ...prev, [user._id]: 0 }));
+          }
+        }}
+        onClick={() => {
+          setSelectedUser(user);
+          setUnseenMessages(prev => ({ ...prev, [user._id]: 0 }));
+        }}
+        key={user._id}
+        className={`qc-contact w-full text-left flex items-center gap-3 p-2.5 rounded-xl cursor-pointer ${selectedUser?._id === user._id ? 'active' : ''}`}
+      ><span className="relative"><ProfileImagePreview src={user.profilePic || assets.avatar_icon} alt={`${user.fullName}'s profile picture`} className="w-10 h-10 rounded-full object-cover"/><i className={`qc-online-dot ${onlineUsers.includes(user._id) ? 'online' : ''}`}/></span><span className="min-w-0 flex-1"><span className="block text-sm truncate">{user.fullName}</span><span className={`block text-[11px] truncate ${onlineUsers.includes(user._id) ? 'text-emerald-300' : 'text-white/40'}`}>{onlineUsers.includes(user._id) ? 'Online' : 'Offline'}</span></span>{unseenMessages[user._id] > 0 && <span className="qc-count">{unseenMessages[user._id]}</span>}</div>)}{!users.length && <p className="text-center text-xs text-white/40 py-8">No contacts yet. Find people and send an invitation.</p>}</div>
     </aside>
   );
 };
