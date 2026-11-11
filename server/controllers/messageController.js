@@ -133,17 +133,7 @@ export const getMessages = async (req, res) => {
     try {
         const { id } = req.params;
         const myId = req.user._id;
-        const rawLimit = Number.parseInt(req.query.limit, 10);
-        const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 100) : 50;
-        const before = req.query.before ? String(req.query.before) : null;
         const after = req.query.after ? String(req.query.after) : null;
-
-        if (before && after) {
-            return res.status(400).json({
-                success: false,
-                message: "Use either a before or after cursor",
-            });
-        }
 
         if (!(await areContacts(myId, id))) {
             return res.status(403).json({
@@ -152,37 +142,9 @@ export const getMessages = async (req, res) => {
             });
         }
 
-        const conversationQuery = pairQuery(myId, id);
-        if (before) {
-            if (!Message.db.base.Types.ObjectId.isValid(before)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid message cursor",
-                });
-            }
+        let query = pairQuery(myId, id);
 
-            const cursorMessage = await Message.findOne({
-                _id: before,
-                ...conversationQuery,
-            }).select("_id createdAt").lean();
-
-            if (!cursorMessage) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Message cursor was not found in this conversation",
-                });
-            }
-
-            conversationQuery.$and = [{
-                $or: [
-                    { createdAt: { $lt: cursorMessage.createdAt } },
-                    {
-                        createdAt: cursorMessage.createdAt,
-                        _id: { $lt: cursorMessage._id },
-                    },
-                ],
-            }];
-        } else if (after) {
+        if (after) {
             if (!Message.db.base.Types.ObjectId.isValid(after)) {
                 return res.status(400).json({
                     success: false,
@@ -192,7 +154,7 @@ export const getMessages = async (req, res) => {
 
             const cursorMessage = await Message.findOne({
                 _id: after,
-                ...pairQuery(myId, id),
+                ...query,
             }).select("_id createdAt").lean();
 
             if (!cursorMessage) {
@@ -202,17 +164,33 @@ export const getMessages = async (req, res) => {
                 });
             }
 
-            conversationQuery.$and = [{
-                $or: [
-                    { createdAt: { $gt: cursorMessage.createdAt } },
-                    {
-                        createdAt: cursorMessage.createdAt,
-                        _id: { $gt: cursorMessage._id },
-                    },
-                ],
-            }];
+            query = {
+                ...query,
+                $and: [{
+                    $or: [
+                        { createdAt: { $gt: cursorMessage.createdAt } },
+                        {
+                            createdAt: cursorMessage.createdAt,
+                            _id: { $gt: cursorMessage._id },
+                        },
+                    ],
+                }],
+            };
+
+            const now = new Date();
+            const changed = await Message.updateMany(
+                { ...query, senderId: id, receiverId: myId, seen: false },
+                { $set: { seen: true, readAt: now, deliveredAt: now } }
+            );
+
+            if (changed.modifiedCount) {
+                emitPair(myId.toString(), id.toString(), "messagesRead", {
+                    readerId: myId.toString(),
+                    senderId: id.toString(),
+                    readAt: now,
+                });
+            }
         } else {
-            // Mark incoming messages as read only when opening the latest page.
             const now = new Date();
             const changed = await Message.updateMany(
                 { senderId: id, receiverId: myId, seen: false },
@@ -228,42 +206,12 @@ export const getMessages = async (req, res) => {
             }
         }
 
-        if (after) {
-            const now = new Date();
-            const changed = await Message.updateMany(
-                { ...conversationQuery, senderId: id, receiverId: myId, seen: false },
-                { $set: { seen: true, readAt: now, deliveredAt: now } }
-            );
-
-            if (changed.modifiedCount) {
-                emitPair(myId.toString(), id.toString(), "messagesRead", {
-                    readerId: myId.toString(),
-                    senderId: id.toString(),
-                    readAt: now,
-                });
-            }
-        }
-
-        const page = await Message.find(conversationQuery)
+        const messages = await Message.find(query)
             .populate("replyTo", "text image senderId")
-            .sort({ createdAt: -1, _id: -1 })
-            .limit(limit + 1)
+            .sort({ createdAt: 1, _id: 1 })
             .lean();
 
-        const hasMore = page.length > limit;
-        const selectedPage = hasMore ? page.slice(0, limit) : page;
-        selectedPage.reverse();
-
-        return res.status(200).json({
-            success: true,
-            messages: selectedPage,
-            pageInfo: {
-                hasMore,
-                nextCursor: hasMore && selectedPage.length
-                    ? selectedPage[0]._id.toString()
-                    : null,
-            },
-        });
+        return res.status(200).json({ success: true, messages });
     } catch (error) {
         console.error("Get Messages Error:", error);
         return res.status(500).json({
