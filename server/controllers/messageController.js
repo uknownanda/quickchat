@@ -25,7 +25,7 @@ const emitPair = (a, b, event, payload) => {
     const io = getIO();
     io.to(`user:${a}`).emit(event, payload);
     io.to(`user:${b}`).emit(event, payload);
-});
+};
 
 export const getUsersForSidebar = async (req, res) => {
     try {
