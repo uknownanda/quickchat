@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import assets from "../assets/assets";
 import { formatMessageTime } from "../lib/utils";
 import { ChatContext } from "../../context/ChatContext";
@@ -112,7 +112,7 @@ const ChatContainer = () => {
     };
     reader.readAsDataURL(file);
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     const list = messageListRef.current;
     if (preservingScrollRef.current && list) {
       list.scrollTop += list.scrollHeight - previousScrollHeightRef.current;
@@ -378,7 +378,9 @@ const ChatContainer = () => {
                 previousScrollHeightRef.current = list.scrollHeight;
                 preservingScrollRef.current = true;
                 await loadOlderMessages();
-                if (preservingScrollRef.current) preservingScrollRef.current = false;
+                requestAnimationFrame(() => {
+                  if (preservingScrollRef.current) preservingScrollRef.current = false;
+                });
               }}
               className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs text-white/65 transition hover:bg-white/[0.08] disabled:opacity-50"
             >
