@@ -120,14 +120,15 @@ const Sidebar = () => {
         return matchesQuery && matchesFilter;
       })
       .sort((a, b) => {
-        const unreadDifference =
-          Number(unseenMessages[b._id] > 0) -
-          Number(unseenMessages[a._id] > 0);
-        if (unreadDifference) return unreadDifference;
-        return (
-          Number(onlineUsers.includes(b._id)) -
-          Number(onlineUsers.includes(a._id))
-        );
+        // Keep the most recently active conversations at the top.
+        // Contacts without messages remain below active conversations.
+        const aLastActivity = a.lastMessage?.createdAt
+          ? new Date(a.lastMessage.createdAt).getTime()
+          : 0;
+        const bLastActivity = b.lastMessage?.createdAt
+          ? new Date(b.lastMessage.createdAt).getTime()
+          : 0;
+        return bLastActivity - aLastActivity;
       });
   }, [users, query, activeFilter, onlineUsers, unseenMessages]);
 
