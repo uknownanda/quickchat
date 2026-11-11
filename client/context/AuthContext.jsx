@@ -34,7 +34,9 @@ export const AuthProvider = ({ children }) => {
         });
 
         newSocket.on("connect", () => setSocketStatus("connected"));
-        newSocket.on("disconnect", () => setSocketStatus("reconnecting"));
+        newSocket.on("disconnect", (reason) => {
+            setSocketStatus(reason === "io client disconnect" ? "disconnected" : "reconnecting");
+        });
         newSocket.on("reconnect_attempt", () => setSocketStatus("reconnecting"));
         newSocket.on("connect_error", () => setSocketStatus("reconnecting"));
 
