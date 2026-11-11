@@ -11,7 +11,7 @@ const formatContactTime = (date) => {
   const value = new Date(date);
   if (Number.isNaN(value.getTime())) return "";
   const now = new Date();
-  if (value.toDateString() === now.toDateString()) return value.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  if (value.toDateString() === now.toDateString()) return value.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
   if (value.toDateString() === yesterday.toDateString()) return "Yesterday";
