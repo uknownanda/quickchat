@@ -6,6 +6,18 @@ import { ChatContext } from "../../context/ChatContext";
 import toast from "react-hot-toast";
 import ProfileImagePreview from "./ProfileImagePreview";
 
+const formatContactTime = (date) => {
+  if (!date) return "";
+  const value = new Date(date);
+  if (Number.isNaN(value.getTime())) return "";
+  const now = new Date();
+  if (value.toDateString() === now.toDateString()) return value.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (value.toDateString() === yesterday.toDateString()) return "Yesterday";
+  return value.toLocaleDateString([], { month: "short", day: "numeric" });
+};
+
 const filters = [
   { id: "all", label: "All" },
   { id: "online", label: "Online" },
@@ -445,21 +457,17 @@ const Sidebar = () => {
                   >
                     {user.fullName}
                   </span>
-                  {unreadCount > 0 && (
-                    <span className="qc-count shrink-0">
-                      {unreadCount > 99 ? "99+" : unreadCount}
-                    </span>
-                  )}
-                </span>
-                <span className="mt-1 flex items-center gap-1.5">
-                  <span
-                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${isOnline ? "bg-emerald-400" : "bg-white/25"}`}
-                  />
-                  <span
-                    className={`truncate text-[10px] ${isOnline ? "text-emerald-300/90" : "text-white/40"}`}
-                  >
-                    {isOnline ? "Online" : "Offline"}
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    {user.lastMessage?.createdAt && <span className="text-[9px] text-white/35">{formatContactTime(user.lastMessage.createdAt)}</span>}
+                    {unreadCount > 0 && <span className="qc-count">{unreadCount > 99 ? "99+" : unreadCount}</span>}
                   </span>
+                </span>
+                <span className="qc-sidebar-preview mt-1 block truncate text-[10px] text-white/45">
+                  {user.lastMessage
+                    ? user.lastMessage.deletedAt
+                      ? "Message deleted"
+                      : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.image ? "📷 Photo" : "Message"))
+                    : isOnline ? "Online" : "Offline"}
                 </span>
               </span>
             </div>
