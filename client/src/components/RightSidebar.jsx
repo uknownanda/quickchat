@@ -3,6 +3,7 @@ import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { formatLastSeen } from "../lib/utils";
 import assets from "../assets/assets";
+import ProfileImagePreview from "./ProfileImagePreview";
 
 const RightSidebar = () => {
   const { selectedUser, messages } = useContext(ChatContext);
@@ -36,9 +37,9 @@ const RightSidebar = () => {
       <aside className="qc-right-panel h-full w-full relative overflow-y-auto text-white">
         <div className="px-5 pt-10 pb-6 flex flex-col items-center text-center">
           <div className="relative">
-            <img
+            <ProfileImagePreview
               src={selectedUser.profilePic || assets.avatar_icon}
-              alt=""
+              alt={`${selectedUser.fullName}'s profile picture`}
               className="w-24 h-24 rounded-full object-cover ring-4 ring-violet-400/15"
             />
             <span
