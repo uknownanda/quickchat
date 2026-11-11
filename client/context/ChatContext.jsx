@@ -11,6 +11,8 @@ export const ChatProvider = ({ children }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [unseenMessages, setUnseenMessages] = useState({});
     const [typingUsers, setTypingUsers] = useState({});
+    const [hasOlderMessages, setHasOlderMessages] = useState(false);
+    const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
 
     const { socket, axios, authUser } = useContext(AuthContext);
 
@@ -29,6 +31,8 @@ export const ChatProvider = ({ children }) => {
         selectedRef.current = null;
         setSelectedUser(null);
         setMessages([]);
+        setHasOlderMessages(false);
+        setLoadingOlderMessages(false);
         setUnseenMessages({});
         setTypingUsers({});
     }, [authUser?._id]);
@@ -59,6 +63,7 @@ export const ChatProvider = ({ children }) => {
                 selectedRef.current?._id === userId
             ) {
                 setMessages(data.messages);
+                setHasOlderMessages(Boolean(data.pageInfo?.hasMore));
             }
         } catch (error) {
             console.error("Get Messages Error:", error);
@@ -74,6 +79,34 @@ export const ChatProvider = ({ children }) => {
             toast.error(
                 error.response?.data?.message || "Unable to load messages"
             );
+        }
+    };
+
+    // Fetch the next older page and prepend it without replacing current messages.
+    const loadOlderMessages = async () => {
+        const userId = selectedRef.current?._id;
+        if (!userId || !hasOlderMessages || loadingOlderMessages || !messages.length) return;
+
+        setLoadingOlderMessages(true);
+        try {
+            const oldestMessage = messages[0];
+            const { data } = await axios.get(`/api/messages/${userId}`, {
+                params: { before: oldestMessage._id, limit: 50 },
+            });
+
+            if (data.success && selectedRef.current?._id === userId) {
+                setMessages((current) => {
+                    const existingIds = new Set(current.map((message) => message._id));
+                    const older = data.messages.filter((message) => !existingIds.has(message._id));
+                    return [...older, ...current];
+                });
+                setHasOlderMessages(Boolean(data.pageInfo?.hasMore));
+            }
+        } catch (error) {
+            console.error("Load Older Messages Error:", error);
+            toast.error(error.response?.data?.message || "Unable to load older messages");
+        } finally {
+            setLoadingOlderMessages(false);
         }
     };
 
@@ -329,6 +362,7 @@ export const ChatProvider = ({ children }) => {
             getMessages(selectedUser._id);
         } else {
             setMessages([]);
+            setHasOlderMessages(false);
         }
     }, [selectedUser?._id]);
 
@@ -378,6 +412,9 @@ export const ChatProvider = ({ children }) => {
             value={{
                 messages,
                 users,
+                hasOlderMessages,
+                loadingOlderMessages,
+                loadOlderMessages,
                 selectedUser,
                 getUsers,
                 getMessages,
