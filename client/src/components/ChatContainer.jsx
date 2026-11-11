@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import assets from "../assets/assets";
 import { formatMessageTime } from "../lib/utils";
 import { ChatContext } from "../../context/ChatContext";
@@ -57,15 +57,9 @@ const ChatContainer = () => {
     deleteMessage,
     searchMessages,
     togglePinMessage,
-    hasOlderMessages,
-    loadingOlderMessages,
-    loadOlderMessages,
   } = useContext(ChatContext);
   const { authUser, onlineUsers, socketStatus } = useContext(AuthContext);
   const scrollEnd = useRef(null);
-  const messageListRef = useRef(null);
-  const preservingScrollRef = useRef(false);
-  const previousScrollHeightRef = useRef(0);
   const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
   const [input, setInput] = useState("");
@@ -112,13 +106,7 @@ const ChatContainer = () => {
     };
     reader.readAsDataURL(file);
   };
-  useLayoutEffect(() => {
-    const list = messageListRef.current;
-    if (preservingScrollRef.current && list) {
-      list.scrollTop += list.scrollHeight - previousScrollHeightRef.current;
-      preservingScrollRef.current = false;
-      return;
-    }
+  useEffect(() => {
     scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   useEffect(() => {
@@ -368,31 +356,9 @@ const ChatContainer = () => {
         </div>
       )}
       <section
-        ref={messageListRef}
         onClick={() => setSelectedMessageId(null)}
         className={`qc-message-list flex-1 overflow-y-auto px-4 md:px-7 py-5 space-y-3 ${dragActive ? "qc-drop-active" : ""}`}
       >
-        {hasOlderMessages && (
-          <div className="flex justify-center pb-2">
-            <button
-              type="button"
-              disabled={loadingOlderMessages}
-              onClick={async () => {
-                const list = messageListRef.current;
-                if (!list || loadingOlderMessages) return;
-                previousScrollHeightRef.current = list.scrollHeight;
-                preservingScrollRef.current = true;
-                await loadOlderMessages();
-                requestAnimationFrame(() => {
-                  if (preservingScrollRef.current) preservingScrollRef.current = false;
-                });
-              }}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs text-white/65 transition hover:bg-white/[0.08] disabled:opacity-50"
-            >
-              {loadingOlderMessages ? "Loading older messages…" : "Load older messages"}
-            </button>
-          </div>
-        )}
         {messages.map((msg, index) => {
           const mine =
             msg.senderId === authUser?._id ||
