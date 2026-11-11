@@ -35,65 +35,65 @@ const RightSidebar = () => {
   return (
     <>
       <aside className="qc-right-panel h-full w-full relative overflow-y-auto text-white">
-        <div className="px-5 pt-10 pb-6 flex flex-col items-center text-center">
+        <div className="qc-profile-card flex flex-col items-center text-center">
           <div className="relative">
             <ProfileImagePreview
               src={selectedUser.profilePic || assets.avatar_icon}
               alt={`${selectedUser.fullName}'s profile picture`}
-              className="w-24 h-24 rounded-full object-cover ring-4 ring-violet-400/15"
+              className="qc-profile-avatar rounded-full object-cover ring-4 ring-violet-400/15"
             />
             <span
               className={`absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-[#11101b] ${isOnline ? "bg-emerald-400" : "bg-slate-500"}`}
             />
           </div>
-          <h2 className="mt-4 text-lg font-semibold">
+          <h2 className="qc-profile-name text-lg font-semibold">
             {selectedUser.fullName}
           </h2>
-          <p className="mt-1 text-xs text-white/55">
+          <p className="qc-profile-seen text-xs text-white/55">
             {isOnline ? "Online now" : formatLastSeen(selectedUser.lastSeen)}
           </p>
           {selectedUser.username && (
-            <p className="mt-3 rounded-full border border-violet-300/15 bg-violet-400/10 px-3 py-1 text-xs text-violet-200">
+            <p className="qc-profile-username rounded-full border border-violet-300/15 bg-violet-400/10 px-3 py-1 text-xs text-violet-200">
               @{selectedUser.username}
             </p>
           )}
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
+          <p className="qc-profile-bio max-w-xs text-sm leading-relaxed text-white/55">
             {selectedUser.bio || "No bio added yet."}
           </p>
         </div>
-        <div className="mx-5 border-t border-white/10" />
-        <section className="p-5">
+        <div className="qc-right-divider border-t border-white/10" />
+        <section className="qc-shared-section">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold">Shared media</h3>
+              <h3 className="text-sm font-semibold tracking-tight">Shared media</h3>
               <p className="mt-0.5 text-[11px] text-white/40">
                 Images exchanged in this conversation
               </p>
             </div>
-            <span className="rounded-full bg-white/8 px-2 py-1 text-[10px] text-white/60">
+            <span className="qc-media-count rounded-full px-2 py-1 text-[10px] text-white/60">
               {msgImages.length}
             </span>
           </div>
           {msgImages.length ? (
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="qc-media-grid grid gap-3">
               {msgImages.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveImage(item)}
-                  className="group relative aspect-square overflow-hidden rounded-xl bg-white/5"
+                  className="qc-media-item group relative aspect-square overflow-hidden rounded-2xl bg-white/5"
                 >
                   <img
                     src={item.url}
                     alt="Shared media"
                     loading="lazy"
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-110"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                   <span className="absolute inset-0 bg-black/0 transition group-hover:bg-black/15" />
                 </button>
               ))}
             </div>
           ) : (
-            <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-8 text-center">
+            <div className="qc-media-empty mt-4 rounded-xl border border-dashed border-white/10 px-4 py-8 text-center">
               <span className="text-2xl">▧</span>
               <p className="mt-2 text-xs text-white/45">No shared images yet</p>
             </div>
