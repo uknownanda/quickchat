@@ -5,6 +5,7 @@ import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { formatLastSeen } from "../lib/utils";
 import toast from "react-hot-toast";
+import ProfileImagePreview from "./ProfileImagePreview";
 
 const emojiSet = [
   "😀",
@@ -51,6 +52,7 @@ const ChatContainer = () => {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [showContactAbout, setShowContactAbout] = useState(false);
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
     if (!input.trim()) return;
@@ -168,14 +170,21 @@ const ChatContainer = () => {
         <button
           onClick={() => setSelectedUser(null)}
           className="md:hidden text-white/70 text-xl"
+          aria-label="Back to contacts"
         >
           ‹
         </button>
-        <img
+        <ProfileImagePreview
           src={selectedUser.profilePic || assets.avatar_icon}
+          alt={`${selectedUser.fullName}'s profile picture`}
           className="w-10 h-10 rounded-full object-cover"
         />
-        <div className="flex-1 min-w-0">
+        <button
+          type="button"
+          onClick={() => setShowContactAbout(true)}
+          className="flex-1 min-w-0 text-left rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-400"
+          aria-label={`View ${selectedUser.fullName}'s profile`}
+        >
           <p className="font-semibold text-white truncate">
             {selectedUser.fullName}
           </p>
@@ -191,7 +200,7 @@ const ChatContainer = () => {
     lastSeenLabel
   )}
 </p>
-        </div>
+        </button>
         <button
           className="qc-icon-btn"
           onClick={() => {
@@ -208,6 +217,65 @@ const ChatContainer = () => {
   className="w-3 h-3 object-contain opacity-90 ml-2"
 />
       </header>
+      {showContactAbout && (
+        <div className="fixed inset-0 z-[150] bg-[#0d0b16] text-white md:hidden">
+          <div className="flex h-full flex-col">
+            <header className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
+              <button
+                type="button"
+                onClick={() => setShowContactAbout(false)}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-2xl text-white/75 hover:bg-white/10"
+                aria-label="Back to conversation"
+              >
+                ‹
+              </button>
+              <div>
+                <p className="font-semibold">Contact info</p>
+                <p className="text-[11px] text-white/40">QuickChat profile</p>
+              </div>
+            </header>
+            <div className="flex-1 overflow-y-auto px-6 py-9">
+              <div className="flex flex-col items-center text-center">
+                <ProfileImagePreview
+                  src={selectedUser.profilePic || assets.avatar_icon}
+                  alt={`${selectedUser.fullName}'s profile picture`}
+                  className="h-28 w-28 rounded-full object-cover ring-4 ring-violet-400/15"
+                />
+                <h2 className="mt-5 text-xl font-semibold">{selectedUser.fullName}</h2>
+                {selectedUser.username && (
+                  <p className="mt-1 text-sm text-violet-200">@{selectedUser.username}</p>
+                )}
+                <p className="mt-3 text-xs text-white/50">
+                  {onlineUsers.includes(selectedUser._id) ? (
+                    <span className="text-emerald-400">● Online</span>
+                  ) : lastSeenLabel}
+                </p>
+              </div>
+              <section className="mt-9 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-violet-200/80">About</p>
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-white/75">
+                  {selectedUser.bio || "No bio added yet."}
+                </p>
+              </section>
+              <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-violet-200/80">Contact status</p>
+                <p className="mt-3 text-sm text-white/70">
+                  {onlineUsers.includes(selectedUser._id) ? "Currently online" : lastSeenLabel}
+                </p>
+              </section>
+            </div>
+            <div className="border-t border-white/10 p-4">
+              <button
+                type="button"
+                onClick={() => setShowContactAbout(false)}
+                className="w-full rounded-xl bg-violet-500/15 py-3 text-sm font-medium text-violet-200"
+              >
+                Back to chat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {pinnedMessages.length > 0 && (
         <button
           onClick={() => scrollTo(pinnedMessages[0]._id)}
