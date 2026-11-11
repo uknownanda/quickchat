@@ -35,10 +35,29 @@ const Sidebar = () => {
         <div><div className="text-2xl font-bold tracking-tight">Quick<span className="qc-gradient-text">Chat</span></div><p className="text-xs text-white/45">Your private space</p></div>
         <div className="relative group"><button className="qc-icon-btn" aria-label="Menu">⋯</button><div className="absolute top-full right-0 z-30 w-36 p-3 rounded-xl bg-[#211b35] border border-white/10 hidden group-hover:block shadow-xl"><button onClick={() => navigate('/profile')} className="block text-sm py-2">Edit profile</button><button onClick={logout} className="block text-sm py-2 text-rose-300">Logout</button></div></div>
       </div>
-      <button onClick={() => setShowDiscover(v => !v)} className="qc-primary-btn w-full mb-3">＋ Find people</button>
-      {showDiscover && <section className="qc-panel p-3 mb-4">
+      <button
+        onClick={() => {
+          setShowDiscover((isOpen) => {
+            if (isOpen) setQuery("");
+            return !isOpen;
+          });
+        }}
+        className="qc-primary-btn w-full mb-3"
+        aria-expanded={showDiscover}
+        aria-controls="quickchat-discover-panel"
+      >
+        ＋ Find people
+      </button>
+      {showDiscover && <section id="quickchat-discover-panel" className="qc-panel p-3 mb-4">
         <p className="font-semibold text-sm mb-2">Discover people</p>
-        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by username or name" className="qc-input w-full" />
+        <input
+          autoFocus
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search by username or name"
+          aria-label="Search people by username or name"
+          className="qc-input w-full"
+        />
         <div className="mt-2 space-y-2 max-h-44 overflow-y-auto">{results.map(user => <div key={user._id} className="flex items-center gap-2 text-sm"><ProfileImagePreview src={user.profilePic || assets.avatar_icon} alt={`${user.fullName}'s profile picture`} className="w-8 h-8 rounded-full object-cover"/><div className="min-w-0 flex-1"><p className="truncate">{user.fullName}</p><p className="text-[10px] text-white/40 truncate">@{user.username}</p></div>{user.relationship === 'none' || user.relationship === 'rejected' ? <button onClick={() => invite(user._id)} className="qc-small-btn">Invite</button> : <span className="text-[10px] text-violet-200">{user.relationship === 'contact' ? 'Connected' : user.relationship === 'sent' ? 'Pending' : 'Requested you'}</span>}</div>)}{query.length >= 2 && !results.length && <p className="text-xs text-white/40">No matching people</p>}</div>
       </section>}
       {!!requests.received?.length && <section className="qc-panel p-3 mb-4"><div className="flex justify-between mb-2"><p className="font-semibold text-sm">Invitations</p><span className="qc-count">{requests.received.length}</span></div>{requests.received.map(r => <div key={r._id} className="flex items-center gap-2 py-2"><ProfileImagePreview src={r.sender?.profilePic || assets.avatar_icon} alt={`${r.sender?.fullName || "Contact"}'s profile picture`} className="w-8 h-8 rounded-full object-cover"/><p className="flex-1 text-xs truncate">{r.sender?.fullName}</p><button onClick={() => respond(r._id, 'accept')} className="qc-small-btn">Accept</button><button onClick={() => respond(r._id, 'reject')} className="text-xs text-white/45">×</button></div>)}</section>}
