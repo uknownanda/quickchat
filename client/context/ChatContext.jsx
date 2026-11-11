@@ -281,26 +281,26 @@ export const ChatProvider = ({ children }) => {
 
     // Refresh current conversation when returning to QuickChat tab
     useEffect(() => {
-        const refreshMessages = () => {
-            const userId = selectedRef.current?._id;
+    const refreshMessages = () => {
+        if (document.visibilityState !== "visible") return;
 
-            if (
-                userId &&
-                document.visibilityState === "visible" &&
-                document.hasFocus()
-            ) {
-                getMessages(userId);
-            }
-        };
+        const userId = selectedRef.current?._id;
 
-        document.addEventListener("visibilitychange", refreshMessages);
-        window.addEventListener("focus", refreshMessages);
+        if (userId) {
+            getMessages(userId);
+        }
+    };
 
-        return () => {
-            document.removeEventListener("visibilitychange", refreshMessages);
-            window.removeEventListener("focus", refreshMessages);
-        };
-    }, []);
+    document.addEventListener("visibilitychange", refreshMessages);
+    window.addEventListener("focus", refreshMessages);
+    window.addEventListener("pageshow", refreshMessages);
+
+    return () => {
+        document.removeEventListener("visibilitychange", refreshMessages);
+        window.removeEventListener("focus", refreshMessages);
+        window.removeEventListener("pageshow", refreshMessages);
+    };
+}, []);
 
     // Browser tab title with total unread messages
     useEffect(() => {
