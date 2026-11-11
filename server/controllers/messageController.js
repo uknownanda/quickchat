@@ -15,7 +15,17 @@ export const getUsersForSidebar = async (req, res) => {
         const contactIds = links.map(link => link.sender.toString() === userId.toString() ? link.recipient : link.sender);
         const users = await User.find({ _id: { $in: contactIds } }).select("-password");
         const unseenMessages = {};
-        await Promise.all(users.map(async user => { const count = await Message.countDocuments({ senderId: user._id, receiverId: userId, seen: false }); if (count) unseenMessages[user._id.toString()] = count; }));
+        await Promise.all(users.map(async user => {
+            const [count, lastMessage] = await Promise.all([
+                Message.countDocuments({ senderId: user._id, receiverId: userId, seen: false }),
+                Message.findOne(pairQuery(userId, user._id))
+                    .select("text image deletedAt senderId createdAt")
+                    .sort({ createdAt: -1 })
+                    .lean(),
+            ]);
+            if (count) unseenMessages[user._id.toString()] = count;
+            user.set("lastMessage", lastMessage, { strict: false });
+        }));
         return res.status(200).json({ success: true, users, unseenMessages });
     } catch (error) { console.error("Get Users Error:", error); return res.status(500).json({ success: false, message: "Unable to load users" }); }
 };
