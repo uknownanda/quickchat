@@ -11,6 +11,8 @@ export const ChatProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState({});
     const { socket, axios, authUser } = useContext(AuthContext);
     const selectedRef = useRef(null);
+    const isChatActive = () =>
+    document.visibilityState === "visible" && document.hasFocus();
     useEffect(() => { selectedRef.current = selectedUser; }, [selectedUser]);
     useEffect(() => { setSelectedUser(null); setMessages([]); setUnseenMessages({}); setTypingUsers({}); }, [authUser?._id]);
 
@@ -34,12 +36,26 @@ export const ChatProvider = ({ children }) => {
     useEffect(() => {
         if (!socket) return;
         const onNew = (message) => {
-            const current = selectedRef.current;
-            if (current?._id === message.senderId) {
-                setMessages(prev => prev.some(m => m._id === message._id) ? prev : [...prev, message]);
-                axios.put(`/api/messages/mark/${message._id}`).catch(console.error);
-            } else setUnseenMessages(prev => ({ ...prev, [message.senderId]: (prev[message.senderId] || 0) + 1 }));
-        };
+    const current = selectedRef.current;
+    const isViewingConversation =
+        current?._id === message.senderId && isChatActive();
+
+    if (isViewingConversation) {
+        setMessages(prev =>
+            prev.some(m => m._id === message._id)
+                ? prev
+                : [...prev, message]
+        );
+
+        axios.put(`/api/messages/mark/${message._id}`)
+            .catch(console.error);
+    } else {
+        setUnseenMessages(prev => ({
+            ...prev,
+            [message.senderId]: (prev[message.senderId] || 0) + 1
+        }));
+    }
+};
         const onUpdate = message => setMessages(prev => prev.map(m => m._id === message._id ? message : m));
         const onDelete = message => setMessages(prev => prev.map(m => m._id === message._id ? { ...m, ...message } : m));
         const onRead = ({ senderId, readerId, readAt }) => { if (authUser?._id === senderId) setMessages(prev => prev.map(m => m.senderId === senderId && m.receiverId === readerId ? { ...m, seen: true, readAt } : m)); };
