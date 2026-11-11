@@ -26,6 +26,25 @@ const emojiSet = [
   "💯",
 ];
 const reactions = ["❤️", "😂", "👍", "🔥", "😮", "😢"];
+
+const formatDateSeparator = (value) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  const sameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+  if (sameDay(date, today)) return "Today";
+  if (sameDay(date, yesterday)) return "Yesterday";
+  return date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "long",
+    year: date.getFullYear() === today.getFullYear() ? undefined : "numeric",
+  });
+};
 const ChatContainer = () => {
   const {
     messages,
@@ -166,7 +185,7 @@ const ChatContainer = () => {
         if (msg) setReplyTo(msg);
       }}
     >
-      <header className="qc-chat-header flex items-center gap-3 px-5 py-4">
+      <header className="qc-chat-header flex items-center gap-3 px-4 md:px-5 py-3 md:py-4">
         <button
           onClick={() => setSelectedUser(null)}
           className="md:hidden text-white/70 text-xl"
@@ -183,7 +202,7 @@ const ChatContainer = () => {
           <img
             src={selectedUser.profilePic || assets.avatar_icon}
             alt={`${selectedUser.fullName}'s profile picture`}
-            className="w-10 h-10 rounded-full object-cover"
+            className="qc-chat-avatar w-10 h-10 rounded-full object-cover"
           />
         </button>
         <button
@@ -195,7 +214,7 @@ const ChatContainer = () => {
           <p className="font-semibold text-white truncate">
             {selectedUser.fullName}
           </p>
-          <p className="text-xs text-white/45">
+          <p className="qc-chat-presence text-xs text-white/45">
   {typingUsers[selectedUser._id] ? (
     <span className="text-violet-300">Typing…</span>
   ) : onlineUsers.includes(selectedUser._id) ? (
@@ -218,11 +237,6 @@ const ChatContainer = () => {
         >
           ⌕
         </button>
-        <img
-  src={assets.logo_icon}
-  alt="QuickChat"
-  className="w-3 h-3 object-contain opacity-90 ml-2"
-/>
       </header>
       {showContactAbout && (
         <div className="fixed inset-0 z-[150] bg-[#0d0b16] text-white md:hidden">
@@ -334,9 +348,9 @@ const ChatContainer = () => {
       )}
       <section
         onClick={() => setSelectedMessageId(null)}
-        className={`flex-1 overflow-y-auto px-4 md:px-7 py-5 space-y-3 ${dragActive ? "qc-drop-active" : ""}`}
+        className={`qc-message-list flex-1 overflow-y-auto px-4 md:px-7 py-5 space-y-3 ${dragActive ? "qc-drop-active" : ""}`}
       >
-        {messages.map((msg) => {
+        {messages.map((msg, index) => {
           const mine =
             msg.senderId === authUser?._id ||
             msg.senderId?._id === authUser?._id;
@@ -345,7 +359,16 @@ const ChatContainer = () => {
             (typeof msg.replyTo === "object"
               ? msg.replyTo
               : replyMessage(msg.replyTo));
+          const currentDate = formatDateSeparator(msg.createdAt);
+          const previousDate =
+            index > 0 ? formatDateSeparator(messages[index - 1].createdAt) : "";
           return (
+            <React.Fragment key={msg._id}>
+              {currentDate && currentDate !== previousDate && (
+                <div className="qc-date-separator" aria-label={currentDate}>
+                  <span>{currentDate}</span>
+                </div>
+              )}
             <div
               id={`message-${msg._id}`}
               key={msg._id}
@@ -498,13 +521,11 @@ const ChatContainer = () => {
                 </div>
               </div>
             </div>
+            </React.Fragment>
           );
         })}
         <div ref={scrollEnd} />
       </section>
-      {typingUsers[selectedUser._id] && (
-        <div className="px-5 pb-1 text-[11px] text-violet-300">typing…</div>
-      )}
       {dragActive && (
         <div className="absolute inset-x-5 bottom-24 qc-drop-hint pointer-events-none">
           Drop message here to reply
@@ -512,7 +533,7 @@ const ChatContainer = () => {
       )}
       <form
         onSubmit={handleSendMessage}
-        className="qc-composer-wrap p-3 md:p-4"
+        className="qc-composer-wrap p-2.5 md:p-4"
       >
         {replyTo && (
           <div className="qc-reply-preview flex items-center gap-3 mb-2 px-3 py-2">
@@ -531,7 +552,7 @@ const ChatContainer = () => {
             </button>
           </div>
         )}
-        <div className="qc-composer flex items-center gap-2 px-3 py-2">
+        <div className="qc-composer flex items-center gap-2 px-2.5 py-2 md:px-3">
           <div className="relative">
             <button
               type="button"
@@ -562,7 +583,8 @@ const ChatContainer = () => {
               if (e.key === "Escape") setReplyTo(null);
             }}
             placeholder="Write a message…"
-            className="flex-1 bg-transparent outline-none text-sm text-white placeholder:text-white/35 min-w-0"
+            aria-label="Write a message"
+            className="qc-composer-input flex-1 bg-transparent outline-none text-sm text-white placeholder:text-white/35 min-w-0"
           />
           <input
             onChange={handleSendImage}
