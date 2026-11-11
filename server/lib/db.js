@@ -25,6 +25,8 @@ mongoose.connection.on("reconnected", () => {
 });
 
 mongoose.connection.on("disconnected", () => {
+    // Clear a previously resolved connect() promise after the socket drops.
+    connectionPromise = null;
     console.warn("MongoDB connection lost; Mongoose will attempt to reconnect");
 });
 
