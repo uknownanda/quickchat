@@ -180,14 +180,17 @@ const ChatContainer = () => {
             {selectedUser.fullName}
           </p>
           <p className="text-xs text-white/45">
-            {typingUsers[selectedUser._id] ? (
-              <span className="text-violet-300">Typing…</span>
-            ) : onlineUsers.includes(selectedUser._id) ? (
-              "● Online"
-            ) : (
-              lastSeenLabel
-            )}
-          </p>
+  {typingUsers[selectedUser._id] ? (
+    <span className="text-violet-300">Typing…</span>
+  ) : onlineUsers.includes(selectedUser._id) ? (
+    <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium">
+      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+      Online
+    </span>
+  ) : (
+    lastSeenLabel
+  )}
+</p>
         </div>
         <button
           className="qc-icon-btn"
@@ -199,7 +202,11 @@ const ChatContainer = () => {
         >
           ⌕
         </button>
-        <span className="text-xs text-white/35">QuickChat</span>
+        <img
+  src={assets.logo_icon}
+  alt="QuickChat"
+  className="w-9 h-9 object-contain opacity-90 ml-2"
+/>
       </header>
       {pinnedMessages.length > 0 && (
         <button
