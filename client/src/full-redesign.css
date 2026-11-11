@@ -1170,3 +1170,15 @@ main.min-h-screen.bg-\[\#0f0d16\],
   border-radius: 16px !important;
   z-index: 50 !important;
 }
+/* Remove unwanted border around the QuickChat header logo */
+.qc-chat-header img {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qc-chat-header img:focus,
+.qc-chat-header img:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
