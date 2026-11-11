@@ -1243,3 +1243,146 @@ body {
   border-color: rgba(255, 255, 255, 0.1) !important;
   box-shadow: none !important;
 }
+
+/* QuickChat UI polish — consistent interaction states and responsive motion */
+.qc-home-shell {
+  isolation: isolate;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
+}
+.qc-sidebar,
+.qc-chat,
+.qc-right-panel,
+.qc-empty {
+  animation: qc-panel-enter 0.32s ease both;
+}
+.qc-icon-btn,
+.qc-tool-btn,
+.qc-small-btn,
+.qc-send-btn,
+.qc-primary-btn,
+.qc-contact,
+.qc-message-actions button,
+.qc-search-results button {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+.qc-icon-btn:hover,
+.qc-tool-btn:hover {
+  background: rgba(167, 139, 250, 0.17);
+  color: #d9ccff;
+}
+.qc-primary-btn:hover,
+.qc-send-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(124, 82, 220, 0.3);
+}
+.qc-small-btn:hover {
+  background: rgba(139, 92, 246, 0.34);
+}
+.qc-contact {
+  border: 1px solid transparent;
+}
+.qc-contact:focus-visible,
+.qc-icon-btn:focus-visible,
+.qc-tool-btn:focus-visible,
+.qc-primary-btn:focus-visible,
+.qc-small-btn:focus-visible,
+.qc-send-btn:focus-visible,
+.qc-message-actions button:focus-visible {
+  outline: 2px solid rgba(183, 163, 255, 0.9);
+  outline-offset: 2px;
+}
+.qc-contact.active {
+  box-shadow: inset 3px 0 0 #a78bfa;
+}
+.qc-chat-header {
+  min-height: 68px;
+}
+.qc-composer-wrap {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.qc-composer:focus-within {
+  border-color: rgba(167, 139, 250, 0.32);
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.18),
+    0 0 0 3px rgba(139, 92, 246, 0.07),
+    inset 0 1px rgba(255, 255, 255, 0.04);
+}
+.qc-message {
+  animation: qc-message-enter 0.2s ease both;
+}
+.qc-empty {
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+}
+.qc-empty h2 {
+  letter-spacing: -0.035em;
+}
+.qc-right-panel {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(126, 94, 205, 0.12), transparent 42%),
+    rgba(15, 13, 24, 0.96);
+}
+.qc-right-empty {
+  background: radial-gradient(ellipse at center, rgba(126, 94, 205, 0.1), transparent 60%);
+}
+.qc-search-bar input:focus-visible,
+.qc-edit-input:focus-visible {
+  outline: 2px solid rgba(167, 139, 250, 0.55);
+  outline-offset: 2px;
+}
+@keyframes qc-panel-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes qc-message-enter {
+  from { opacity: 0; transform: translateY(5px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 767px) {
+  .qc-home {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+  .qc-home-shell {
+    height: 100%;
+    border-radius: 0;
+  }
+  .qc-sidebar {
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .qc-chat-header {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+  .qc-message {
+    max-width: min(84%, 420px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qc-sidebar,
+  .qc-chat,
+  .qc-right-panel,
+  .qc-empty,
+  .qc-message {
+    animation: none !important;
+  }
+  .qc-icon-btn,
+  .qc-tool-btn,
+  .qc-small-btn,
+  .qc-send-btn,
+  .qc-primary-btn,
+  .qc-contact,
+  .qc-message-actions button,
+  .qc-search-results button {
+    transition: none !important;
+  }
+}
+
