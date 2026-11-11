@@ -61,7 +61,7 @@ const ChatContainer = () => {
     loadingOlderMessages,
     loadOlderMessages,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const messageListRef = useRef(null);
   const preservingScrollRef = useRef(false);
@@ -231,7 +231,12 @@ const ChatContainer = () => {
             {selectedUser.fullName}
           </p>
           <p className="qc-chat-presence text-xs text-white/45">
-  {typingUsers[selectedUser._id] ? (
+  {socketStatus !== "connected" ? (
+    <span className="inline-flex items-center gap-1.5 text-amber-300">
+      <span className={`h-2 w-2 rounded-full ${socketStatus === "connecting" ? "animate-pulse bg-amber-300" : "bg-amber-400"}`} />
+      {socketStatus === "connecting" ? "Connecting…" : socketStatus === "reconnecting" ? "Reconnecting…" : "Offline"}
+    </span>
+  ) : typingUsers[selectedUser._id] ? (
     <span className="text-violet-300">Typing…</span>
   ) : onlineUsers.includes(selectedUser._id) ? (
     <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium">
