@@ -15,16 +15,28 @@ export const AuthProvider = ({ children }) => {
     const [authUser, setAuthUser] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [socketStatus, setSocketStatus] = useState("disconnected");
 
     const connectSocket = (userData) => {
         // Connect to the persistent Express + Socket.IO backend.
         // In production, VITE_SOCKET_URL should point to the Render service.
-        if (!socketUrl || !userData || socket?.connected) return;
+        if (!socketUrl || !userData || socket) return;
 
+        setSocketStatus("connecting");
         const newSocket = io(socketUrl, {
             query: { userId: userData._id },
             transports: ["websocket", "polling"],
+            reconnection: true,
+            reconnectionAttempts: Infinity,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 10000,
+            timeout: 20000,
         });
+
+        newSocket.on("connect", () => setSocketStatus("connected"));
+        newSocket.on("disconnect", () => setSocketStatus("reconnecting"));
+        newSocket.on("reconnect_attempt", () => setSocketStatus("reconnecting"));
+        newSocket.on("connect_error", () => setSocketStatus("reconnecting"));
 
         newSocket.on("connect_error", (error) => {
             console.error("Socket connection error:", error.message);
@@ -43,6 +55,7 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         setAuthUser(null);
         setOnlineUsers([]);
+        setSocketStatus("disconnected");
         setSocket((currentSocket) => {
             currentSocket?.disconnect();
             return null;
@@ -160,6 +173,7 @@ export const AuthProvider = ({ children }) => {
         authUser,
         onlineUsers,
         socket,
+        socketStatus,
         token,
         login,
         logout,
