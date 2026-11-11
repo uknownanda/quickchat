@@ -66,9 +66,7 @@ const RightSidebar = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold tracking-tight">Shared media</h3>
-              <p className="mt-0.5 text-[11px] text-white/40">
-                Images exchanged in this conversation
-              </p>
+              
             </div>
             <span className="qc-media-count rounded-full px-2 py-1 text-[10px] text-white/60">
               {msgImages.length}
