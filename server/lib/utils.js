@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken";
 
-//Function to gen a token for user
-
 export const generateToken = (userId) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-  return token;
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET environment variable is required");
+  }
+  return jwt.sign(
+    { userId: userId.toString() },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d", algorithm: "HS256" },
+  );
 };
