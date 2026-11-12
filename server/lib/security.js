@@ -1,5 +1,3 @@
-const rateLimitBuckets = new Map();
-
 const defaultKey = (req) => req.ip || req.socket?.remoteAddress || "unknown";
 
 export const createRateLimiter = ({
@@ -33,9 +31,8 @@ export const createRateLimiter = ({
     }
 
     bucket.count += 1;
-    const remaining = Math.max(0, max - bucket.count);
     res.set("RateLimit-Limit", String(max));
-    res.set("RateLimit-Remaining", String(remaining));
+    res.set("RateLimit-Remaining", String(Math.max(0, max - bucket.count)));
     res.set("RateLimit-Reset", String(Math.ceil(bucket.resetAt / 1000)));
 
     if (bucket.count > max) {
@@ -58,7 +55,7 @@ export const securityHeaders = (_req, res, next) => {
   if (process.env.NODE_ENV === "production") {
     res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   }
-  return next();
+  next();
 };
 
 export const normalizeEmail = (value) =>
@@ -67,12 +64,12 @@ export const normalizeEmail = (value) =>
 export const isValidEmail = (value) =>
   typeof value === "string" &&
   value.length <= 254 &&
-  /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value);
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
 export const isValidProfileImage = (value) =>
   typeof value === "string" &&
   value.length <= 7 * 1024 * 1024 &&
-  /^data:image\\/(png|jpe?g|webp|gif);base64,[a-z0-9+/]+=*$/i.test(value);
+  /^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/]+=*$/i.test(value);
 
 export const validateProfileFields = ({ fullName, bio }) => {
   if (typeof fullName !== "string" || !fullName.trim() || fullName.trim().length > 60) {
