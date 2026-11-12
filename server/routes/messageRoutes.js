@@ -1,14 +1,18 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.js";
 import { deleteMessage, togglePinMessage, getMessages, getUsersForSidebar, getSharedMedia, markMessageAsSeen, searchMessages, sendMessage, updateMessage } from "../controllers/messageController.js";
+import { createRateLimiter } from "../lib/security.js";
+
 const messageRouter = express.Router();
+const sendLimiter = createRateLimiter({ windowMs: 60 * 1000, max: 60, message: "You are sending messages too quickly. Please wait a moment." });
+const searchLimiter = createRateLimiter({ windowMs: 60 * 1000, max: 30, message: "Too many searches. Please slow down." });
 messageRouter.get("/users", protectRoute, getUsersForSidebar);
-messageRouter.get("/search/:id", protectRoute, searchMessages);
+messageRouter.get("/search/:id", protectRoute, searchLimiter, searchMessages);
 messageRouter.get("/media/:id", protectRoute, getSharedMedia);
 messageRouter.get("/:id", protectRoute, getMessages);
 messageRouter.put("/mark/:id", protectRoute, markMessageAsSeen);
-messageRouter.post("/send/:id", protectRoute, sendMessage);
-messageRouter.patch("/:id", protectRoute, updateMessage);
-messageRouter.patch("/:id/pin", protectRoute, togglePinMessage);
-messageRouter.delete("/:id", protectRoute, deleteMessage);
+messageRouter.post("/send/:id", protectRoute, sendLimiter, sendMessage);
+messageRouter.patch("/:id", protectRoute, sendLimiter, updateMessage);
+messageRouter.patch("/:id/pin", protectRoute, sendLimiter, togglePinMessage);
+messageRouter.delete("/:id", protectRoute, sendLimiter, deleteMessage);
 export default messageRouter;
