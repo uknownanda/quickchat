@@ -20,7 +20,7 @@ const RightSidebar = () => {
     setMediaLoading(true);
     setMediaError("");
     try {
-      const { data } = await axios.get(\`/api/messages/media/\${selectedUser._id}\`, { signal });
+      const { data } = await axios.get(`/api/messages/media/${selectedUser._id}`, { signal });
       if (data.success) {
         setMsgImages((data.media || []).map((item) => ({
           url: item.image,
@@ -79,7 +79,7 @@ const RightSidebar = () => {
   const copyUsername = async () => {
     if (!selectedUser.username || !navigator.clipboard?.writeText) return;
     try {
-      await navigator.clipboard.writeText(\`@\${selectedUser.username}\`);
+      await navigator.clipboard.writeText(`@${selectedUser.username}`);
     } catch (error) {
       console.error("Unable to copy username:", error);
     }
@@ -92,12 +92,12 @@ const RightSidebar = () => {
           <div className="relative">
             <ProfileImagePreview
               src={selectedUser.profilePic || assets.avatar_icon}
-              alt={\`\${selectedUser.fullName}'s profile picture\`}
+              alt={`${selectedUser.fullName}'s profile picture`}
               className="qc-profile-avatar rounded-full object-cover ring-4 ring-violet-400/15"
             />
             <span
               aria-label={isOnline ? "Online" : "Offline"}
-              className={\`absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-[#11101b] \${isOnline ? "bg-emerald-400" : "bg-slate-500"}\`}
+              className={`absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-[#11101b] ${isOnline ? "bg-emerald-400" : "bg-slate-500"}`}
             />
           </div>
           <h2 className="qc-profile-name text-lg font-semibold">{selectedUser.fullName}</h2>
@@ -177,7 +177,7 @@ const RightSidebar = () => {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveImage(item)}
-                  aria-label={\`Preview shared image from \${new Date(item.date).toLocaleDateString()}\`}
+                  aria-label={`Preview shared image from ${new Date(item.date).toLocaleDateString()}`}
                   className="qc-media-item group relative aspect-square overflow-hidden rounded-xl bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
                 >
                   <img
