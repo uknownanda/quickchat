@@ -269,14 +269,16 @@ const Sidebar = () => {
               ×
             </button>
           </div>
-          <input
-            autoFocus
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Enter complete username"
-            aria-label="Enter the complete username"
-            className="mt-3 w-full rounded-xl border border-white/10 bg-[#0b1020] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-white/20 focus:outline-none focus:ring-0"
-          />
+          <label className="qc-sidebar-search mt-3 flex items-center gap-2 rounded-xl px-3">
+            <input
+              autoFocus
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Enter complete username"
+              aria-label="Enter the complete username"
+              className="w-full min-w-0 bg-transparent py-3 text-sm text-white outline-none ring-0 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+            />
+          </label>
           <div className="mt-3 max-h-44 space-y-2 overflow-y-auto">
             {results.map((user) => (
               <div
