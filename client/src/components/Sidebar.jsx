@@ -35,7 +35,8 @@ const Sidebar = () => {
     setUnseenMessages,
   } = useContext(ChatContext);
   const { authUser, logout, onlineUsers, axios } = useContext(AuthContext);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(""); // Find people username query
+  const [contactQuery, setContactQuery] = useState(""); // Existing contacts filter
   const [results, setResults] = useState([]);
   const [requests, setRequests] = useState({ received: [], sent: [] });
   const [showDiscover, setShowDiscover] = useState(false);
@@ -114,7 +115,7 @@ const Sidebar = () => {
   };
 
   const filteredUsers = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = contactQuery.trim().toLowerCase();
     return users
       .filter((user) => {
         const matchesQuery =
@@ -140,7 +141,7 @@ const Sidebar = () => {
           : 0;
         return bLastActivity - aLastActivity;
       });
-  }, [users, query, activeFilter, onlineUsers, unseenMessages]);
+  }, [users, contactQuery, activeFilter, onlineUsers, unseenMessages]);
 
   const totalUnread = Object.values(unseenMessages).reduce(
     (total, count) => total + (Number(count) || 0),
@@ -391,19 +392,16 @@ const Sidebar = () => {
       <label className="qc-sidebar-search mb-3 flex items-center gap-2 rounded-xl px-3">
         <span className="text-base text-white/40" aria-hidden="true">⌕</span>
         <input
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            if (showDiscover) setShowDiscover(false);
-          }}
+          value={contactQuery}
+          onChange={(event) => setContactQuery(event.target.value)}
           placeholder="Search contacts"
           aria-label="Search contacts"
           className="w-full min-w-0 bg-transparent py-1.5 text-[11px] leading-4 text-white outline-none ring-0 placeholder:text-white/35 focus:outline-none focus:ring-0"
         />
-        {query && !showDiscover && (
+        {contactQuery && (
           <button
             type="button"
-            onClick={() => setQuery("")}
+            onClick={() => setContactQuery("")}
             className="text-sm text-white/45 hover:text-white"
             aria-label="Clear contact search"
           >
