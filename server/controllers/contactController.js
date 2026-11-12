@@ -4,24 +4,46 @@ import { getIO } from "../lib/socket.js";
 
 export const searchPeople = async (req, res) => {
   try {
-    const q = (req.query.q || "").trim();
+    const q = String(req.query.q || "").trim();
     if (q.length < 2) return res.json({ success: true, users: [] });
     const me = req.user._id;
     const searchTerm = q.replace(/^@/, "").slice(0, 40);
-    const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\    const users = await User.find({ _id: { $ne: me }, $or: [
-      { username: { $regex: q.replace(/^@/, ""), $options: "i" } }, { fullName: { $regex: q, $options: "i" } }
-    ] }).select("fullName username profilePic bio").limit(20);");
-    const users = await User.find({ _id: { $ne: me }, $or: [
-      { username: { $regex: escaped, $options: "i" } }, { fullName: { $regex: escaped, $options: "i" } }
-    ] }).select("fullName username profilePic bio").limit(20);
-    const ids = users.map(u => u._id);
-    const requests = await ContactRequest.find({ $or: [{ sender: me, recipient: { $in: ids } }, { recipient: me, sender: { $in: ids } }] });
+    const escaped = searchTerm.replace(/[.*+?^\${}()|[\]\\]/g, "\\$&");
+    const users = await User.find({
+      _id: { $ne: me },
+      $or: [
+        { username: { $regex: escaped, $options: "i" } },
+        { fullName: { $regex: escaped, $options: "i" } },
+      ],
+    }).select("fullName username profilePic bio").limit(20);
+    const ids = users.map((u) => u._id);
+    const requests = await ContactRequest.find({
+      $or: [
+        { sender: me, recipient: { $in: ids } },
+        { recipient: me, sender: { $in: ids } },
+      ],
+    });
     const statusById = {};
-    requests.forEach(r => { const other = r.sender.toString() === me.toString() ? r.recipient : r.sender; statusById[other.toString()] = r.status === "accepted" ? "contact" : r.sender.toString() === me.toString() ? "sent" : r.status === "pending" ? "received" : "rejected"; });
-    res.json({ success: true, users: users.map(u => ({ ...u.toObject(), relationship: statusById[u._id.toString()] || "none" })) });
-  } catch (e) { res.status(500).json({ success: false, message: "Search failed" }); }
+    requests.forEach((request) => {
+      const other = request.sender.toString() === me.toString() ? request.recipient : request.sender;
+      statusById[other.toString()] = request.status === "accepted"
+        ? "contact"
+        : request.sender.toString() === me.toString()
+          ? "sent"
+          : request.status === "pending" ? "received" : "rejected";
+    });
+    return res.json({
+      success: true,
+      users: users.map((user) => ({
+        ...user.toObject(),
+        relationship: statusById[user._id.toString()] || "none",
+      })),
+    });
+  } catch (error) {
+    console.error("Search People Error:", error);
+    return res.status(500).json({ success: false, message: "Search failed" });
+  }
 };
-
 export const sendContactRequest = async (req, res) => {
   try {
     const recipient = req.params.id, sender = req.user._id;
