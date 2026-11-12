@@ -3242,3 +3242,75 @@ body {
   .qc-app .qc-chat .qc-chat-theme-tile{min-height:68px;padding:7px;gap:6px}
   .qc-theme-tile-art{height:27px}
 }
+
+/* QuickChat Signature Themes — premium surfaces, depth, texture and matching bubbles */
+.qc-app .qc-chat[data-wallpaper] .qc-message-list{background:transparent!important}
+.qc-app .qc-chat[data-wallpaper] .qc-chat-header,.qc-app .qc-chat[data-wallpaper] .qc-composer-wrap{backdrop-filter:blur(22px) saturate(135%)!important;-webkit-backdrop-filter:blur(22px) saturate(135%)!important;border-color:rgba(255,255,255,.085)!important}
+.qc-app .qc-chat[data-wallpaper] .qc-message{border:1px solid rgba(255,255,255,.095)!important;box-shadow:0 5px 18px rgba(0,0,0,.10),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(10px)}
+.qc-app .qc-chat[data-wallpaper] .qc-message.mine{color:#fff!important;border-color:rgba(255,255,255,.16)!important;box-shadow:0 7px 22px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.2)!important}
+.qc-app .qc-chat[data-wallpaper] .qc-message.theirs{color:#f7f4ff!important}
+.qc-app .qc-chat[data-wallpaper] .qc-composer{border-color:rgba(255,255,255,.13)!important;background:rgba(12,13,25,.52)!important;box-shadow:0 8px 30px rgba(0,0,0,.12),inset 0 1px rgba(255,255,255,.06)!important}
+.qc-app .qc-chat[data-wallpaper="default"]{background:radial-gradient(ellipse 70% 42% at 100% 0%,rgba(137,104,220,.20),transparent 72%),radial-gradient(ellipse 55% 45% at 0% 100%,rgba(68,87,148,.13),transparent 72%),linear-gradient(145deg,#11101d,#151324 52%,#0d111d)!important}
+.qc-app .qc-chat[data-wallpaper="default"] .qc-message.mine{background:linear-gradient(135deg,#7865bd,#4b548f)!important}
+.qc-app .qc-chat[data-wallpaper="default"] .qc-message.theirs{background:linear-gradient(135deg,rgba(117,101,151,.22),rgba(42,42,66,.72))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="default"]{background:radial-gradient(ellipse at 100% 0%,rgba(137,104,220,.13),transparent 72%),linear-gradient(145deg,#f5f3fa,#eeedf6)!important}
+.qc-app .qc-chat[data-wallpaper="midnight"]{background:radial-gradient(ellipse 55% 42% at 78% 0%,rgba(151,111,255,.27),transparent 70%),radial-gradient(ellipse 42% 50% at 8% 90%,rgba(67,82,161,.20),transparent 72%),repeating-linear-gradient(125deg,transparent 0 42px,rgba(190,174,255,.018) 43px 44px),linear-gradient(145deg,#090d1d,#1a1732 56%,#0b1020)!important}
+.qc-app .qc-chat[data-wallpaper="midnight"] .qc-message.mine{background:linear-gradient(130deg,#9275e7,#514c9a)!important}
+.qc-app .qc-chat[data-wallpaper="midnight"] .qc-message.theirs{background:linear-gradient(135deg,rgba(111,92,157,.28),rgba(24,28,52,.82))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="midnight"]{background:radial-gradient(ellipse at 78% 0%,rgba(151,111,255,.18),transparent 72%),linear-gradient(145deg,#eeebfa,#e5e5f2)!important}
+.qc-app .qc-chat[data-wallpaper="ocean"]{background:radial-gradient(ellipse 65% 38% at 92% 0%,rgba(50,201,220,.25),transparent 72%),radial-gradient(ellipse 50% 48% at 0% 100%,rgba(32,105,174,.26),transparent 72%),linear-gradient(155deg,#071724,#0d3042 52%,#091827)!important}
+.qc-app .qc-chat[data-wallpaper="ocean"] .qc-message.mine{background:linear-gradient(130deg,#39aabd,#286c9e)!important}
+.qc-app .qc-chat[data-wallpaper="ocean"] .qc-message.theirs{background:linear-gradient(135deg,rgba(50,139,163,.30),rgba(8,38,57,.82))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="ocean"]{background:radial-gradient(ellipse at 92% 0%,rgba(50,201,220,.18),transparent 72%),linear-gradient(155deg,#e7f5f7,#e1edf6)!important}
+.qc-app .qc-chat[data-wallpaper="forest"]{background:radial-gradient(ellipse 55% 45% at 88% 4%,rgba(105,198,139,.23),transparent 72%),radial-gradient(ellipse 50% 48% at 4% 100%,rgba(28,118,92,.24),transparent 70%),repeating-linear-gradient(65deg,transparent 0 58px,rgba(174,232,190,.018) 59px 60px),linear-gradient(145deg,#091a17,#12352b 54%,#0a1919)!important}
+.qc-app .qc-chat[data-wallpaper="forest"] .qc-message.mine{background:linear-gradient(130deg,#54b987,#26775e)!important}
+.qc-app .qc-chat[data-wallpaper="forest"] .qc-message.theirs{background:linear-gradient(135deg,rgba(67,132,101,.28),rgba(13,43,35,.84))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="forest"]{background:radial-gradient(ellipse at 88% 4%,rgba(105,198,139,.18),transparent 72%),linear-gradient(145deg,#edf7ef,#e1f0e8)!important}
+.qc-app .qc-chat[data-wallpaper="sunset"]{background:radial-gradient(ellipse 66% 45% at 90% 0%,rgba(245,153,119,.28),transparent 72%),radial-gradient(ellipse 55% 55% at 0% 100%,rgba(156,82,142,.23),transparent 72%),linear-gradient(150deg,#1b111c,#38202e 55%,#19121e)!important}
+.qc-app .qc-chat[data-wallpaper="sunset"] .qc-message.mine{background:linear-gradient(130deg,#e99b83,#a65c83)!important}
+.qc-app .qc-chat[data-wallpaper="sunset"] .qc-message.theirs{background:linear-gradient(135deg,rgba(162,94,119,.28),rgba(50,29,48,.84))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="sunset"]{background:radial-gradient(ellipse at 90% 0%,rgba(245,153,119,.19),transparent 72%),linear-gradient(150deg,#fbf0ed,#f5e8f0)!important}
+.qc-app .qc-chat[data-wallpaper="aurora"]{background:radial-gradient(ellipse 42% 60% at 10% 8%,rgba(69,228,190,.25),transparent 72%),radial-gradient(ellipse 58% 42% at 85% 14%,rgba(133,103,245,.32),transparent 72%),radial-gradient(ellipse 50% 55% at 70% 100%,rgba(50,143,190,.20),transparent 72%),linear-gradient(145deg,#071c25,#17132e 55%,#0a1726)!important}
+.qc-app .qc-chat[data-wallpaper="aurora"] .qc-message.mine{background:linear-gradient(120deg,#46bfae,#7662d0)!important}
+.qc-app .qc-chat[data-wallpaper="aurora"] .qc-message.theirs{background:linear-gradient(135deg,rgba(75,151,161,.26),rgba(39,34,77,.84))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="aurora"]{background:radial-gradient(ellipse at 10% 8%,rgba(69,228,190,.17),transparent 72%),radial-gradient(ellipse at 85% 14%,rgba(133,103,245,.16),transparent 72%),linear-gradient(145deg,#e9f7f4,#efebfa)!important}
+.qc-app .qc-chat[data-wallpaper="stardust"]{background:radial-gradient(2px 2px at 12% 18%,rgba(224,216,255,.72) 98%,transparent),radial-gradient(1px 1px at 27% 72%,rgba(181,169,255,.72) 98%,transparent),radial-gradient(2px 2px at 76% 28%,rgba(255,255,255,.62) 98%,transparent),radial-gradient(1px 1px at 88% 80%,rgba(193,184,255,.65) 98%,transparent),radial-gradient(ellipse 55% 45% at 78% 0%,rgba(109,88,177,.25),transparent 72%),linear-gradient(145deg,#080d1b,#17152c 55%,#090f1d)!important}
+.qc-app .qc-chat[data-wallpaper="stardust"] .qc-message.mine{background:linear-gradient(130deg,#7774bd,#444d80)!important}
+.qc-app .qc-chat[data-wallpaper="stardust"] .qc-message.theirs{background:linear-gradient(135deg,rgba(94,91,143,.28),rgba(18,24,48,.86))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="stardust"]{background:radial-gradient(ellipse at 78% 0%,rgba(109,88,177,.14),transparent 72%),linear-gradient(145deg,#f0f0f8,#e9ebf5)!important}
+.qc-app .qc-chat[data-wallpaper="geometry"]{background:linear-gradient(135deg,transparent 48.8%,rgba(194,177,255,.065) 49.5%,rgba(194,177,255,.065) 50.2%,transparent 51%) 0 0/46px 46px,linear-gradient(45deg,transparent 48.8%,rgba(194,177,255,.045) 49.5%,rgba(194,177,255,.045) 50.2%,transparent 51%) 0 0/46px 46px,radial-gradient(ellipse 60% 44% at 90% 0%,rgba(119,91,197,.25),transparent 72%),linear-gradient(145deg,#10101e,#1c1932 56%,#0d1420)!important}
+.qc-app .qc-chat[data-wallpaper="geometry"] .qc-message.mine{background:linear-gradient(130deg,#8870d5,#4b5b9a)!important}
+.qc-app .qc-chat[data-wallpaper="geometry"] .qc-message.theirs{background:linear-gradient(135deg,rgba(107,95,151,.25),rgba(26,27,48,.86))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="geometry"]{background:linear-gradient(135deg,transparent 48.8%,rgba(119,91,197,.055) 49.5%,rgba(119,91,197,.055) 50.2%,transparent 51%) 0 0/46px 46px,linear-gradient(145deg,#f2effa,#e9edf6)!important}
+.qc-app .qc-chat[data-wallpaper="glass"]{background:radial-gradient(ellipse 52% 56% at 12% 10%,rgba(90,206,211,.24),transparent 72%),radial-gradient(ellipse 60% 48% at 92% 88%,rgba(137,123,232,.26),transparent 72%),linear-gradient(135deg,#0a1b29,#172a3c 50%,#12162a)!important}
+.qc-app .qc-chat[data-wallpaper="glass"] .qc-message.mine{background:linear-gradient(130deg,#54bdc4,#696cc2)!important}
+.qc-app .qc-chat[data-wallpaper="glass"] .qc-message.theirs{background:linear-gradient(135deg,rgba(86,157,174,.26),rgba(24,39,59,.82))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="glass"]{background:radial-gradient(ellipse at 12% 10%,rgba(90,206,211,.16),transparent 72%),radial-gradient(ellipse at 92% 88%,rgba(137,123,232,.15),transparent 72%),linear-gradient(135deg,#eaf7f7,#edf0fa)!important}
+.qc-app .qc-chat[data-wallpaper="minimal"]{background:radial-gradient(ellipse 62% 42% at 90% 0%,rgba(183,190,205,.13),transparent 72%),linear-gradient(145deg,#11141a,#20232b 55%,#11141a)!important}
+.qc-app .qc-chat[data-wallpaper="minimal"] .qc-message.mine{background:linear-gradient(130deg,#737e91,#485264)!important}
+.qc-app .qc-chat[data-wallpaper="minimal"] .qc-message.theirs{background:linear-gradient(135deg,rgba(123,132,148,.23),rgba(35,39,48,.86))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="minimal"]{background:radial-gradient(ellipse at 90% 0%,rgba(183,190,205,.15),transparent 72%),linear-gradient(145deg,#f2f3f5,#e9ebef)!important}
+.qc-app .qc-chat[data-wallpaper="dreamscape"]{background:radial-gradient(ellipse 60% 50% at 8% 8%,rgba(190,151,255,.27),transparent 72%),radial-gradient(ellipse 58% 52% at 94% 86%,rgba(232,133,181,.22),transparent 72%),linear-gradient(145deg,#1a142b,#302039 54%,#171827)!important}
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message.mine{background:linear-gradient(130deg,#ae8be6,#c875a6)!important}
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message.theirs{background:linear-gradient(135deg,rgba(155,116,175,.26),rgba(48,31,54,.84))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="dreamscape"]{background:radial-gradient(ellipse at 8% 8%,rgba(190,151,255,.17),transparent 72%),radial-gradient(ellipse at 94% 86%,rgba(232,133,181,.15),transparent 72%),linear-gradient(145deg,#f5effb,#f9edf3)!important}
+.qc-app .qc-chat[data-wallpaper="ember"]{background:radial-gradient(ellipse 60% 46% at 92% 4%,rgba(240,143,91,.27),transparent 72%),radial-gradient(ellipse 50% 48% at 0% 100%,rgba(157,69,67,.22),transparent 72%),linear-gradient(145deg,#1a1113,#332024 55%,#171317)!important}
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message.mine{background:linear-gradient(130deg,#dc9568,#a95358)!important}
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message.theirs{background:linear-gradient(135deg,rgba(155,95,79,.27),rgba(48,28,31,.86))!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="ember"]{background:radial-gradient(ellipse at 92% 4%,rgba(240,143,91,.16),transparent 72%),linear-gradient(145deg,#faf0e9,#f4e9e9)!important}
+
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper] .qc-message.theirs{color:#302b40!important;background:rgba(255,255,255,.78)!important;border-color:rgba(75,65,105,.12)!important;box-shadow:0 5px 18px rgba(55,45,80,.07),inset 0 1px #fff!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper] .qc-composer{background:rgba(255,255,255,.72)!important;border-color:rgba(70,60,100,.14)!important;box-shadow:0 8px 28px rgba(55,45,80,.07),inset 0 1px #fff!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper] .qc-chat-header,.qc-app[data-theme="light"] .qc-chat[data-wallpaper] .qc-composer-wrap{border-color:rgba(70,60,100,.12)!important}
+.qc-theme-tile-art.default{background:radial-gradient(ellipse at 90% 0%,#9a83d5,transparent 55%),linear-gradient(145deg,#29213e,#11101d)!important}
+.qc-theme-tile-art.midnight{background:radial-gradient(ellipse at 80% 0%,#a88bfa,transparent 58%),linear-gradient(145deg,#1a1732,#090d1d)!important}
+.qc-theme-tile-art.ocean{background:radial-gradient(ellipse at 90% 0%,#55d5e3,transparent 58%),linear-gradient(145deg,#0d3042,#071724)!important}
+.qc-theme-tile-art.forest{background:radial-gradient(ellipse at 85% 0%,#8be0a7,transparent 58%),linear-gradient(145deg,#12352b,#091a17)!important}
+.qc-theme-tile-art.sunset{background:radial-gradient(ellipse at 90% 0%,#ffb28d,transparent 58%),linear-gradient(145deg,#38202e,#1b111c)!important}
+.qc-theme-tile-art.aurora{background:radial-gradient(ellipse at 10% 20%,#58e2bf,transparent 55%),radial-gradient(ellipse at 90% 10%,#9a7cff,transparent 60%),linear-gradient(145deg,#17132e,#071c25)!important}
+.qc-theme-tile-art.stardust{background:radial-gradient(circle at 70% 25%,#e6ddff 0 2px,transparent 3px),radial-gradient(circle at 30% 65%,#a99cf1 0 1px,transparent 2px),linear-gradient(145deg,#17152c,#080d1b)!important}
+.qc-theme-tile-art.geometry{background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(190,175,255,.45) 10px 11px),linear-gradient(145deg,#1c1932,#10101e)!important}
+.qc-theme-tile-art.glass{background:radial-gradient(ellipse at 10% 10%,#68d4d6,transparent 55%),radial-gradient(ellipse at 90% 90%,#9185ef,transparent 55%),linear-gradient(135deg,#172a3c,#0a1b29)!important}
+.qc-theme-tile-art.minimal{background:radial-gradient(ellipse at 90% 0%,#aab3c4,transparent 55%),linear-gradient(145deg,#20232b,#11141a)!important}
+.qc-theme-tile-art.dreamscape{background:radial-gradient(ellipse at 10% 10%,#d0afff,transparent 55%),radial-gradient(ellipse at 90% 90%,#ed9fc2,transparent 55%),linear-gradient(145deg,#302039,#1a142b)!important}
+.qc-theme-tile-art.ember{background:radial-gradient(ellipse at 90% 5%,#ffb078,transparent 55%),linear-gradient(145deg,#332024,#1a1113)!important}
