@@ -43,6 +43,7 @@ const Sidebar = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showRequests, setShowRequests] = useState(false);
   const navigate = useNavigate();
 
   const loadRequests = async () => {
@@ -162,94 +163,43 @@ const Sidebar = () => {
     <aside
       className={`qc-sidebar h-full min-h-0 p-4 md:p-5 rounded-r-2xl overflow-y-auto text-white flex flex-col ${selectedUser ? "max-md:hidden" : ""}`}
     >
-      <div className="qc-sidebar-top flex items-center justify-between gap-3 pb-5">
-        <div className="min-w-0">
-          <div className="qc-sidebar-brand text-2xl font-bold tracking-tight">
-            Quick<span className="qc-gradient-text">Chat</span>
+      <div className="qc-sidebar-top flex flex-col gap-4 pb-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="qc-sidebar-brand text-2xl font-bold tracking-tight">Quick<span className="qc-gradient-text">Chat</span></div>
+            <p className="qc-sidebar-tagline mt-0.5 text-xs text-white/45">Your conversations, closer.</p>
           </div>
-          <p className="qc-sidebar-tagline mt-0.5 text-xs text-white/45">Your conversations, closer.</p>
-        </div>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setShowAccountMenu((open) => !open)}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] p-1.5 transition hover:border-violet-300/25 hover:bg-white/[0.08]"
-            aria-label="Open account menu"
-            aria-expanded={showAccountMenu}
-          >
-            <span className="relative">
-              <img
-                src={authUser?.profilePic || assets.avatar_icon}
-                alt="Your profile"
-                className="h-9 w-9 rounded-full object-cover"
-              />
-              <i className="qc-online-dot online" />
-            </span>
-            <span className="hidden min-w-0 text-left sm:block">
-              <span className="block max-w-[100px] truncate text-xs font-semibold">
-                {authUser?.fullName || "Your account"}
+          <div className="relative">
+            <button type="button" onClick={() => setShowAccountMenu((open) => !open)} className="qc-profile-trigger flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] p-1.5 transition hover:border-violet-300/25 hover:bg-white/[0.08]" aria-label="Open account menu" aria-expanded={showAccountMenu}>
+              <span className="relative">
+                <img src={authUser?.profilePic || assets.avatar_icon} alt="Your profile" className="h-10 w-10 rounded-full object-cover" />
+                <i className="qc-online-dot online" />
               </span>
-              <span className="block text-[10px] text-emerald-300">Online</span>
-            </span>
-            <span className="px-1 text-sm text-white/55">⌄</span>
-          </button>
-          {showAccountMenu && (
-            <>
-              <button
-                type="button"
-                aria-label="Close account menu"
-                className="fixed inset-0 z-20 cursor-default"
-                onClick={() => setShowAccountMenu(false)}
-              />
-              <div className="qc-account-menu absolute right-0 top-full z-30 mt-2 w-48 rounded-xl border border-white/10 bg-[#211b35] p-2 shadow-2xl">
-                <button
-                  type="button"
-                  onClick={openProfile}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"
-                >
-                  <span>♙</span> Edit profile
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAccountMenu(false);
-                    setShowSettings(true);
-                  }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"
-                >
-                  <span>⚙</span> Settings
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAccountMenu(false);
-                    logout();
-                  }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-rose-300 hover:bg-rose-400/10"
-                >
-                  <span>↪</span> Log out
-                </button>
-              </div>
-            </>
-          )}
+              <span className="min-w-0 text-left">
+                <span className="block max-w-[112px] truncate text-xs font-semibold">{authUser?.fullName || "Your account"}</span>
+                <span className="block text-[10px] text-emerald-300">Online</span>
+              </span>
+              <span className="px-1 text-sm text-white/55">⌄</span>
+            </button>
+            {showAccountMenu && (
+              <>
+                <button type="button" aria-label="Close account menu" className="fixed inset-0 z-20 cursor-default" onClick={() => setShowAccountMenu(false)} />
+                <div className="qc-account-menu absolute right-0 top-full z-30 mt-2 w-48 rounded-xl border border-white/10 bg-[#211b35] p-2 shadow-2xl">
+                  <button type="button" onClick={openProfile} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"><span>♙</span> Edit profile</button>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); setShowSettings(true); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"><span>⚙</span> Settings</button>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); logout(); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-rose-300 hover:bg-rose-400/10"><span>↪</span> Log out</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="qc-sidebar-nav grid grid-cols-4 gap-2" aria-label="Sidebar navigation">
+          <button type="button" className="qc-sidebar-nav-item active" aria-current="page"><span>▤</span><small>Chats</small></button>
+          <button type="button" className="qc-sidebar-nav-item" onClick={() => setShowDiscover((open) => { if (open) setQuery(""); else setActiveFilter("all"); return !open; })} aria-expanded={showDiscover}><span>＋</span><small>Find people</small></button>
+          <button type="button" className={`qc-sidebar-nav-item ${showRequests ? "active" : ""}`} onClick={() => setShowRequests((open) => !open)} aria-expanded={showRequests}><span>✉</span><small>Requests{requests.received.length ? ` · ${requests.received.length}` : ""}</small></button>
+          <button type="button" className="qc-sidebar-nav-item" onClick={() => setShowSettings(true)}><span>⚙</span><small>Settings</small></button>
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={() => {
-          setShowDiscover((isOpen) => {
-            if (isOpen) setQuery("");
-            else setActiveFilter("all");
-            return !isOpen;
-          });
-        }}
-        className="qc-primary-btn qc-discover-button mb-3 flex w-full items-center justify-center gap-2"
-        aria-expanded={showDiscover}
-        aria-controls="quickchat-discover-panel"
-      >
-        <span className="qc-discover-icon text-base leading-none">＋</span> <span>Find people</span><span className="qc-discover-arrow" aria-hidden="true">↗</span>
-      </button>
 
       {showDiscover && (
         <section
@@ -338,7 +288,7 @@ const Sidebar = () => {
         </section>
       )}
 
-      {!!requests.received?.length && (
+      {showRequests && !!requests.received?.length && (
         <section className="qc-panel qc-sidebar-reveal mb-4 p-3">
           <div className="mb-2 flex items-center justify-between">
             <div>
@@ -384,7 +334,7 @@ const Sidebar = () => {
         </section>
       )}
 
-      <div className="mb-3 flex items-center justify-between gap-2">
+      <div className="qc-sidebar-messages-heading mb-3 flex items-center justify-between gap-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[.16em] text-white/65">
             Messages
@@ -522,7 +472,7 @@ const Sidebar = () => {
                   ? "Find people and send an invitation to start chatting."
                   : "Try another filter to see your conversations."}
             </p>
-            {activeFilter === "all" && !query.trim() && (
+            {activeFilter === "all" && !contactQuery.trim() && (
               <button
                 type="button"
                 onClick={() => setShowDiscover(true)}
@@ -534,6 +484,9 @@ const Sidebar = () => {
           </div>
         )}
       </div>
+      <button type="button" onClick={() => setShowDiscover((open) => { if (open) setQuery(""); else setActiveFilter("all"); return !open; })} className="qc-sidebar-bottom-discover mt-3 flex w-full items-center justify-center gap-3" aria-expanded={showDiscover}>
+        <span className="qc-sidebar-bottom-plus">＋</span><span>Find People</span><span className="qc-sidebar-bottom-arrow">↗</span>
+      </button>
       {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} selectedUser={selectedUser} />}
     </aside>
   );
