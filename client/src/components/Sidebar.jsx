@@ -261,7 +261,7 @@ const Sidebar = () => {
               <span className="qc-discover-mark" aria-hidden="true">⌕</span>
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-white">Find your people</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-slate-300/75">Connect with someone using their exact username.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-300/75">Find friends by their QuickChat username.</p>
               </div>
             </div>
             <button
@@ -291,7 +291,6 @@ const Sidebar = () => {
             />
             {query && <button type="button" onClick={() => setQuery("")} className="qc-discover-clear" aria-label="Clear username">×</button>}
           </label>
-          <p className="qc-discover-hint mt-2">Enter a username, not a display name</p>
           <div className="qc-discover-results mt-3 max-h-48 space-y-2 overflow-y-auto">
             {results.map((user) => (
               <div
