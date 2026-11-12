@@ -58,7 +58,7 @@ const ChatContainer = () => {
     searchMessages,
     togglePinMessage,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, preferences } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
@@ -535,10 +535,10 @@ const ChatContainer = () => {
                   </span>
                 )}
                 <div className="qc-message-meta flex items-center justify-between gap-5 mt-1">
-                  <span className="text-[10px] text-white/45">
+                  {preferences.showTimestamps && <span className="text-[10px] text-white/45">
                     {formatMessageTime(msg.createdAt)}
                     {msg.editedAt ? " · edited" : ""}
-                  </span>
+                  </span>}
                   {mine && (
                     <span className="text-[10px] text-white/55">
                       {msg.readAt || msg.seen
@@ -612,6 +612,10 @@ const ChatContainer = () => {
             value={input}
             onKeyDown={(e) => {
               if (e.key === "Escape") setReplyTo(null);
+              if (preferences.enterToSend && e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                e.preventDefault();
+                handleSendMessage();
+              }
             }}
             placeholder="Write a message…"
             aria-label="Write a message"
