@@ -16,6 +16,24 @@ export const AuthProvider = ({ children }) => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
     const [socketStatus, setSocketStatus] = useState("disconnected");
+    const [theme, setTheme] = useState(() => localStorage.getItem("qc-theme") || "dark");
+    const [accent, setAccent] = useState(() => localStorage.getItem("qc-accent") || "violet");
+    const [desktopNotifications, setDesktopNotifications] = useState(() => localStorage.getItem("qc-desktop-notifications") === "true");
+    const [wallpapers, setWallpapers] = useState(() => {
+        try { return JSON.parse(localStorage.getItem("qc-chat-wallpapers") || "{}"); }
+        catch { return {}; }
+    });
+
+    const updateTheme = (value) => { setTheme(value); localStorage.setItem("qc-theme", value); };
+    const updateAccent = (value) => { setAccent(value); localStorage.setItem("qc-accent", value); };
+    const updateDesktopNotifications = (value) => { setDesktopNotifications(value); localStorage.setItem("qc-desktop-notifications", String(value)); };
+    const updateWallpaper = (conversationId, value) => {
+        setWallpapers((current) => {
+            const next = { ...current, [conversationId]: value };
+            localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
+            return next;
+        });
+    };
 
     const connectSocket = (userData) => {
         // Connect to the persistent Express + Socket.IO backend.
@@ -180,6 +198,9 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateProfile,
+        theme, updateTheme, accent, updateAccent,
+        desktopNotifications, updateDesktopNotifications,
+        wallpapers, updateWallpaper,
     };
 
     return (
