@@ -16,6 +16,7 @@ export const ChatProvider = ({ children }) => {
 
     const selectedRef = useRef(null);
     const messagesRef = useRef(messages);
+    const typingTimersRef = useRef({});
     messagesRef.current = messages;
 
     const isChatActive = () =>
@@ -274,10 +275,16 @@ export const ChatProvider = ({ children }) => {
 
         // Typing status
         const onTyping = ({ from, isTyping }) => {
-            setTypingUsers(prev => ({
-                ...prev,
-                [from]: isTyping
-            }));
+            clearTimeout(typingTimersRef.current[from]);
+            setTypingUsers((prev) => ({ ...prev, [from]: Boolean(isTyping) }));
+            if (isTyping) {
+                typingTimersRef.current[from] = setTimeout(() => {
+                    setTypingUsers((prev) => ({ ...prev, [from]: false }));
+                    delete typingTimersRef.current[from];
+                }, 4000);
+            } else {
+                delete typingTimersRef.current[from];
+            }
         };
 
         // Online presence
@@ -323,6 +330,8 @@ export const ChatProvider = ({ children }) => {
 
         // Cleanup listeners
         return () => {
+            Object.values(typingTimersRef.current).forEach(clearTimeout);
+            typingTimersRef.current = {};
             socket.off("connect", syncAfterReconnect);
             socket.off("newMessage", onNew);
             socket.off("messageUpdated", onUpdate);
