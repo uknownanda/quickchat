@@ -4,7 +4,7 @@ import { AuthContext } from '../../context/AuthContext'
 const Icon = ({ children }) => <span aria-hidden="true" className="qc-auth-icon">{children}</span>
 
 const LoginPage = () => {
-  const [mode, setMode] = useState('signup')
+  const [mode, setMode] = useState('login')
   const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [identifier, setIdentifier] = useState('')
@@ -93,8 +93,8 @@ const LoginPage = () => {
             </div>
 
             <div className="qc-auth-switch" role="tablist" aria-label="Account access">
-              <button type="button" role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'active' : ''} onClick={() => switchMode('signup')}>Create account</button>
               <button type="button" role="tab" aria-selected={mode === 'login'} className={mode === 'login' ? 'active' : ''} onClick={() => switchMode('login')}>Sign in</button>
+              <button type="button" role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'active' : ''} onClick={() => switchMode('signup')}>Create account</button>
             </div>
 
             <form onSubmit={onSubmit} className="qc-auth-fields">
