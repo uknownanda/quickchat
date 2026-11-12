@@ -79,6 +79,7 @@ const ChatContainer = () => {
   const [editText, setEditText] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [showContactAbout, setShowContactAbout] = useState(false);
+  const [wallpaperMenuOpen, setWallpaperMenuOpen] = useState(false);
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
     const text = input.trim();
@@ -265,19 +266,46 @@ const ChatContainer = () => {
   )}
 </p>
         </button>
-        <select
-          aria-label="Conversation wallpaper"
-          title="Change chat wallpaper"
-          value={wallpapers[selectedUser._id] || "default"}
-          onChange={(event) => updateWallpaper(selectedUser._id, event.target.value)}
-          className="qc-wallpaper-select"
-        >
-          <option value="default">Default</option>
-          <option value="midnight">Midnight</option>
-          <option value="ocean">Ocean</option>
-          <option value="forest">Forest</option>
-          <option value="sunset">Sunset</option>
-        </select>
+        <div className="qc-chat-theme-picker">
+          <button
+            type="button"
+            className="qc-chat-theme-trigger"
+            aria-label="Change conversation theme"
+            aria-expanded={wallpaperMenuOpen}
+            onClick={() => setWallpaperMenuOpen((open) => !open)}
+            title="Change conversation theme"
+          >
+            <span className={`qc-theme-trigger-swatch ${wallpapers[selectedUser._id] || "default"}`} />
+            <span className="qc-theme-trigger-label">Theme</span>
+            <span className="qc-theme-trigger-chevron">⌄</span>
+          </button>
+          {wallpaperMenuOpen && (
+            <div className="qc-chat-theme-menu" role="group" aria-label="Conversation themes">
+              {[
+                { id: "default", label: "Classic", detail: "Original QuickChat look" },
+                { id: "midnight", label: "Midnight", detail: "Violet after dark" },
+                { id: "ocean", label: "Ocean", detail: "Cool blue atmosphere" },
+                { id: "forest", label: "Forest", detail: "Soft green tones" },
+                { id: "sunset", label: "Sunset", detail: "Warm evening colors" },
+              ].map((item) => (
+                <button
+                  type="button"
+                  key={item.id}
+                  className={`qc-chat-theme-item ${(wallpapers[selectedUser._id] || "default") === item.id ? "active" : ""}`}
+                  onClick={() => {
+                    updateWallpaper(selectedUser._id, item.id);
+                    setWallpaperMenuOpen(false);
+                  }}
+                  aria-pressed={(wallpapers[selectedUser._id] || "default") === item.id}
+                >
+                  <span className={`qc-theme-item-swatch ${item.id}`} />
+                  <span className="qc-theme-item-copy"><b>{item.label}</b><small>{item.detail}</small></span>
+                  <span className="qc-theme-item-check">{(wallpapers[selectedUser._id] || "default") === item.id ? "✓" : ""}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           className="qc-icon-btn"
           onClick={() => {
