@@ -8,9 +8,9 @@ import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 
 const App = () => {
-  const { authUser } = useContext(AuthContext)
+  const { authUser, theme, accent } = useContext(AuthContext)
   return (
-    <div className="bg-[url('/bgImage.svg')] bg-contain">
+    <div className="qc-app bg-[url('/bgImage.svg')] bg-contain" data-theme={theme} data-accent={accent}>
       <Toaster />
       <Routes>
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
