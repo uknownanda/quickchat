@@ -243,7 +243,7 @@ const Sidebar = () => {
             return !isOpen;
           });
         }}
-        className="qc-primary-btn mb-3 flex w-full items-center justify-center gap-2 !text-white"
+        className="qc-primary-btn mb-3 flex w-full items-center justify-center gap-2"
         aria-expanded={showDiscover}
         aria-controls="quickchat-discover-panel"
       >
