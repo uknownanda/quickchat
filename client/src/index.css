@@ -4006,3 +4006,224 @@ body {
   .qc-menu-trigger{min-width:78px;height:36px;padding:0 9px}
   .qc-main-menu{width:205px!important}
 }
+
+
+/* ── Settings refresh: elevated workspace, clearer hierarchy, responsive controls ── */
+.qc-settings-overlay{
+  background:rgba(5,7,18,.76)!important;
+  backdrop-filter:blur(20px) saturate(125%)!important;
+}
+.qc-settings-shell{
+  width:min(1080px,calc(100vw - 48px))!important;
+  height:min(760px,calc(100dvh - 48px))!important;
+  border:1px solid rgba(145,160,225,.22)!important;
+  border-radius:26px!important;
+  background:#0e1222!important;
+  box-shadow:0 38px 120px rgba(0,0,0,.62),0 0 0 1px rgba(129,111,218,.06),inset 0 1px rgba(255,255,255,.07)!important;
+}
+.qc-settings-nav{
+  padding:26px 17px 18px!important;
+  border-right:1px solid rgba(151,169,224,.12)!important;
+  background:
+    radial-gradient(ellipse 100% 35% at 0% 0%,rgba(85,111,220,.19),transparent 75%),
+    linear-gradient(165deg,#171d35,#111629 68%,#131326)!important;
+}
+.qc-settings-brand{padding:0 7px 34px!important}
+.qc-settings-mark{
+  width:40px!important;height:40px!important;border-radius:14px!important;
+  background:linear-gradient(145deg,#8b78ff,#397fdf)!important;
+  box-shadow:0 8px 24px rgba(83,100,221,.28)!important;
+}
+.qc-settings-brand b{font-size:16px!important;color:#f4f6ff}
+.qc-settings-brand small{font-size:8px!important;letter-spacing:.17em!important;color:#8592b5!important}
+.qc-settings-nav-label{color:#7785a7!important;font-size:9px!important;letter-spacing:.18em!important}
+.qc-settings-nav-links{gap:5px!important}
+.qc-settings-nav-item{
+  min-height:54px!important;padding:8px 9px!important;border-radius:13px!important;
+  border-color:transparent!important;color:#a9b4d0!important;
+}
+.qc-settings-nav-item:hover{background:rgba(126,148,218,.09)!important;color:#f1f4ff!important}
+.qc-settings-nav-item.active{
+  border-color:rgba(133,132,255,.28)!important;
+  background:linear-gradient(105deg,rgba(109,91,222,.27),rgba(51,120,206,.12))!important;
+  color:#fff!important;
+  box-shadow:inset 3px 0 #8c85ff,0 7px 18px rgba(0,0,0,.12)!important;
+}
+.qc-settings-nav-icon{
+  width:33px!important;height:33px!important;border-radius:11px!important;
+  background:rgba(255,255,255,.055)!important;color:#9db9ee!important;
+}
+.qc-settings-nav-item.active .qc-settings-nav-icon{background:rgba(145,128,255,.20)!important;color:#c7c1ff!important}
+.qc-settings-nav-item b{font-size:11px!important}
+.qc-settings-nav-item small{color:#8591b0!important;font-size:9px!important}
+.qc-settings-nav-arrow{color:#a9baff}
+.qc-settings-nav-foot{
+  border-color:rgba(160,176,222,.12)!important;color:#8592ad!important;
+  font-size:9px!important;padding-top:15px!important;
+}
+.qc-settings-main{
+  background:
+    radial-gradient(ellipse 75% 28% at 100% 0%,rgba(92,99,224,.15),transparent 72%),
+    radial-gradient(ellipse 50% 28% at 45% 100%,rgba(38,130,199,.06),transparent 75%),
+    #0e1222!important;
+}
+.qc-settings-header{
+  padding:30px 38px 23px!important;
+  border-color:rgba(151,169,224,.12)!important;
+  background:linear-gradient(105deg,rgba(255,255,255,.018),transparent 70%);
+}
+.qc-settings-eyebrow{color:#9da5ff!important;font-size:9px!important;letter-spacing:.19em!important}
+.qc-settings-header h2{font-size:27px!important;letter-spacing:-.055em!important;color:#f4f6ff}
+.qc-settings-header>div>p:last-child{color:#9aa7c4!important;font-size:11px!important}
+.qc-settings-close{
+  width:37px!important;height:37px!important;border-radius:12px!important;
+  border-color:rgba(163,177,222,.17)!important;background:rgba(255,255,255,.045)!important;
+  transition:transform .18s ease,background .18s ease!important;
+}
+.qc-settings-close:hover{transform:rotate(90deg);background:rgba(255,255,255,.10)!important}
+.qc-settings-content{padding:27px 38px 24px!important;scrollbar-color:#465078 transparent!important}
+.qc-settings-section{
+  margin-bottom:21px!important;padding:19px!important;
+  border:1px solid rgba(148,164,220,.13)!important;border-radius:17px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.035)!important;
+}
+.qc-settings-section-title{margin-bottom:16px!important}
+.qc-settings-section-title h3{font-size:13px!important;color:#f0f3ff!important;letter-spacing:-.015em}
+.qc-settings-section-title p{font-size:10px!important;color:#929fbe!important}
+.qc-theme-cards{gap:13px!important}
+.qc-theme-cards .qc-setting-choice{
+  position:relative;gap:7px!important;padding:12px!important;border-radius:13px!important;
+  border-color:rgba(151,167,220,.16)!important;background:rgba(8,13,29,.45)!important;
+}
+.qc-theme-cards .qc-setting-choice.selected{
+  border-color:rgba(143,132,255,.65)!important;
+  background:linear-gradient(145deg,rgba(108,91,220,.18),rgba(44,112,194,.10))!important;
+  box-shadow:0 0 0 2px rgba(127,111,239,.10),0 8px 22px rgba(0,0,0,.12)!important;
+}
+.qc-theme-preview{height:86px!important;border-radius:10px!important}
+.qc-theme-cards b{font-size:11px!important;color:#f1f3ff}
+.qc-theme-cards small{color:#929fbe!important}
+.qc-accent-grid{gap:8px!important}
+.qc-accent-option{
+  min-height:45px!important;border-radius:12px!important;
+  border-color:rgba(151,167,220,.14)!important;background:rgba(8,13,29,.32)!important;
+  color:#c3cce0!important;transition:transform .18s ease,border-color .18s ease,background .18s ease!important;
+}
+.qc-accent-option:hover{transform:translateY(-1px);border-color:rgba(144,136,255,.45)!important}
+.qc-accent-option.selected{
+  border-color:rgba(143,132,255,.62)!important;
+  background:rgba(108,91,220,.14)!important;color:#f5f3ff!important;
+}
+.qc-setting-row{border-color:rgba(151,169,224,.12)!important;padding:15px 0!important}
+.qc-setting-row h3{font-size:11px!important;color:#e9edfb!important}
+.qc-setting-row p{font-size:9px!important;color:#8d9ab8!important}
+.qc-settings-inline .qc-setting-choice{min-width:62px;border-radius:9px!important}
+.qc-setting-switch:checked{background:linear-gradient(90deg,#7068e9,#398edc)!important}
+.qc-settings-feature-card{
+  border-color:rgba(140,129,255,.25)!important;border-radius:16px!important;
+  background:linear-gradient(115deg,rgba(112,91,226,.17),rgba(51,128,200,.07),rgba(255,255,255,.015))!important;
+}
+.qc-settings-feature-icon{background:linear-gradient(145deg,rgba(142,121,255,.24),rgba(58,133,220,.16))!important;color:#c7c1ff!important}
+.qc-settings-feature-card h3{font-size:13px!important;color:#f2f4ff}
+.qc-settings-feature-card p{font-size:10px!important;color:#9aa6c2!important}
+.qc-settings-primary{border-radius:10px!important;background:linear-gradient(105deg,#7567e8,#397fce)!important;box-shadow:0 7px 18px rgba(67,103,217,.20)!important}
+.qc-privacy-list{border-color:rgba(151,167,220,.15)!important;border-radius:13px!important}
+.qc-privacy-list>div{border-color:rgba(151,167,220,.12)!important}
+.qc-privacy-list b{color:#e2e8f7!important}
+.qc-privacy-list span{color:#95a2bf!important}
+.qc-wallpaper-grid{gap:11px!important}
+.qc-wallpaper-option{
+  padding:8px!important;border-color:rgba(151,167,220,.16)!important;
+  border-radius:13px!important;background:rgba(8,13,29,.34)!important;
+  transition:transform .18s ease,border-color .18s ease!important;
+}
+.qc-wallpaper-option:hover{transform:translateY(-2px);border-color:rgba(143,132,255,.42)!important}
+.qc-wallpaper-option>span{height:66px!important;border-radius:9px!important}
+.qc-wallpaper-option.selected{border-color:rgba(143,132,255,.72)!important;box-shadow:0 0 0 2px rgba(127,111,239,.10)!important}
+.qc-wallpaper-option .qc-wallpaper-meta b{color:#edf1ff}
+.qc-wallpaper-option .qc-wallpaper-meta small{color:#929fbe}
+.qc-settings-empty{color:#eff2ff}
+.qc-settings-empty p{color:#9aa6c2!important}
+.qc-settings-footer{
+  padding:13px 38px!important;border-color:rgba(151,169,224,.12)!important;
+  color:#8794b2!important;background:rgba(7,11,24,.20);
+}
+.qc-settings-footer button{
+  padding:9px 20px!important;border:1px solid rgba(140,131,255,.25);
+  background:linear-gradient(105deg,rgba(112,96,222,.22),rgba(51,127,205,.16))!important;
+  color:#e6eaff!important;border-radius:10px!important;
+}
+.qc-settings-footer button:hover{background:linear-gradient(105deg,rgba(112,96,222,.35),rgba(51,127,205,.25))!important}
+.qc-settings-shell button:focus-visible,.qc-settings-shell input:focus-visible{outline:2px solid #7ecbff!important;outline-offset:3px!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-shell{
+  border-color:#d9e1f1!important;
+  background:#f6f8fd!important;
+  box-shadow:0 30px 100px rgba(38,54,91,.24)!important;
+}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav{
+  background:radial-gradient(ellipse 100% 35% at 0% 0%,rgba(98,137,224,.13),transparent 75%),linear-gradient(165deg,#edf2fc,#e9edf8 72%)!important;
+  border-color:#dce4f2!important;
+}
+.qc-settings-overlay[data-theme="light"] .qc-settings-brand b{color:#273653}
+.qc-settings-overlay[data-theme="light"] .qc-settings-brand small{color:#8290ac}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav-label{color:#8794ad}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav-item{color:#65738e}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav-item.active{
+  color:#2c4773!important;background:linear-gradient(105deg,#e1ebff,#eae8ff)!important;
+  border-color:#c8d8f5!important;box-shadow:inset 3px 0 #6e83e8!important;
+}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav-icon{background:#e1e9f7!important;color:#627daf}
+.qc-settings-overlay[data-theme="light"] .qc-settings-nav-item.active .qc-settings-nav-icon{background:#d9e3ff!important;color:#536bd0}
+.qc-settings-overlay[data-theme="light"] .qc-settings-main{background:radial-gradient(ellipse 75% 28% at 100% 0%,rgba(105,120,224,.09),transparent 72%),#f7f9fd!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-header{border-color:#e2e8f2!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-eyebrow{color:#6c70c8!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-header h2{color:#263653}
+.qc-settings-overlay[data-theme="light"] .qc-settings-section{border-color:#e1e7f1!important;background:linear-gradient(145deg,#fff,#f7f9fd)!important;box-shadow:0 5px 18px rgba(47,65,105,.035)!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-section-title h3{color:#2e3d5b!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-section-title p{color:#8491a9!important}
+.qc-settings-overlay[data-theme="light"] .qc-theme-cards .qc-setting-choice{background:#f7f9fd!important;border-color:#e0e6f1!important}
+.qc-settings-overlay[data-theme="light"] .qc-theme-cards .qc-setting-choice.selected{background:linear-gradient(145deg,#f0edff,#edf5ff)!important;border-color:#b9b4ef!important}
+.qc-settings-overlay[data-theme="light"] .qc-theme-cards b{color:#30405e}
+.qc-settings-overlay[data-theme="light"] .qc-theme-cards small{color:#8792a8}
+.qc-settings-overlay[data-theme="light"] .qc-accent-option{background:#fff!important;border-color:#e1e7f1!important;color:#5d6d89!important}
+.qc-settings-overlay[data-theme="light"] .qc-accent-option.selected{background:#f0efff!important;border-color:#bdb7ef!important;color:#4b4b91!important}
+.qc-settings-overlay[data-theme="light"] .qc-setting-row{border-color:#e7ebf3!important}
+.qc-settings-overlay[data-theme="light"] .qc-setting-row h3{color:#33415e!important}
+.qc-settings-overlay[data-theme="light"] .qc-setting-row p{color:#8995aa!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-feature-card{background:linear-gradient(115deg,#efedff,#edf6ff,#fff)!important;border-color:#dfdef4!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-feature-card h3{color:#34415e!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-feature-card p{color:#75829b!important}
+.qc-settings-overlay[data-theme="light"] .qc-privacy-list{border-color:#e0e6f0!important}
+.qc-settings-overlay[data-theme="light"] .qc-privacy-list>div{border-color:#e7ebf3!important}
+.qc-settings-overlay[data-theme="light"] .qc-privacy-list b{color:#3b4a67!important}
+.qc-settings-overlay[data-theme="light"] .qc-privacy-list span{color:#8290a8!important}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-option{background:#fff!important;border-color:#e1e7f1!important}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-option .qc-wallpaper-meta b{color:#34415e!important}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-option .qc-wallpaper-meta small{color:#8290a8!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-footer{background:#f4f7fc;border-color:#e1e7f1!important}
+.qc-settings-overlay[data-theme="light"] .qc-settings-footer button{background:linear-gradient(105deg,#e8e8ff,#e5f1ff)!important;color:#42568a!important;border-color:#d6def1!important}
+@media(max-width:700px){
+  .qc-settings-shell{width:100%!important;height:100dvh!important;border-radius:0!important}
+  .qc-settings-nav{padding:calc(10px + env(safe-area-inset-top)) 12px 9px!important}
+  .qc-settings-brand{padding-bottom:5px!important}
+  .qc-settings-nav-links{gap:5px!important}
+  .qc-settings-nav-item{min-height:37px!important;padding:5px 9px!important}
+  .qc-settings-header{padding:16px 17px 13px!important}
+  .qc-settings-header h2{font-size:22px!important}
+  .qc-settings-content{padding:15px 14px 20px!important}
+  .qc-settings-section{padding:14px!important;margin-bottom:14px!important;border-radius:14px!important}
+  .qc-settings-footer{padding:10px 15px calc(10px + env(safe-area-inset-bottom))!important}
+  .qc-wallpaper-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .qc-wallpaper-option>span{height:54px!important}
+}
+@media(max-width:390px){
+  .qc-settings-nav-item{padding:5px 7px!important}
+  .qc-settings-nav-item>span:nth-child(2) b{font-size:9px!important}
+  .qc-settings-content{padding-left:11px!important;padding-right:11px!important}
+  .qc-settings-section{padding:12px!important}
+  .qc-theme-preview{height:60px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .qc-settings-nav-item,.qc-accent-option,.qc-wallpaper-option,.qc-settings-close{transition:none!important}
+}
