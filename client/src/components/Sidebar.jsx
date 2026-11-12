@@ -162,12 +162,12 @@ const Sidebar = () => {
     <aside
       className={`qc-sidebar h-full min-h-0 p-4 md:p-5 rounded-r-2xl overflow-y-auto text-white flex flex-col ${selectedUser ? "max-md:hidden" : ""}`}
     >
-      <div className="flex items-center justify-between gap-3 pb-5">
+      <div className="qc-sidebar-top flex items-center justify-between gap-3 pb-5">
         <div className="min-w-0">
-          <div className="text-2xl font-bold tracking-tight">
+          <div className="qc-sidebar-brand text-2xl font-bold tracking-tight">
             Quick<span className="qc-gradient-text">Chat</span>
           </div>
-          <p className="mt-0.5 text-xs text-white/45">Your private space</p>
+          <p className="qc-sidebar-tagline mt-0.5 text-xs text-white/45">Your conversations, closer.</p>
         </div>
         <div className="relative">
           <button
@@ -244,11 +244,11 @@ const Sidebar = () => {
             return !isOpen;
           });
         }}
-        className="qc-primary-btn mb-3 flex w-full items-center justify-center gap-2"
+        className="qc-primary-btn qc-discover-button mb-3 flex w-full items-center justify-center gap-2"
         aria-expanded={showDiscover}
         aria-controls="quickchat-discover-panel"
       >
-        <span className="text-base leading-none">＋</span> Find people
+        <span className="qc-discover-icon text-base leading-none">＋</span> <span>Find people</span><span className="qc-discover-arrow" aria-hidden="true">↗</span>
       </button>
 
       {showDiscover && (
@@ -379,7 +379,7 @@ const Sidebar = () => {
             Messages
           </p>
           <p className="mt-0.5 text-[10px] text-white/35">
-            {users.length} {users.length === 1 ? "contact" : "contacts"}
+            {users.length} {users.length === 1 ? "contact" : "contacts"} · {users.filter((user) => onlineUsers.includes(user._id)).length} online
           </p>
         </div>
         {totalUnread > 0 && (
@@ -493,7 +493,7 @@ const Sidebar = () => {
         {!filteredUsers.length && (
           <div className="qc-sidebar-empty px-3 py-9 text-center">
             <span className="mx-auto grid h-10 w-10 place-items-center rounded-2xl bg-violet-400/10 text-xl text-violet-200">
-              {query.trim() ? "⌕" : activeFilter === "online" ? "◌" : activeFilter === "unread" ? "✓" : "✦"}
+              {contactQuery.trim() ? "⌕" : activeFilter === "online" ? "◌" : activeFilter === "unread" ? "✓" : "✦"}
             </span>
             <p className="mt-3 text-xs font-medium text-white/70">
               {query.trim()
