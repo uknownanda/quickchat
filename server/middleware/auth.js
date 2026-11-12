@@ -18,7 +18,7 @@ export const protectRoute = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
-        if (!decoded?.userId) {
+        if (!decoded?.userId || !Number.isFinite(decoded.exp) || decoded.exp <= Math.floor(Date.now() / 1000)) {
             return res.status(401).json({ success: false, message: "Invalid or expired token" });
         }
         const user = await User.findById(decoded.userId).select("-password");
