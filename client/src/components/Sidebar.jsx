@@ -59,22 +59,30 @@ const Sidebar = () => {
   }, [onlineUsers]);
 
   useEffect(() => {
+    const username = query.trim().replace(/^@/, "");
+    if (!showDiscover || !username) {
+      setResults([]);
+      return undefined;
+    }
+    let cancelled = false;
     const timer = setTimeout(async () => {
-      if (query.trim().length < 2) {
-        setResults([]);
-        return;
-      }
       try {
         const { data } = await axios.get(
-          `/api/contacts/search?q=${encodeURIComponent(query.trim())}`,
+          `/api/contacts/search?q=${encodeURIComponent(username)}`,
         );
-        setResults(data.users || []);
+        if (!cancelled) setResults(data.users || []);
       } catch (error) {
-        toast.error(error.response?.data?.message || "Search failed");
+        if (!cancelled) {
+          setResults([]);
+          toast.error(error.response?.data?.message || "Search failed");
+        }
       }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [query]);
+    }, 350);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, showDiscover, axios]);
 
   const invite = async (id) => {
     try {
@@ -235,7 +243,7 @@ const Sidebar = () => {
             return !isOpen;
           });
         }}
-        className="qc-primary-btn mb-3 flex w-full items-center justify-center gap-2"
+        className="qc-primary-btn mb-3 flex w-full items-center justify-center gap-2 !text-white"
         aria-expanded={showDiscover}
         aria-controls="quickchat-discover-panel"
       >
@@ -245,10 +253,10 @@ const Sidebar = () => {
       {showDiscover && (
         <section
           id="quickchat-discover-panel"
-          className="qc-panel qc-sidebar-reveal mb-4 p-3"
+          className="qc-sidebar-reveal mb-4 rounded-2xl border border-violet-300/20 bg-gradient-to-br from-[#20263b] via-[#191f32] to-[#171426] p-4 shadow-xl shadow-black/20"
         >
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm font-semibold">Discover people</p>
+            <div><p className="text-sm font-semibold text-white">Find someone on QuickChat</p><p className="mt-1 text-[11px] leading-relaxed text-slate-300/75">Search using their exact username.</p></div>
             <button
               type="button"
               onClick={() => {
@@ -265,9 +273,9 @@ const Sidebar = () => {
             autoFocus
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by username or name"
-            aria-label="Search people by username or name"
-            className="qc-input w-full"
+            placeholder="Enter complete username"
+            aria-label="Enter the complete username"
+            className="mt-3 w-full rounded-xl border border-violet-300/30 bg-[#0b1020] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-400/15"
           />
           <div className="mt-3 max-h-44 space-y-2 overflow-y-auto">
             {results.map((user) => (
@@ -306,14 +314,14 @@ const Sidebar = () => {
                 )}
               </div>
             ))}
-            {query.trim().length >= 2 && !results.length && (
-              <p className="py-2 text-xs text-white/40">
-                No matching people found.
+            {query.trim() && !results.length && (
+              <p className="rounded-lg bg-white/[0.04] px-3 py-3 text-xs leading-relaxed text-slate-300/70">
+                No exact username match yet. Enter the complete username to find the account.
               </p>
             )}
-            {query.trim().length < 2 && (
-              <p className="py-2 text-xs text-white/40">
-                Enter at least 2 characters to search.
+            {!query.trim() && (
+              <p className="rounded-lg bg-white/[0.04] px-3 py-3 text-xs leading-relaxed text-slate-300/70">
+                The account appears only when the full username matches.
               </p>
             )}
           </div>
