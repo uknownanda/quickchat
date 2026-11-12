@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 import { connectDB } from "./lib/db.js";
 import { initializeSocket } from "./lib/socket.js";
-import { createRateLimiter, securityHeaders } from "./lib/security.js";
+import { securityHeaders } from "./lib/security.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import contactRouter from "./routes/contactRoutes.js";
