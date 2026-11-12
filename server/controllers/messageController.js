@@ -175,11 +175,29 @@ export const getMessages = async (req, res) => {
         return res.status(500).json({ success: false, message: "Unable to load messages" });
     }
 };
+export const getSharedMedia = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!(await areContacts(req.user._id, id))) {
+            return res.status(403).json({ success: false, message: "You can view media only from accepted contacts" });
+        }
+        const media = await Message.find({
+            ...pairQuery(req.user._id, id),
+            image: { $exists: true, $ne: "" },
+            deletedAt: null,
+        }).select("_id image createdAt").sort({ createdAt: -1, _id: -1 }).limit(200).lean();
+        return res.json({ success: true, media });
+    } catch (error) {
+        console.error("Get Shared Media Error:", error);
+        return res.status(500).json({ success: false, message: "Unable to load shared media" });
+    }
+};
+
 export const markMessageAsSeen = async (req, res) => {
     try {
         const message = await Message.findOneAndUpdate(
             { _id: req.params.id, receiverId: req.user._id },
-            { $set: { seen: true, readAt: new Date() } },
+            { $set: { seen: true, deliveredAt: new Date(), readAt: new Date() } },
             { new: true }
         );
         if (!message) {
