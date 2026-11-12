@@ -8,7 +8,7 @@ export const searchPeople = async (req, res) => {
     if (q.length < 2) return res.json({ success: true, users: [] });
     const me = req.user._id;
     const searchTerm = q.replace(/^@/, "").slice(0, 40);
-    const escaped = searchTerm.replace(/[.*+?^\${}()|[\]\\]/g, "\\$&");
+    const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\    const escaped = searchTerm.replace(/[.*+?^\${}()|[\]\\]/g, "\\$&");");
     const users = await User.find({
       _id: { $ne: me },
       $or: [
