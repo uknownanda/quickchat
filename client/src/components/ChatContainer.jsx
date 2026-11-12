@@ -48,6 +48,9 @@ const formatDateSeparator = (value) => {
 const ChatContainer = () => {
   const {
     messages,
+    hasMoreMessages,
+    loadingOlderMessages,
+    loadOlderMessages,
     selectedUser,
     setSelectedUser,
     sendMessage,
@@ -60,6 +63,8 @@ const ChatContainer = () => {
   } = useContext(ChatContext);
   const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, preferences } = useContext(AuthContext);
   const scrollEnd = useRef(null);
+  const messageListRef = useRef(null);
+  const previousScrollHeight = useRef(null);
   const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
   const [input, setInput] = useState("");
@@ -107,6 +112,17 @@ const ChatContainer = () => {
     reader.readAsDataURL(file);
   };
   useEffect(() => {
+    const list = messageListRef.current;
+    if (previousScrollHeight.current !== null && list) {
+      const heightBefore = previousScrollHeight.current;
+      previousScrollHeight.current = null;
+      requestAnimationFrame(() => {
+        if (messageListRef.current) {
+          messageListRef.current.scrollTop += messageListRef.current.scrollHeight - heightBefore;
+        }
+      });
+      return;
+    }
     scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   useEffect(() => {
@@ -370,9 +386,19 @@ const ChatContainer = () => {
         </div>
       )}
       <section
+        ref={messageListRef}
+        onScroll={(event) => {
+          if (event.currentTarget.scrollTop <= 48 && hasMoreMessages && !loadingOlderMessages) {
+            previousScrollHeight.current = event.currentTarget.scrollHeight;
+            loadOlderMessages();
+          }
+        }}
         onClick={() => setSelectedMessageId(null)}
         className={`qc-message-list flex-1 overflow-y-auto px-4 md:px-7 py-5 space-y-3 ${dragActive ? "qc-drop-active" : ""}`}
       >
+        {loadingOlderMessages && (
+          <p className="py-2 text-center text-xs text-white/40">Loading older messages…</p>
+        )}
         {messages.map((msg, index) => {
           const mine =
             msg.senderId === authUser?._id ||
