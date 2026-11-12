@@ -356,7 +356,7 @@ export const ChatProvider = ({ children }) => {
             socket.off("presenceUpdated", onPresence);
             socket.off("contactRequestUpdated", getUsers);
         };
-    }, [socket, authUser?._id]);
+    }, [socket, authUser?._id, desktopNotifications]);
 
     // Existing contact-selection behavior - unchanged
     useEffect(() => {
