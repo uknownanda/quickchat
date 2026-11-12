@@ -12,7 +12,7 @@ export const ChatProvider = ({ children }) => {
     const [unseenMessages, setUnseenMessages] = useState({});
     const [typingUsers, setTypingUsers] = useState({});
 
-    const { socket, axios, authUser } = useContext(AuthContext);
+    const { socket, axios, authUser, desktopNotifications } = useContext(AuthContext);
 
     const selectedRef = useRef(null);
     const messagesRef = useRef(messages);
