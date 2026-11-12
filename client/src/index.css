@@ -1886,3 +1886,24 @@ body {
   .qc-settings-header>div>p:last-child{display:none}
   .qc-settings-content{padding-top:12px}
 }
+
+
+/* Desktop dialog sizing: keep navigation and content inside the modal */
+@media (min-width:701px){
+  .qc-settings-overlay{box-sizing:border-box;display:grid;place-items:center;padding:clamp(16px,3vh,28px);overflow:auto}
+  .qc-settings-shell{display:grid;grid-template-columns:230px minmax(0,1fr);grid-template-rows:minmax(0,1fr);width:min(960px,calc(100vw - 48px));height:min(700px,calc(100dvh - 48px));min-height:420px;max-height:calc(100dvh - 48px)}
+  .qc-settings-nav{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden}
+  .qc-settings-nav-links{min-width:0}
+  .qc-settings-main{display:flex;min-width:0;min-height:0;height:100%;overflow:hidden}
+  .qc-settings-header{flex:0 0 auto;min-width:0}
+  .qc-settings-header>div{min-width:0}
+  .qc-settings-content{flex:1 1 auto;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto}
+  .qc-settings-footer{flex:0 0 auto}
+}
+@media (min-width:701px) and (max-height:560px){
+  .qc-settings-shell{height:calc(100dvh - 24px);min-height:0}
+  .qc-settings-nav{padding-top:14px;padding-bottom:12px}
+  .qc-settings-brand{padding-bottom:16px}
+  .qc-settings-header{padding-top:16px;padding-bottom:13px}
+  .qc-settings-content{padding-top:14px;padding-bottom:14px}
+}
