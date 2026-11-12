@@ -457,7 +457,7 @@ const Sidebar = () => {
               {contactQuery.trim() ? "⌕" : activeFilter === "online" ? "◌" : activeFilter === "unread" ? "✓" : "✦"}
             </span>
             <p className="mt-3 text-xs font-medium text-white/70">
-              {query.trim()
+              {contactQuery.trim()
                 ? "No contacts match your search"
                 : activeFilter === "online"
                   ? "Nobody is online right now"
@@ -466,7 +466,7 @@ const Sidebar = () => {
                     : "No contacts yet"}
             </p>
             <p className="mt-1 text-[10px] leading-5 text-white/35">
-              {query.trim()
+              {contactQuery.trim()
                 ? "Try another name or username."
                 : activeFilter === "all"
                   ? "Find people and send an invitation to start chatting."
