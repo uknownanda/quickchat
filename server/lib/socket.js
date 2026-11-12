@@ -12,7 +12,7 @@ export const initializeSocket = (httpServer, allowedOrigins) => {
             if (!token || !process.env.JWT_SECRET) {
                 return next(new Error("Unauthorized"));
             }
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
             if (!decoded?.userId) return next(new Error("Unauthorized"));
             const user = await User.findById(decoded.userId).select("_id").lean();
             if (!user) return next(new Error("Unauthorized"));
