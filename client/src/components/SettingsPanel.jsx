@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -36,18 +36,41 @@ const SettingsPanel = ({ onClose, selectedUser }) => {
   const navigate = useNavigate();
   const { theme, updateTheme, accent, updateAccent, preferences, updatePreference, wallpapers, updateWallpaper } = useContext(AuthContext);
   const [active, setActive] = useState("appearance");
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialogRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") { event.preventDefault(); onClose(); return; }
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const items = Array.from(dialogRef.current.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter((el) => el.offsetParent !== null);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus?.();
+    };
+  }, []);
 
   const goProfile = () => { onClose(); navigate("/profile"); };
 
   return createPortal(
-    <div className="qc-settings-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section role="dialog" aria-modal="true" aria-labelledby="qc-settings-title" className="qc-settings-shell">
+    <div className="qc-settings-overlay" data-theme={theme} onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="qc-settings-title" className="qc-settings-shell">
         <aside className="qc-settings-nav">
           <div className="qc-settings-brand"><span className="qc-settings-mark">Q</span><div><b>QuickChat</b><small>PERSONALIZATION CENTER</small></div></div>
           <p className="qc-settings-nav-label">PREFERENCES</p>
           <div className="qc-settings-nav-links">
             {sections.map((item) => (
-              <button key={item.id} type="button" onClick={() => setActive(item.id)} className={`qc-settings-nav-item ${active === item.id ? "active" : ""}`}>
+              <button key={item.id} type="button" onClick={() => setActive(item.id)} aria-current={active === item.id ? "page" : undefined} className={`qc-settings-nav-item ${active === item.id ? "active" : ""}`}>
                 <span className="qc-settings-nav-icon">{item.icon}</span><span><b>{item.label}</b><small>{item.detail}</small></span><span className="qc-settings-nav-arrow">›</span>
               </button>
             ))}
