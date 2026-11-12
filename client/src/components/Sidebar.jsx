@@ -256,8 +256,14 @@ const Sidebar = () => {
           id="quickchat-discover-panel"
           className="qc-sidebar-reveal mb-4 rounded-2xl border border-violet-300/20 bg-gradient-to-br from-[#20263b] via-[#191f32] to-[#171426] p-4 shadow-xl shadow-black/20"
         >
-          <div className="mb-2 flex items-center justify-between">
-            <div><p className="text-sm font-semibold text-white">Find someone on QuickChat</p><p className="mt-1 text-[11px] leading-relaxed text-slate-300/75">Search using their exact username.</p></div>
+          <div className="qc-discover-heading mb-3 flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-start gap-3">
+              <span className="qc-discover-mark" aria-hidden="true">⌕</span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-white">Find your people</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-300/75">Connect with someone using their exact username.</p>
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => {
@@ -270,17 +276,23 @@ const Sidebar = () => {
               ×
             </button>
           </div>
-          <label className="qc-sidebar-search mt-3 flex items-center gap-2 rounded-xl px-3">
+          <label className="qc-discover-input mt-3 flex items-center gap-3 rounded-xl px-3">
+            <span className="qc-discover-at" aria-hidden="true">@</span>
             <input
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Enter complete username"
+              placeholder="Search by username"
               aria-label="Enter the complete username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               className="w-full min-w-0 bg-transparent py-3 text-sm text-white outline-none ring-0 placeholder:text-slate-400 focus:outline-none focus:ring-0"
             />
+            {query && <button type="button" onClick={() => setQuery("")} className="qc-discover-clear" aria-label="Clear username">×</button>}
           </label>
-          <div className="mt-3 max-h-44 space-y-2 overflow-y-auto">
+          <p className="qc-discover-hint mt-2">Enter a username, not a display name</p>
+          <div className="qc-discover-results mt-3 max-h-48 space-y-2 overflow-y-auto">
             {results.map((user) => (
               <div
                 key={user._id}
