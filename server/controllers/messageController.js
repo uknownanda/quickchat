@@ -447,3 +447,61 @@ export const togglePinMessage = async (req, res) => {
         });
     }
 };
+
+
+const allowedWallpapers = new Set(["default", "midnight", "ocean", "forest", "sunset"]);
+
+export const getConversationWallpaper = async (req, res) => {
+    try {
+        const otherUserId = req.params.id;
+        if (!otherUserId || otherUserId === req.user._id.toString()) {
+            return res.status(400).json({ success: false, message: "Invalid conversation." });
+        }
+        const contact = await ContactRequest.findOne({
+            status: "accepted",
+            $or: [
+                { sender: req.user._id, recipient: otherUserId },
+                { sender: otherUserId, recipient: req.user._id },
+            ],
+        }).select("wallpaper").lean();
+        if (!contact) return res.status(403).json({ success: false, message: "This conversation is not available." });
+        return res.status(200).json({ success: true, wallpaper: contact.wallpaper || "default" });
+    } catch (error) {
+        console.error("Get conversation wallpaper error:", error.message);
+        return res.status(500).json({ success: false, message: "Unable to load conversation theme." });
+    }
+};
+
+export const updateConversationWallpaper = async (req, res) => {
+    try {
+        const otherUserId = req.params.id;
+        const wallpaper = String(req.body?.wallpaper || "");
+        if (!otherUserId || otherUserId === req.user._id.toString() || !allowedWallpapers.has(wallpaper)) {
+            return res.status(400).json({ success: false, message: "Choose a valid conversation theme." });
+        }
+        const contact = await ContactRequest.findOneAndUpdate(
+            {
+                status: "accepted",
+                $or: [
+                    { sender: req.user._id, recipient: otherUserId },
+                    { sender: otherUserId, recipient: req.user._id },
+                ],
+            },
+            { $set: { wallpaper } },
+            { new: true, runValidators: true }
+        ).select("sender recipient wallpaper").lean();
+
+        if (!contact) return res.status(403).json({ success: false, message: "This conversation is not available." });
+
+        const payload = {
+            userIds: [contact.sender.toString(), contact.recipient.toString()],
+            wallpaper: contact.wallpaper,
+        };
+        const io = getIO();
+        payload.userIds.forEach((id) => io.to(`user:${id}`).emit("conversationWallpaperUpdated", payload));
+        return res.status(200).json({ success: true, wallpaper: contact.wallpaper });
+    } catch (error) {
+        console.error("Update conversation wallpaper error:", error.message);
+        return res.status(500).json({ success: false, message: "Unable to update conversation theme." });
+    }
+};
