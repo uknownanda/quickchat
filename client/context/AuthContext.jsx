@@ -19,6 +19,31 @@ export const AuthProvider = ({ children }) => {
     const [theme, setTheme] = useState(() => localStorage.getItem("qc-theme") || "dark");
     const [accent, setAccent] = useState(() => localStorage.getItem("qc-accent") || "violet");
     const [desktopNotifications, setDesktopNotifications] = useState(() => localStorage.getItem("qc-desktop-notifications") === "true");
+    const [preferences, setPreferences] = useState(() => {
+        try {
+            return {
+                fontSize: "medium",
+                chatDensity: "comfortable",
+                bubbleStyle: "soft",
+                cornerStyle: "rounded",
+                showTimestamps: true,
+                enterToSend: true,
+                messagePreview: true,
+                profileAccent: "violet",
+                ...JSON.parse(localStorage.getItem("qc-preferences") || "{}"),
+            };
+        } catch {
+            return { fontSize: "medium", chatDensity: "comfortable", bubbleStyle: "soft", cornerStyle: "rounded", showTimestamps: true, enterToSend: true, messagePreview: true, profileAccent: "violet" };
+        }
+    });
+    const updatePreference = (key, value) => {
+        setPreferences((current) => {
+            const next = { ...current, [key]: value };
+            localStorage.setItem("qc-preferences", JSON.stringify(next));
+            return next;
+        });
+    };
+
     const [wallpapers, setWallpapers] = useState(() => {
         try { return JSON.parse(localStorage.getItem("qc-chat-wallpapers") || "{}"); }
         catch { return {}; }
@@ -201,6 +226,7 @@ export const AuthProvider = ({ children }) => {
         theme, updateTheme, accent, updateAccent,
         desktopNotifications, updateDesktopNotifications,
         wallpapers, updateWallpaper,
+        preferences, updatePreference,
     };
 
     return (
