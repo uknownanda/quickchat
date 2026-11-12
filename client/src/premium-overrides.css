@@ -45,3 +45,39 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
 .qc-app[data-theme="light"] .qc-composer-input,.qc-app[data-theme="light"] .qc-wallpaper-select{color:#27263b!important}
 .qc-app[data-theme="light"] .qc-wallpaper-select{background:#fff;border-color:#d8d9e8}
 @media(max-width:520px){.qc-wallpaper-select{max-width:82px;font-size:9px;padding:7px 4px}}
+
+/* Light theme: right contact-details panel */
+.qc-app[data-theme="light"] .qc-right-panel{
+  background:linear-gradient(160deg,#fbfaff 0%,#f1eff8 100%)!important;
+  color:#29263b!important;
+  border-left:1px solid #e1deec!important;
+}
+.qc-app[data-theme="light"] .qc-profile-card{color:#29263b}
+.qc-app[data-theme="light"] .qc-profile-name{color:#262238!important}
+.qc-app[data-theme="light"] .qc-profile-seen,
+.qc-app[data-theme="light"] .qc-profile-bio{color:#77738b!important}
+.qc-app[data-theme="light"] .qc-profile-username{
+  color:#6550a2!important;
+  background:#eee9fb!important;
+  border-color:#dcd3f3!important;
+}
+.qc-app[data-theme="light"] .qc-profile-username:hover{background:#e6def8!important}
+.qc-app[data-theme="light"] .qc-profile-card img{border-color:#f7f5fc!important}
+.qc-app[data-theme="light"] .qc-right-divider{border-color:#e4e0ed!important}
+.qc-app[data-theme="light"] .qc-shared-section h3{color:#302c43!important}
+.qc-app[data-theme="light"] .qc-media-count{color:#77738b!important;background:#e9e6f1!important}
+.qc-app[data-theme="light"] .qc-media-item{background:#e9e6f1!important}
+.qc-app[data-theme="light"] .qc-media-empty{
+  border-color:#dcd7e8!important;
+  background:rgba(255,255,255,.62)!important;
+}
+.qc-app[data-theme="light"] .qc-media-empty p{color:#77738b!important}
+.qc-app[data-theme="light"] .qc-media-empty button{
+  color:#5d4898!important;
+  background:#eee9fb!important;
+}
+.qc-app[data-theme="light"] .qc-shared-section [role="status"]>div{background:#e6e2ee!important}
+.qc-app[data-theme="light"] .qc-right-empty{
+  background:radial-gradient(ellipse at 50% 42%,rgba(135,99,220,.08),transparent 42%),#f4f2fa!important;
+  border-left:1px solid #e1deec!important;
+}
