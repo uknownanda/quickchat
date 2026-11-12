@@ -19,15 +19,17 @@ const ProfilePage = () => {
   useEffect(() => {
     setName(authUser?.fullName || "");
     setBio(authUser?.bio || "");
-    if (!selectedImg) setPreviewUrl(authUser?.profilePic || assets.avatar_icon);
-  }, [authUser?.fullName, authUser?.bio, authUser?.profilePic, selectedImg]);
+  }, [authUser?.fullName, authUser?.bio]);
 
   useEffect(() => {
-    if (!selectedImg) return undefined;
+    if (!selectedImg) {
+      setPreviewUrl(authUser?.profilePic || assets.avatar_icon);
+      return undefined;
+    }
     const objectUrl = URL.createObjectURL(selectedImg);
     setPreviewUrl(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedImg]);
+  }, [selectedImg, authUser?.profilePic]);
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
