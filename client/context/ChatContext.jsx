@@ -11,6 +11,8 @@ export const ChatProvider = ({ children }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [unseenMessages, setUnseenMessages] = useState({});
     const [typingUsers, setTypingUsers] = useState({});
+    const [hasMoreMessages, setHasMoreMessages] = useState(false);
+    const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
 
     const { socket, axios, authUser, desktopNotifications } = useContext(AuthContext);
 
@@ -34,6 +36,8 @@ export const ChatProvider = ({ children }) => {
         selectedRef.current = null;
         setSelectedUser(null);
         setMessages([]);
+        setHasMoreMessages(false);
+        setLoadingOlderMessages(false);
         setUnseenMessages({});
         setTypingUsers({});
     }, [authUser?._id]);
@@ -60,7 +64,7 @@ export const ChatProvider = ({ children }) => {
             const latestKnownMessage = messagesRef.current[messagesRef.current.length - 1];
             const shouldCatchUp = sync && latestKnownMessage?._id;
             const { data } = await axios.get(`/api/messages/${userId}`, {
-                params: shouldCatchUp ? { after: latestKnownMessage._id, limit: 100 } : undefined,
+                params: shouldCatchUp ? { after: latestKnownMessage._id, limit: 100 } : { limit: 50 },
             });
 
             if (
@@ -78,6 +82,7 @@ export const ChatProvider = ({ children }) => {
                     });
                 } else {
                     setMessages(data.messages);
+                    setHasMoreMessages(Boolean(data.hasMore));
                 }
             }
         } catch (error) {
@@ -94,6 +99,31 @@ export const ChatProvider = ({ children }) => {
             toast.error(
                 error.response?.data?.message || "Unable to load messages"
             );
+        }
+    };
+
+    // Fetch the preceding page without changing the current read position.
+    const loadOlderMessages = async () => {
+        const userId = selectedRef.current?._id;
+        const oldest = messagesRef.current[0];
+        if (!userId || !oldest?._id || !hasMoreMessages || loadingOlderMessages) return;
+        setLoadingOlderMessages(true);
+        try {
+            const { data } = await axios.get(`/api/messages/${userId}`, {
+                params: { before: oldest._id, limit: 50 },
+            });
+            if (data.success && selectedRef.current?._id === userId) {
+                setMessages((current) => {
+                    const ids = new Set(current.map((message) => message._id));
+                    const older = data.messages.filter((message) => !ids.has(message._id));
+                    return [...older, ...current];
+                });
+                setHasMoreMessages(Boolean(data.hasMore));
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Unable to load older messages");
+        } finally {
+            setLoadingOlderMessages(false);
         }
     };
 
@@ -369,6 +399,7 @@ export const ChatProvider = ({ children }) => {
             getMessages(selectedUser._id);
         } else {
             setMessages([]);
+            setHasMoreMessages(false);
         }
     }, [selectedUser?._id]);
 
@@ -417,6 +448,9 @@ export const ChatProvider = ({ children }) => {
         <ChatContext.Provider
             value={{
                 messages,
+                hasMoreMessages,
+                loadingOlderMessages,
+                loadOlderMessages,
                 users,
                 selectedUser,
                 getUsers,
