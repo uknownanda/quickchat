@@ -30,7 +30,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization", "token"],
 }));
 
-app.use(express.json({ limit: "6mb" }));
+app.use(express.json({ limit: "7mb" }));
 
 app.get("/", (_req, res) => {
     res.status(200).json({
