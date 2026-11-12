@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { formatLastSeen } from "../lib/utils";
@@ -6,16 +6,31 @@ import assets from "../assets/assets";
 import ProfileImagePreview from "./ProfileImagePreview";
 
 const RightSidebar = () => {
-  const { selectedUser, messages } = useContext(ChatContext);
-  const { onlineUsers } = useContext(AuthContext);
+  const { selectedUser } = useContext(ChatContext);
+  const { onlineUsers, axios } = useContext(AuthContext);
   const [activeImage, setActiveImage] = useState(null);
-  const msgImages = useMemo(
-    () =>
-      messages
-        .filter((msg) => msg.image && !msg.deletedAt)
-        .map((msg) => ({ url: msg.image, id: msg._id, date: msg.createdAt })),
-    [messages],
-  );
+  const [msgImages, setMsgImages] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setMsgImages([]);
+    setActiveImage(null);
+    if (!selectedUser?._id) return undefined;
+    axios.get(`/api/messages/media/${selectedUser._id}`)
+      .then(({ data }) => {
+        if (!cancelled && data.success) {
+          setMsgImages(data.media.map((item) => ({
+            url: item.image,
+            id: item._id,
+            date: item.createdAt,
+          })));
+        }
+      })
+      .catch((error) => {
+        console.error("Shared media load failed:", error);
+      });
+    return () => { cancelled = true; };
+  }, [selectedUser?._id, axios]);
 
   if (!selectedUser)
     return (
