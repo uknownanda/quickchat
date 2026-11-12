@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -38,7 +39,7 @@ const SettingsPanel = ({ onClose, selectedUser }) => {
 
   const goProfile = () => { onClose(); navigate("/profile"); };
 
-  return (
+  return createPortal(
     <div className="qc-settings-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section role="dialog" aria-modal="true" aria-labelledby="qc-settings-title" className="qc-settings-shell">
         <aside className="qc-settings-nav">
@@ -105,7 +106,8 @@ const SettingsPanel = ({ onClose, selectedUser }) => {
           <footer className="qc-settings-footer"><span>QuickChat · Personalization</span><button type="button" onClick={onClose}>Done</button></footer>
         </main>
       </section>
-    </div>
+    </div>,
+    document.body
   );
 };
 
