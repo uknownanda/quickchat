@@ -8,9 +8,9 @@ import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 
 const App = () => {
-  const { authUser, theme, accent } = useContext(AuthContext)
+  const { authUser, theme, accent, preferences } = useContext(AuthContext)
   return (
-    <div className="qc-app bg-[url('/bgImage.svg')] bg-contain" data-theme={theme} data-accent={accent}>
+    <div className="qc-app bg-[url('/bgImage.svg')] bg-contain" data-theme={theme} data-accent={accent} data-font-size={preferences.fontSize} data-density={preferences.chatDensity} data-bubble={preferences.bubbleStyle} data-corners={preferences.cornerStyle}>
       <Toaster />
       <Routes>
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
