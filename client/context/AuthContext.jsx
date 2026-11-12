@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 
         newSocket.on("conversationWallpaperUpdated", ({ userIds = [], wallpaper } = {}) => {
             const otherUserId = userIds.find((id) => id !== String(userData._id));
-            if (!otherUserId || !["default", "midnight", "ocean", "forest", "sunset"].includes(wallpaper)) return;
+            if (!otherUserId || !["default", "midnight", "ocean", "forest", "sunset", "aurora", "stardust", "geometry", "glass", "minimal", "dreamscape", "ember"].includes(wallpaper)) return;
             setWallpapers((current) => {
                 const next = { ...current, [otherUserId]: wallpaper };
                 localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
