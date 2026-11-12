@@ -449,7 +449,7 @@ export const togglePinMessage = async (req, res) => {
 };
 
 
-const allowedWallpapers = new Set(["default", "midnight", "ocean", "forest", "sunset"]);
+const allowedWallpapers = new Set(["default", "midnight", "ocean", "forest", "sunset", "aurora", "stardust", "geometry", "glass", "minimal", "dreamscape", "ember"]);
 
 export const getConversationWallpaper = async (req, res) => {
     try {
