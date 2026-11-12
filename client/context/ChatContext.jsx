@@ -16,8 +16,10 @@ export const ChatProvider = ({ children }) => {
 
     const selectedRef = useRef(null);
     const messagesRef = useRef(messages);
+    const usersRef = useRef(users);
     const typingTimersRef = useRef({});
     messagesRef.current = messages;
+    usersRef.current = users;
 
     const isChatActive = () =>
         document.visibilityState === "visible" && document.hasFocus();
@@ -223,6 +225,15 @@ export const ChatProvider = ({ children }) => {
                     : user
             ));
 
+            if (desktopNotifications && "Notification" in window &&
+                Notification.permission === "granted" && !isViewingConversation) {
+                const sender = usersRef.current.find((user) => user._id === message.senderId);
+                new Notification(sender?.fullName || "New QuickChat message", {
+                    body: message.text || (message.image ? "Sent you a photo" : "New message"),
+                    tag: "quickchat-" + message._id,
+                });
+            }
+
             if (isViewingConversation) {
                 setMessages(prev =>
                     prev.some(m => m._id === message._id)
@@ -260,16 +271,19 @@ export const ChatProvider = ({ children }) => {
         };
 
         // Read receipt
-        const onRead = ({ senderId, readerId, readAt }) => {
+        const onRead = ({ messageId, senderId, readerId, readAt }) => {
+            if (messageId) {
+                setMessages((prev) => prev.map((message) =>
+                    message._id === messageId ? { ...message, seen: true, readAt } : message
+                ));
+                return;
+            }
             if (authUser?._id === senderId) {
-                setMessages(prev =>
-                    prev.map(m =>
-                        m.senderId === senderId &&
-                        m.receiverId === readerId
-                            ? { ...m, seen: true, readAt }
-                            : m
-                    )
-                );
+                setMessages((prev) => prev.map((message) =>
+                    message.senderId === senderId && message.receiverId === readerId
+                        ? { ...message, seen: true, readAt }
+                        : message
+                ));
             }
         };
 
