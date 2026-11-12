@@ -52,12 +52,20 @@ export const AuthProvider = ({ children }) => {
     const updateTheme = (value) => { setTheme(value); localStorage.setItem("qc-theme", value); };
     const updateAccent = (value) => { setAccent(value); localStorage.setItem("qc-accent", value); };
     const updateDesktopNotifications = (value) => { setDesktopNotifications(value); localStorage.setItem("qc-desktop-notifications", String(value)); };
-    const updateWallpaper = (conversationId, value) => {
-        setWallpapers((current) => {
-            const next = { ...current, [conversationId]: value };
-            localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
-            return next;
-        });
+    const updateWallpaper = async (conversationId, value) => {
+        try {
+            const { data } = await axios.put(`/api/messages/wallpaper/${conversationId}`, { wallpaper: value });
+            if (!data.success) throw new Error(data.message || "Could not update conversation theme");
+            setWallpapers((current) => {
+                const next = { ...current, [conversationId]: data.wallpaper || value };
+                localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
+                return next;
+            });
+            return true;
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message || "Could not update conversation theme");
+            return false;
+        }
     };
 
     const connectSocket = (userData, authToken) => {
@@ -89,6 +97,16 @@ export const AuthProvider = ({ children }) => {
 
         newSocket.on("getOnlineUsers", (userIds) => {
             setOnlineUsers(userIds);
+        });
+
+        newSocket.on("conversationWallpaperUpdated", ({ userIds = [], wallpaper } = {}) => {
+            const otherUserId = userIds.find((id) => id !== String(userData._id));
+            if (!otherUserId || !["default", "midnight", "ocean", "forest", "sunset"].includes(wallpaper)) return;
+            setWallpapers((current) => {
+                const next = { ...current, [otherUserId]: wallpaper };
+                localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
+                return next;
+            });
         });
 
         setSocket(newSocket);
