@@ -58,7 +58,7 @@ const ChatContainer = () => {
     searchMessages,
     togglePinMessage,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers, socketStatus } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
@@ -177,6 +177,7 @@ const ChatContainer = () => {
   return (
     <main
       className="qc-chat h-full relative flex flex-col min-w-0"
+      style={{ "--qc-chat-wallpaper": wallpapers[selectedUser._id] || "default" }}
       onDragOver={(e) => {
         e.preventDefault();
         setDragActive(true);
@@ -236,6 +237,19 @@ const ChatContainer = () => {
   )}
 </p>
         </button>
+        <select
+          aria-label="Conversation wallpaper"
+          title="Change chat wallpaper"
+          value={wallpapers[selectedUser._id] || "default"}
+          onChange={(event) => updateWallpaper(selectedUser._id, event.target.value)}
+          className="qc-wallpaper-select"
+        >
+          <option value="default">Default</option>
+          <option value="midnight">Midnight</option>
+          <option value="ocean">Ocean</option>
+          <option value="forest">Forest</option>
+          <option value="sunset">Sunset</option>
+        </select>
         <button
           className="qc-icon-btn"
           onClick={() => {
