@@ -1,14 +1,18 @@
 import User from "../models/User.js";
 import ContactRequest from "../models/ContactRequest.js";
-import { getIO, userSocketmap } from "../lib/socket.js";
+import { getIO } from "../lib/socket.js";
 
 export const searchPeople = async (req, res) => {
   try {
     const q = (req.query.q || "").trim();
     if (q.length < 2) return res.json({ success: true, users: [] });
     const me = req.user._id;
-    const users = await User.find({ _id: { $ne: me }, $or: [
+    const searchTerm = q.replace(/^@/, "").slice(0, 40);
+    const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\    const users = await User.find({ _id: { $ne: me }, $or: [
       { username: { $regex: q.replace(/^@/, ""), $options: "i" } }, { fullName: { $regex: q, $options: "i" } }
+    ] }).select("fullName username profilePic bio").limit(20);");
+    const users = await User.find({ _id: { $ne: me }, $or: [
+      { username: { $regex: escaped, $options: "i" } }, { fullName: { $regex: escaped, $options: "i" } }
     ] }).select("fullName username profilePic bio").limit(20);
     const ids = users.map(u => u._id);
     const requests = await ContactRequest.find({ $or: [{ sender: me, recipient: { $in: ids } }, { recipient: me, sender: { $in: ids } }] });
@@ -28,8 +32,7 @@ export const sendContactRequest = async (req, res) => {
     if (request?.status === "pending") return res.status(409).json({ success: false, message: "An invitation is already pending" });
     if (request) { request.sender = sender; request.recipient = recipient; request.status = "pending"; await request.save(); }
     else request = await ContactRequest.create({ sender, recipient });
-    const socketId = userSocketmap[recipient.toString()];
-    if (socketId) getIO().to(socketId).emit("contactRequest", { requestId: request._id, from: { _id: sender, fullName: req.user.fullName } });
+    getIO().to(`user:${recipient.toString()}`).emit("contactRequest", { requestId: request._id, from: { _id: sender, fullName: req.user.fullName } });
     res.status(201).json({ success: true, request });
   } catch (e) { res.status(500).json({ success: false, message: "Could not send invitation" }); }
 };
@@ -52,8 +55,8 @@ export const respondToContactRequest = async (req, res) => {
     if (!request) return res.status(404).json({ success: false, message: "Invitation not found" });
     request.status = action === "accept" ? "accepted" : "rejected";
     await request.save();
-    const senderSocket = userSocketmap[request.sender.toString()];
-    if (senderSocket) getIO().to(senderSocket).emit("contactRequestUpdated", { status: request.status });
+    getIO().to(`user:${request.sender.toString()}`).emit("contactRequestUpdated", { status: request.status });
+    getIO().to(`user:${request.recipient.toString()}`).emit("contactRequestUpdated", { status: request.status });
     res.json({ success: true, status: request.status });
   } catch (e) { res.status(500).json({ success: false, message: "Could not update invitation" }); }
 };
