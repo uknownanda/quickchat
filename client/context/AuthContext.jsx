@@ -52,6 +52,21 @@ export const AuthProvider = ({ children }) => {
     const updateTheme = (value) => { setTheme(value); localStorage.setItem("qc-theme", value); };
     const updateAccent = (value) => { setAccent(value); localStorage.setItem("qc-accent", value); };
     const updateDesktopNotifications = (value) => { setDesktopNotifications(value); localStorage.setItem("qc-desktop-notifications", String(value)); };
+    const loadWallpaper = async (conversationId) => {
+        if (!conversationId) return;
+        try {
+            const { data } = await axios.get(`/api/messages/wallpaper/${conversationId}`);
+            if (!data.success) return;
+            setWallpapers((current) => {
+                const next = { ...current, [conversationId]: data.wallpaper || "default" };
+                localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
+                return next;
+            });
+        } catch (error) {
+            console.error("Load conversation theme error:", error);
+        }
+    };
+
     const updateWallpaper = async (conversationId, value) => {
         try {
             const { data } = await axios.put(`/api/messages/wallpaper/${conversationId}`, { wallpaper: value });
@@ -245,7 +260,7 @@ export const AuthProvider = ({ children }) => {
         updateProfile,
         theme, updateTheme, accent, updateAccent,
         desktopNotifications, updateDesktopNotifications,
-        wallpapers, updateWallpaper,
+        wallpapers, updateWallpaper, loadWallpaper,
         preferences, updatePreference,
     };
 
