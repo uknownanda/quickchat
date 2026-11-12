@@ -2948,3 +2948,53 @@ body {
 /* Keep password guidance readable in the two-column registration grid. */
 .qc-field-control input { overflow: hidden; text-overflow: ellipsis; }
 .qc-field-control .qc-reveal { flex: 0 0 auto; padding-inline: 10px; white-space: nowrap; }
+
+
+/* Rich conversation wallpaper system */
+.qc-chat {
+  --chat-wallpaper-base:#100d19;
+  --chat-wallpaper-glow:rgba(124,91,205,.14);
+  background:radial-gradient(ellipse at 82% 0%,var(--chat-wallpaper-glow),transparent 48%),var(--chat-wallpaper-base);
+  transition:background .35s ease;
+}
+.qc-chat[data-wallpaper="default"]{--chat-wallpaper-base:#100d19;--chat-wallpaper-glow:rgba(124,91,205,.14)}
+.qc-chat[data-wallpaper="midnight"]{--chat-wallpaper-base:#0c1020;--chat-wallpaper-glow:rgba(119,89,190,.27);background:radial-gradient(ellipse at 78% 5%,rgba(108,82,181,.24),transparent 38%),radial-gradient(ellipse at 8% 90%,rgba(43,55,104,.18),transparent 42%),linear-gradient(145deg,#0b1020,#171329 58%,#0d1220)}
+.qc-chat[data-wallpaper="ocean"]{--chat-wallpaper-base:#091725;--chat-wallpaper-glow:rgba(35,144,183,.22);background:radial-gradient(ellipse at 85% 0%,rgba(38,157,190,.23),transparent 42%),radial-gradient(ellipse at 5% 90%,rgba(29,89,139,.18),transparent 45%),linear-gradient(145deg,#081724,#10283a 58%,#0b1b2a)}
+.qc-chat[data-wallpaper="forest"]{--chat-wallpaper-base:#0c1917;--chat-wallpaper-glow:rgba(53,143,102,.2);background:radial-gradient(ellipse at 85% 0%,rgba(67,153,108,.2),transparent 42%),radial-gradient(ellipse at 8% 95%,rgba(32,100,78,.17),transparent 45%),linear-gradient(145deg,#0a1715,#142820 58%,#0b1919)}
+.qc-chat[data-wallpaper="sunset"]{--chat-wallpaper-base:#1a101d;--chat-wallpaper-glow:rgba(194,103,111,.22);background:radial-gradient(ellipse at 85% 0%,rgba(222,132,105,.2),transparent 42%),radial-gradient(ellipse at 5% 95%,rgba(127,73,128,.2),transparent 45%),linear-gradient(145deg,#1a101d,#2a1929 58%,#171323)}
+.qc-chat[data-wallpaper] .qc-chat-header,.qc-chat[data-wallpaper] .qc-composer-wrap{background:color-mix(in srgb,var(--chat-wallpaper-base) 82%,transparent);backdrop-filter:blur(18px)}
+.qc-chat[data-wallpaper] .qc-message.theirs{background:color-mix(in srgb,var(--chat-wallpaper-base) 70%,#ffffff 8%);border-color:color-mix(in srgb,var(--chat-wallpaper-glow) 50%,transparent)}
+.qc-wallpaper-select{max-width:116px;min-width:96px;padding:8px 28px 8px 11px;border:1px solid rgba(180,170,235,.2);border-radius:11px;color:#e9e5fb;background-color:rgba(255,255,255,.065);font-size:11px;font-weight:650;outline:none;cursor:pointer;transition:border-color .2s,background .2s}
+.qc-wallpaper-select:hover,.qc-wallpaper-select:focus-visible{border-color:rgba(167,139,250,.65);background-color:rgba(255,255,255,.11)}
+.qc-wallpaper-select option{color:#f4f1ff;background:#171426}
+.qc-wallpaper-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.qc-wallpaper-option{position:relative;display:flex;min-width:0;flex-direction:column;gap:9px;padding:9px;overflow:hidden;border:1px solid rgba(255,255,255,.1);border-radius:15px;color:#c9c5dc;background:rgba(255,255,255,.035);text-align:left;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+.qc-wallpaper-option:hover{transform:translateY(-2px);border-color:rgba(177,157,255,.45)}
+.qc-wallpaper-option.selected{border-color:#a894ff;background:rgba(151,128,239,.12);box-shadow:0 0 0 1px rgba(168,148,255,.2),0 8px 24px rgba(0,0,0,.16)}
+.qc-wallpaper-art{position:relative;display:flex;height:76px;align-items:flex-end;justify-content:flex-end;gap:5px;padding:9px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#151326,#0d1220)}
+.qc-wallpaper-art i{display:block;width:44%;height:15px;border-radius:10px 10px 3px 10px;background:rgba(169,143,255,.8)}
+.qc-wallpaper-art i:nth-child(2){width:34%;height:12px;background:rgba(255,255,255,.18)}
+.qc-wallpaper-art i:nth-child(3){width:25%;height:9px;background:rgba(169,143,255,.35)}
+.qc-wallpaper-option.midnight .qc-wallpaper-art{background:radial-gradient(at 80% 10%,#65518f,#1b1a32 52%,#0d1220)}
+.qc-wallpaper-option.midnight .qc-wallpaper-art i{background:#b29bff}
+.qc-wallpaper-option.ocean .qc-wallpaper-art{background:radial-gradient(at 80% 5%,#267c96,#12324b 55%,#0a1829)}
+.qc-wallpaper-option.ocean .qc-wallpaper-art i{background:#69d5df}
+.qc-wallpaper-option.forest .qc-wallpaper-art{background:radial-gradient(at 80% 5%,#38785c,#193d35 55%,#0d1b1a)}
+.qc-wallpaper-option.forest .qc-wallpaper-art i{background:#8bd4a9}
+.qc-wallpaper-option.sunset .qc-wallpaper-art{background:radial-gradient(at 80% 5%,#a65c69,#57334e 55%,#21172b)}
+.qc-wallpaper-option.sunset .qc-wallpaper-art i{background:#ffc18b}
+.qc-wallpaper-option.default .qc-wallpaper-art{background:radial-gradient(at 80% 5%,#554b79,#24213d 55%,#111321)}
+.qc-wallpaper-meta{display:flex;min-width:0;flex-direction:column;gap:2px}
+.qc-wallpaper-meta b{font-size:11px;color:#f1effb}
+.qc-wallpaper-meta small{font-size:9px;color:#8f8ba6}
+.qc-wallpaper-check{position:absolute;top:13px;right:13px;display:grid;width:20px;height:20px;place-items:center;border:1px solid rgba(255,255,255,.35);border-radius:50%;color:#fff;background:rgba(10,10,20,.45);font-size:11px;font-weight:800}
+.qc-wallpaper-option.selected .qc-wallpaper-check{border-color:#b5a4ff;background:#8b70e8}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-meta b{color:#302b43}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-meta small{color:#817b96}
+.qc-settings-overlay[data-theme="light"] .qc-wallpaper-option.selected{background:#f0ebff}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="default"]{--chat-wallpaper-base:#f4f3f9;--chat-wallpaper-glow:rgba(124,91,205,.08)}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="midnight"]{--chat-wallpaper-base:#e9e6f5;--chat-wallpaper-glow:rgba(119,89,190,.16)}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="ocean"]{--chat-wallpaper-base:#e6f2f6;--chat-wallpaper-glow:rgba(35,144,183,.14)}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="forest"]{--chat-wallpaper-base:#e8f2eb;--chat-wallpaper-glow:rgba(53,143,102,.13)}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="sunset"]{--chat-wallpaper-base:#f6eaf0;--chat-wallpaper-glow:rgba(194,103,111,.14)}
+@media(max-width:520px){.qc-wallpaper-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.qc-wallpaper-art{height:64px}.qc-wallpaper-option{padding:8px}}
