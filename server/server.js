@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 import { connectDB } from "./lib/db.js";
 import { initializeSocket } from "./lib/socket.js";
+import { createRateLimiter, securityHeaders } from "./lib/security.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import contactRouter from "./routes/contactRoutes.js";
@@ -20,6 +21,8 @@ const allowedOrigins = [
     "http://localhost:5173",
 ].filter(Boolean);
 
+app.disable("x-powered-by");
+app.use(securityHeaders);
 app.use(cors({
     origin(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
@@ -73,7 +76,7 @@ app.use("/api/messages", ensureDatabase, messageRouter);
 
 app.use((req, res) => res.status(404).json({
     success: false,
-    message: `Route not found: ${req.method} ${req.originalUrl}`,
+    message: \`Route not found: \${req.method} \${req.originalUrl}\`,
 }));
 
 app.use((error, _req, res, _next) => {
@@ -90,11 +93,11 @@ initializeSocket(httpServer, allowedOrigins);
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(`QuickChat API + Socket.IO listening on port ${PORT}`);
+    console.log(\`QuickChat API + Socket.IO listening on port \${PORT}\`);
 });
 
 const shutdown = async (signal) => {
-    console.log(`${signal} received; shutting down gracefully`);
+    console.log(\`\${signal} received; shutting down gracefully\`);
     httpServer.close(async () => {
         try {
             await mongoose.connection.close();
