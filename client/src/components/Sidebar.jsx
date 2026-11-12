@@ -319,11 +319,7 @@ const Sidebar = () => {
                 No exact username match yet. Enter the complete username to find the account.
               </p>
             )}
-            {!query.trim() && (
-              <p className="rounded-lg bg-white/[0.04] px-3 py-3 text-xs leading-relaxed text-slate-300/70">
-                The account appears only when the full username matches.
-              </p>
-            )}
+
           </div>
         </section>
       )}
