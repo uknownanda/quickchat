@@ -93,3 +93,87 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
   background:linear-gradient(110deg,#e7def9,#dbd0f4 70%,#e2d6f6)!important;
 }
 .qc-app[data-theme="dark"] .qc-primary-btn{color:#fff!important}
+
+/* Theme-aware account menu */
+.qc-app[data-theme="dark"] .qc-account-menu{
+  background:linear-gradient(155deg,#251e3a,#171326)!important;
+  border-color:rgba(205,184,255,.16)!important;
+  box-shadow:0 20px 55px rgba(0,0,0,.42)!important;
+}
+.qc-app[data-theme="dark"] .qc-account-menu button{color:#eeeaf8!important}
+.qc-app[data-theme="dark"] .qc-account-menu button:hover{background:rgba(255,255,255,.08)!important}
+.qc-app[data-theme="dark"] .qc-account-menu button:last-child{color:#fda4af!important}
+.qc-app[data-theme="light"] .qc-account-menu{
+  background:linear-gradient(155deg,#fff,#f4f1fb)!important;
+  border:1px solid #e2deed!important;
+  box-shadow:0 18px 48px rgba(47,37,78,.18)!important;
+}
+.qc-app[data-theme="light"] .qc-account-menu button{
+  color:#39344e!important;
+}
+.qc-app[data-theme="light"] .qc-account-menu button:hover{
+  background:#eeeafb!important;
+}
+.qc-app[data-theme="light"] .qc-account-menu button:last-child{
+  color:#c04462!important;
+}
+.qc-app[data-theme="light"] .qc-account-menu button span{color:inherit!important}
+
+/* Chat canvas and message bubbles adapt to the selected theme */
+.qc-app[data-theme="light"] .qc-chat{
+  background:#f4f3f9!important;
+  color:#29263a!important;
+}
+.qc-app[data-theme="light"] .qc-message-list{
+  background:linear-gradient(180deg,#f5f4fa,#eeedf6)!important;
+}
+.qc-app[data-theme="light"] .qc-chat[style*="--qc-chat-wallpaper: midnight"] .qc-message-list{
+  background:radial-gradient(ellipse at 50% 0%,rgba(116,104,174,.10),transparent 65%),linear-gradient(145deg,#f0eff8,#e9e8f2)!important;
+}
+.qc-app[data-theme="light"] .qc-chat[style*="--qc-chat-wallpaper: ocean"] .qc-message-list{
+  background:radial-gradient(ellipse at 15% 20%,rgba(35,130,170,.09),transparent 60%),linear-gradient(145deg,#edf5f8,#e8f0f5)!important;
+}
+.qc-app[data-theme="light"] .qc-chat[style*="--qc-chat-wallpaper: forest"] .qc-message-list{
+  background:radial-gradient(ellipse at 85% 15%,rgba(35,130,90,.08),transparent 60%),linear-gradient(145deg,#eef5f0,#e8f0eb)!important;
+}
+.qc-app[data-theme="light"] .qc-chat[style*="--qc-chat-wallpaper: sunset"] .qc-message-list{
+  background:radial-gradient(ellipse at 50% 0%,rgba(190,95,110,.08),transparent 60%),linear-gradient(145deg,#f8eff1,#f1e9ef)!important;
+}
+.qc-app[data-theme="light"] .qc-message.theirs{
+  background:#fff!important;
+  color:#302c43!important;
+  border:1px solid #e4e1ed!important;
+  box-shadow:0 3px 12px rgba(47,39,75,.055)!important;
+}
+.qc-app[data-theme="light"] .qc-message.mine{
+  background:linear-gradient(135deg,#8064cb,#674bb0)!important;
+  color:#fff!important;
+  border:1px solid rgba(93,69,158,.18)!important;
+  box-shadow:0 4px 14px rgba(91,68,151,.14)!important;
+}
+.qc-app[data-theme="light"] .qc-message-meta,
+.qc-app[data-theme="light"] .qc-message-meta span{color:rgba(255,255,255,.78)!important}
+.qc-app[data-theme="light"] .qc-message.theirs .qc-message-meta,
+.qc-app[data-theme="light"] .qc-message.theirs .qc-message-meta span{color:#89849a!important}
+.qc-app[data-theme="light"] .qc-message.theirs .text-white\/45,
+.qc-app[data-theme="light"] .qc-message.theirs .text-white\/60{color:#77738b!important}
+.qc-app[data-theme="light"] .qc-message.theirs .qc-quoted{
+  background:#f3f0fa!important;
+  border-left:3px solid #a18bd6!important;
+  color:#39334e!important;
+}
+.qc-app[data-theme="light"] .qc-message.theirs .qc-quoted span:first-child{color:#765bb5!important}
+.qc-app[data-theme="light"] .qc-message.theirs .qc-reaction-chip{
+  color:#51476d!important;background:#f1eef8!important;border-color:#e1dced!important;
+}
+.qc-app[data-theme="light"] .qc-message.theirs .qc-edit-input{
+  color:#302c43!important;background:#fff!important;border-color:#dcd7e8!important;
+}
+.qc-app[data-theme="light"] .qc-message-actions{
+  color:#39334e!important;background:#fff!important;border-color:#e1dced!important;
+  box-shadow:0 8px 24px rgba(47,39,75,.14)!important;
+}
+.qc-app[data-theme="light"] .qc-message-actions button{color:#51476d!important}
+.qc-app[data-theme="light"] .qc-message-actions button:hover{background:#f0ecf8!important}
+.qc-app[data-theme="light"] .qc-message-list .text-white\/45,
+.qc-app[data-theme="light"] .qc-message-list .text-white\/60{color:#77738b!important}
