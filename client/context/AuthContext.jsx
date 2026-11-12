@@ -184,16 +184,18 @@ export const AuthProvider = ({ children }) => {
                 { headers: { token: localStorage.getItem("token") || "" } }
             );
 
-            if (data.success) {
-                setAuthUser(data.user);
-                toast.success("Profile updated successfully");
-            } else {
-                toast.error(data.message || "Profile update failed");
+            if (!data.success || !data.user) {
+                throw new Error(data.message || "Profile update failed");
             }
+
+            setAuthUser(data.user);
+            return data.user;
         } catch (error) {
             console.error("Profile Update Error:", error);
-            toast.error(
-                error.response?.data?.message || "Profile update failed"
+            throw new Error(
+                error.response?.data?.message ||
+                error.message ||
+                "Profile update failed"
             );
         }
     };
