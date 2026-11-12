@@ -3629,3 +3629,53 @@ body {
   .qc-app .qc-sidebar #quickchat-discover-panel{padding:14px!important}
   .qc-discover-input{min-height:50px}
 }
+
+
+/* Find People search refinement: compact field and quiet focus treatment */
+.qc-app .qc-sidebar #quickchat-discover-panel{padding:15px 16px 16px!important}
+.qc-discover-heading{margin-bottom:10px!important}
+.qc-discover-heading p:first-child{font-size:13px!important;line-height:1.25!important}
+.qc-discover-heading p:nth-child(2){font-size:10px!important;line-height:1.45!important;max-width:235px}
+.qc-discover-input{
+  min-height:45px!important;
+  height:45px;
+  margin-top:10px!important;
+  gap:10px!important;
+  border-radius:12px!important;
+  padding:0 10px!important;
+}
+.qc-discover-at{width:24px;height:24px;flex-basis:24px;font-size:13px;border-radius:7px}
+.qc-discover-input input{
+  height:100%;
+  min-height:0;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+}
+.qc-discover-input input:focus,
+.qc-discover-input input:focus-visible,
+.qc-discover-input input:active{
+  border:0!important;
+  outline:0!important;
+  outline-offset:0!important;
+  box-shadow:none!important;
+  ring:0!important;
+}
+.qc-discover-input:focus-within{
+  border-color:rgba(178,151,255,.56)!important;
+  box-shadow:0 0 0 2px rgba(139,92,246,.09),inset 0 1px 3px rgba(0,0,0,.15)!important;
+}
+.qc-discover-clear{width:22px;height:22px;flex-basis:22px}
+.qc-discover-results{margin-top:10px!important}
+.qc-app[data-theme="light"] .qc-discover-input input:focus,
+.qc-app[data-theme="light"] .qc-discover-input input:focus-visible{
+  outline:0!important;border:0!important;box-shadow:none!important;
+}
+@media(max-width:767px){
+  .qc-discover-input{min-height:44px!important;height:44px}
+}
