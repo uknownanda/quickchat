@@ -21,6 +21,8 @@ export const ChatProvider = ({ children }) => {
     const usersRef = useRef(users);
     const typingTimersRef = useRef({});
     const loadingOlderLock = useRef(false);
+    const sendingMessageToRef = useRef(new Set());
+    const refreshTimerRef = useRef(null);
     messagesRef.current = messages;
     usersRef.current = users;
 
@@ -130,36 +132,46 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // Send message
+    // Serialize sends per conversation so slow requests cannot create duplicates.
     const sendMessage = async (messageData) => {
         const userId = selectedRef.current?._id;
 
         if (!userId) {
-            return toast.error("Select a conversation first");
+            toast.error("Select a conversation first");
+            return false;
         }
+        if (sendingMessageToRef.current.has(userId)) return false;
 
+        sendingMessageToRef.current.add(userId);
         try {
             const { data } = await axios.post(
                 `/api/messages/send/${userId}`,
                 messageData
             );
 
-            if (data.success) {
-                setMessages(prev =>
-                    prev.some(m => m._id === data.newMessage._id)
-                        ? prev
-                        : [...prev, data.newMessage]
-                );
-                setUsers(prev => prev.map(user =>
-                    user._id === userId
-                        ? { ...user, lastMessage: data.newMessage }
-                        : user
-                ));
+            if (!data.success || !data.newMessage?._id) {
+                toast.error(data.message || "Message could not be sent");
+                return false;
             }
+
+            setMessages(prev =>
+                prev.some(m => m._id === data.newMessage._id)
+                    ? prev
+                    : [...prev, data.newMessage]
+            );
+            setUsers(prev => prev.map(user =>
+                user._id === userId
+                    ? { ...user, lastMessage: data.newMessage }
+                    : user
+            ));
+            return true;
         } catch (error) {
             toast.error(
                 error.response?.data?.message || "Message could not be sent"
             );
+            return false;
+        } finally {
+            sendingMessageToRef.current.delete(userId);
         }
     };
 
@@ -408,28 +420,31 @@ export const ChatProvider = ({ children }) => {
         }
     }, [selectedUser?._id]);
 
-    // Refresh conversation when returning to browser tab
+    // Coalesce focus/visibility/pageshow bursts into one background refresh.
     useEffect(() => {
-        const refreshMessages = () => {
+        const scheduleRefresh = () => {
             if (document.visibilityState !== "visible") return;
+            if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
 
-            const userId = selectedRef.current?._id;
-
-            if (userId) {
-                getMessages(userId);
-            }
-
-            getUsers();
+            refreshTimerRef.current = setTimeout(() => {
+                refreshTimerRef.current = null;
+                if (document.visibilityState !== "visible") return;
+                const userId = selectedRef.current?._id;
+                if (userId) getMessages(userId);
+                getUsers();
+            }, 300);
         };
 
-        document.addEventListener("visibilitychange", refreshMessages);
-        window.addEventListener("focus", refreshMessages);
-        window.addEventListener("pageshow", refreshMessages);
+        document.addEventListener("visibilitychange", scheduleRefresh);
+        window.addEventListener("focus", scheduleRefresh);
+        window.addEventListener("pageshow", scheduleRefresh);
 
         return () => {
-            document.removeEventListener("visibilitychange", refreshMessages);
-            window.removeEventListener("focus", refreshMessages);
-            window.removeEventListener("pageshow", refreshMessages);
+            if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+            refreshTimerRef.current = null;
+            document.removeEventListener("visibilitychange", scheduleRefresh);
+            window.removeEventListener("focus", scheduleRefresh);
+            window.removeEventListener("pageshow", scheduleRefresh);
         };
     }, []);
 
