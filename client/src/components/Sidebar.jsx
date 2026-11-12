@@ -275,7 +275,7 @@ const Sidebar = () => {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Enter complete username"
             aria-label="Enter the complete username"
-            className="mt-3 w-full rounded-xl border border-violet-300/30 bg-[#0b1020] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-400/15"
+            className="mt-3 w-full rounded-xl border border-white/10 bg-[#0b1020] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-white/20 focus:outline-none focus:ring-0"
           />
           <div className="mt-3 max-h-44 space-y-2 overflow-y-auto">
             {results.map((user) => (
