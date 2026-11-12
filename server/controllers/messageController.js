@@ -134,93 +134,47 @@ export const getMessages = async (req, res) => {
         const { id } = req.params;
         const myId = req.user._id;
         const after = req.query.after ? String(req.query.after) : null;
+        const before = req.query.before ? String(req.query.before) : null;
+        const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 50, 1), 100);
+        if (after && before) return res.status(400).json({ success: false, message: "Use either before or after cursor" });
+        if (!(await areContacts(myId, id))) return res.status(403).json({ success: false, message: "You can message only accepted contacts" });
 
-        if (!(await areContacts(myId, id))) {
-            return res.status(403).json({
-                success: false,
-                message: "You can message only accepted contacts",
+        let query = pairQuery(myId, id);
+        const cursor = after || before;
+        if (cursor) {
+            if (!Message.db.base.Types.ObjectId.isValid(cursor)) return res.status(400).json({ success: false, message: "Invalid message cursor" });
+            const cursorMessage = await Message.findOne({ _id: cursor, ...query }).select("_id createdAt").lean();
+            if (!cursorMessage) return res.status(400).json({ success: false, message: "Message cursor was not found in this conversation" });
+            const comparison = after ? "$gt" : "$lt";
+            query = { ...query, $and: [{ $or: [
+                { createdAt: { [comparison]: cursorMessage.createdAt } },
+                { createdAt: cursorMessage.createdAt, _id: { [comparison]: cursorMessage._id } },
+            ] }] };
+        }
+
+        if (!before) {
+            const now = new Date();
+            const incomingQuery = after
+                ? { ...query, senderId: id, receiverId: myId, seen: false }
+                : { senderId: id, receiverId: myId, seen: false };
+            const changed = await Message.updateMany(incomingQuery, { $set: { seen: true, readAt: now, deliveredAt: now } });
+            if (changed.modifiedCount) emitPair(myId.toString(), id.toString(), "messagesRead", {
+                readerId: myId.toString(), senderId: id.toString(), readAt: now,
             });
         }
 
-        let query = pairQuery(myId, id);
+        const sort = before || !after ? { createdAt: -1, _id: -1 } : { createdAt: 1, _id: 1 };
+        let messages = await Message.find(query).populate("replyTo", "text image senderId").sort(sort).limit(limit + 1).lean();
+        const hasMore = messages.length > limit;
+        if (hasMore) messages = messages.slice(0, limit);
+        if (before || !after) messages.reverse();
 
-        if (after) {
-            if (!Message.db.base.Types.ObjectId.isValid(after)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid message cursor",
-                });
-            }
-
-            const cursorMessage = await Message.findOne({
-                _id: after,
-                ...query,
-            }).select("_id createdAt").lean();
-
-            if (!cursorMessage) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Message cursor was not found in this conversation",
-                });
-            }
-
-            query = {
-                ...query,
-                $and: [{
-                    $or: [
-                        { createdAt: { $gt: cursorMessage.createdAt } },
-                        {
-                            createdAt: cursorMessage.createdAt,
-                            _id: { $gt: cursorMessage._id },
-                        },
-                    ],
-                }],
-            };
-
-            const now = new Date();
-            const changed = await Message.updateMany(
-                { ...query, senderId: id, receiverId: myId, seen: false },
-                { $set: { seen: true, readAt: now, deliveredAt: now } }
-            );
-
-            if (changed.modifiedCount) {
-                emitPair(myId.toString(), id.toString(), "messagesRead", {
-                    readerId: myId.toString(),
-                    senderId: id.toString(),
-                    readAt: now,
-                });
-            }
-        } else {
-            const now = new Date();
-            const changed = await Message.updateMany(
-                { senderId: id, receiverId: myId, seen: false },
-                { $set: { seen: true, readAt: now, deliveredAt: now } }
-            );
-
-            if (changed.modifiedCount) {
-                emitPair(myId.toString(), id.toString(), "messagesRead", {
-                    readerId: myId.toString(),
-                    senderId: id.toString(),
-                    readAt: now,
-                });
-            }
-        }
-
-        const messages = await Message.find(query)
-            .populate("replyTo", "text image senderId")
-            .sort({ createdAt: 1, _id: 1 })
-            .lean();
-
-        return res.status(200).json({ success: true, messages });
+        return res.status(200).json({ success: true, messages, hasMore, nextCursor: messages.length ? messages[0]._id : null });
     } catch (error) {
         console.error("Get Messages Error:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Unable to load messages",
-        });
+        return res.status(500).json({ success: false, message: "Unable to load messages" });
     }
 };
-
 export const markMessageAsSeen = async (req, res) => {
     try {
         const message = await Message.findOneAndUpdate(
