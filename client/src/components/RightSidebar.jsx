@@ -202,7 +202,7 @@ const RightSidebar = () => {
             src={activeImage.url}
             alt={activeImage.alt || "Image preview"}
             onClick={(event) => event.stopPropagation()}
-            className="h-full w-full select-none object-contain object-center"
+            className="h-auto w-auto max-h-[92dvh] max-w-[94vw] select-none object-contain object-center"
           />
         </div>
       )}
