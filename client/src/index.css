@@ -2852,3 +2852,99 @@ body {
   .qc-auth-form-shell { padding: 21px 16px; }
   .qc-auth-heading h2 { font-size: 30px; }
 }
+
+
+/* Auth layout refinement: tablet / compact desktop gets a true centered form,
+   not a squeezed two-column page with the story panel bleeding off-screen. */
+@media (max-width: 1100px) {
+  .qc-auth-v2 {
+    min-height: 100svh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .qc-auth-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100svh;
+    padding: 28px 22px;
+    gap: 0;
+  }
+  .qc-auth-story { display: none; }
+  .qc-auth-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+  }
+  .qc-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 18px;
+    color: #f8f7ff;
+    font-size: 19px;
+    letter-spacing: -.6px;
+  }
+  .qc-mobile-brand .qc-brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 24px;
+  }
+  .qc-auth-form-shell {
+    width: min(100%, 720px);
+    max-width: 720px;
+    max-height: none;
+    overflow: visible;
+    padding: clamp(24px, 3.5vw, 38px);
+    border-radius: 24px;
+  }
+  .qc-auth-heading { margin-bottom: 19px; }
+  .qc-auth-heading h2 { font-size: clamp(30px, 4vw, 38px); }
+  .qc-auth-switch { margin-bottom: 19px; }
+  .qc-auth-fields { gap: 14px; }
+  .qc-field-grid { gap: 13px 14px; }
+  .qc-field-control { min-height: 48px; }
+  .qc-field-control input { font-size: 13px; }
+  .qc-field-control textarea { min-height: 72px; }
+  .qc-auth-cta { min-height: 54px; }
+  .qc-auth-bottom { margin-top: 18px; }
+  .qc-auth-secure { margin-top: 19px; }
+  .qc-auth-panel-foot {
+    display: block;
+    margin-top: 16px;
+    color: #69728a;
+    font-size: 10px;
+  }
+  .qc-auth-panel-foot span { color: #a99df2; }
+}
+@media (max-width: 680px) {
+  .qc-auth-layout { justify-content: flex-start; padding: 18px 14px 24px; }
+  .qc-mobile-brand { margin-bottom: 14px; }
+  .qc-auth-form-shell { padding: 23px 19px; border-radius: 21px; }
+  .qc-auth-heading { margin-bottom: 17px; }
+  .qc-auth-heading h2 { font-size: 31px; }
+  .qc-field-grid { grid-template-columns: minmax(0,1fr); gap: 13px; }
+  .qc-field-wide { grid-column: auto; }
+  .qc-field-control { min-height: 48px; }
+  .qc-field-control textarea { min-height: 76px; }
+  .qc-password-meter { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .qc-password-meter > div { width: 100%; flex: none; }
+  .qc-password-meter small { white-space: normal; }
+  .qc-auth-secure { flex-wrap: wrap; line-height: 1.6; }
+}
+@media (max-width: 380px) {
+  .qc-auth-layout { padding-inline: 10px; }
+  .qc-auth-form-shell { padding: 20px 15px; }
+  .qc-auth-switch button { font-size: 10px; }
+  .qc-auth-heading h2 { font-size: 28px; }
+}
+
+/* Keep password guidance readable in the two-column registration grid. */
+.qc-field-control input { overflow: hidden; text-overflow: ellipsis; }
+.qc-field-control .qc-reveal { flex: 0 0 auto; padding-inline: 10px; white-space: nowrap; }
