@@ -60,14 +60,14 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
-    const connectSocket = (userData) => {
+    const connectSocket = (userData, authToken) => {
         // Connect to the persistent Express + Socket.IO backend.
         // In production, VITE_SOCKET_URL should point to the Render service.
-        if (!socketUrl || !userData || socket) return;
+        if (!socketUrl || !userData || !authToken || socket) return;
 
         setSocketStatus("connecting");
         const newSocket = io(socketUrl, {
-            query: { userId: userData._id },
+            auth: { token: authToken },
             transports: ["websocket", "polling"],
             reconnection: true,
             reconnectionAttempts: Infinity,
@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }) => {
 
             if (data.success && data.user) {
                 setAuthUser(data.user);
-                connectSocket(data.user);
+                connectSocket(data.user, savedToken);
             } else {
                 clearSession();
             }
@@ -158,7 +158,7 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common.token = data.token;
             setToken(data.token);
             setAuthUser(data.userData);
-            connectSocket(data.userData);
+            connectSocket(data.userData, data.token);
             toast.success(data.message || "Authentication successful");
         } catch (error) {
             console.error("Login/Signup Error:", error);
