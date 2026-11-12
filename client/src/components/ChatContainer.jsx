@@ -287,6 +287,13 @@ const ChatContainer = () => {
                 { id: "ocean", label: "Ocean", detail: "Cool blue atmosphere" },
                 { id: "forest", label: "Forest", detail: "Soft green tones" },
                 { id: "sunset", label: "Sunset", detail: "Warm evening colors" },
+                { id: "aurora", label: "Aurora", detail: "Northern-light gradients" },
+                { id: "stardust", label: "Stardust", detail: "A quiet cosmic night" },
+                { id: "geometry", label: "Geometry", detail: "Structured color fields" },
+                { id: "glass", label: "Glass", detail: "Cool translucent layers" },
+                { id: "minimal", label: "Minimal", detail: "Soft graphite and ink" },
+                { id: "dreamscape", label: "Dreamscape", detail: "Lavender and rose haze" },
+                { id: "ember", label: "Ember", detail: "Copper and warm charcoal" },
               ].map((item) => (
                 <button
                   type="button"
