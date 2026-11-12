@@ -519,7 +519,7 @@ const Sidebar = () => {
           </div>
         )}
       </div>
-      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
+      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} selectedUser={selectedUser} />}
     </aside>
   );
 };
