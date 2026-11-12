@@ -44,11 +44,13 @@ const SettingsPanel = ({ onClose, selectedUser }) => {
         <aside className="qc-settings-nav">
           <div className="qc-settings-brand"><span className="qc-settings-mark">Q</span><div><b>QuickChat</b><small>PERSONALIZATION CENTER</small></div></div>
           <p className="qc-settings-nav-label">PREFERENCES</p>
-          {sections.map((item) => (
-            <button key={item.id} type="button" onClick={() => setActive(item.id)} className={`qc-settings-nav-item ${active === item.id ? "active" : ""}`}>
-              <span className="qc-settings-nav-icon">{item.icon}</span><span><b>{item.label}</b><small>{item.detail}</small></span><span className="qc-settings-nav-arrow">›</span>
-            </button>
-          ))}
+          <div className="qc-settings-nav-links">
+            {sections.map((item) => (
+              <button key={item.id} type="button" onClick={() => setActive(item.id)} className={`qc-settings-nav-item ${active === item.id ? "active" : ""}`}>
+                <span className="qc-settings-nav-icon">{item.icon}</span><span><b>{item.label}</b><small>{item.detail}</small></span><span className="qc-settings-nav-arrow">›</span>
+              </button>
+            ))}
+          </div>
           <div className="qc-settings-nav-foot"><span className="qc-settings-status-dot" /> Preferences saved on this device</div>
         </aside>
         <main className="qc-settings-main">
