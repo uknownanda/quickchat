@@ -3,10 +3,9 @@ import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { formatLastSeen } from "../lib/utils";
 import assets from "../assets/assets";
-import ProfileImagePreview from "./ProfileImagePreview";
 
 const RightSidebar = () => {
-  const { selectedUser, messages } = useContext(ChatContext);
+  const { selectedUser } = useContext(ChatContext);
   const { onlineUsers, axios } = useContext(AuthContext);
   const [activeImage, setActiveImage] = useState(null);
   const [msgImages, setMsgImages] = useState([]);
@@ -72,10 +71,6 @@ const RightSidebar = () => {
   }
 
   const isOnline = onlineUsers.includes(selectedUser._id);
-  const pinnedMessages = messages
-    .filter((message) => message.isPinned && !message.deletedAt)
-    .sort((a, b) => new Date(b.pinnedAt || b.createdAt) - new Date(a.pinnedAt || a.createdAt));
-
   const copyUsername = async () => {
     if (!selectedUser.username || !navigator.clipboard?.writeText) return;
     try {
@@ -89,15 +84,18 @@ const RightSidebar = () => {
     <>
       <aside className="qc-right-panel h-full w-full relative overflow-y-auto text-white">
         <div className="qc-profile-card flex flex-col items-center text-center">
-          <div className="relative">
-            <ProfileImagePreview
-              src={selectedUser.profilePic || assets.avatar_icon}
-              alt={`${selectedUser.fullName}'s profile picture`}
-              className="qc-profile-avatar rounded-full object-cover ring-4 ring-violet-400/15"
-            />
+          <div className="relative mb-3">
+            <div className="rounded-full p-1 bg-gradient-to-br from-violet-400 via-fuchsia-400 to-indigo-500 shadow-lg shadow-violet-500/20">
+              <img
+                src={selectedUser.profilePic || assets.avatar_icon}
+                alt={`${selectedUser.fullName}'s profile picture`}
+                className="h-24 w-24 rounded-full border-4 border-[#11101b] object-cover"
+                loading="lazy"
+              />
+            </div>
             <span
               aria-label={isOnline ? "Online" : "Offline"}
-              className={`absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-[#11101b] ${isOnline ? "bg-emerald-400" : "bg-slate-500"}`}
+              className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-[3px] border-[#11101b] ${isOnline ? "bg-emerald-400" : "bg-slate-500"}`}
             />
           </div>
           <h2 className="qc-profile-name text-lg font-semibold">{selectedUser.fullName}</h2>
@@ -120,31 +118,6 @@ const RightSidebar = () => {
         </div>
 
         <div className="qc-right-divider border-t border-white/10" />
-
-        <section className="qc-pinned-section" aria-labelledby="qc-pinned-heading">
-          <div className="flex items-center justify-between">
-            <h3 id="qc-pinned-heading" className="text-sm font-semibold tracking-tight">Pinned messages</h3>
-            <span className="rounded-full px-2 py-1 text-[10px] text-white/60">{pinnedMessages.length}</span>
-          </div>
-          {pinnedMessages.length ? (
-            <div className="mt-3 space-y-2">
-              {pinnedMessages.slice(0, 5).map((message) => (
-                <div key={message._id} className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                  <p className="line-clamp-3 text-xs text-white/80">
-                    {message.text || (message.image ? "Image message" : "Pinned message")}
-                  </p>
-                  <p className="mt-1 text-[10px] text-white/40">
-                    {message.pinnedAt ? new Date(message.pinnedAt).toLocaleDateString() : "Pinned"}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-2 text-xs text-white/40">Pinned messages will appear here.</p>
-          )}
-        </section>
-
-        <div className="qc-right-divider my-4 border-t border-white/10" />
 
         <section className="qc-shared-section" aria-labelledby="qc-shared-heading">
           <div className="flex items-center justify-between">
