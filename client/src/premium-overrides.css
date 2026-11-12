@@ -81,3 +81,15 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
   background:radial-gradient(ellipse at 50% 42%,rgba(135,99,220,.08),transparent 42%),#f4f2fa!important;
   border-left:1px solid #e1deec!important;
 }
+
+/* Find People button contrast in light and dark themes */
+.qc-app[data-theme="light"] .qc-primary-btn{
+  color:#44336c!important;
+  background:linear-gradient(110deg,#eee9fb,#e5def8 70%,#e9e1f8)!important;
+  border:1px solid #dcd2f2!important;
+  box-shadow:0 8px 22px rgba(111,82,171,.12)!important;
+}
+.qc-app[data-theme="light"] .qc-primary-btn:hover{
+  background:linear-gradient(110deg,#e7def9,#dbd0f4 70%,#e2d6f6)!important;
+}
+.qc-app[data-theme="dark"] .qc-primary-btn{color:#fff!important}
