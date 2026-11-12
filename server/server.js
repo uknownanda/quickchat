@@ -14,6 +14,9 @@ import contactRouter from "./routes/contactRoutes.js";
 const app = express();
 const httpServer = http.createServer(app);
 
+// Render terminates TLS at its proxy; trust its single forwarding hop for client IP rate limits.
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
     process.env.CLIENT_URL,
     "https://quickchat-two-mu.vercel.app",
