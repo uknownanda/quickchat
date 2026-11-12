@@ -85,14 +85,23 @@ const RightSidebar = () => {
       <aside className="qc-right-panel h-full w-full relative overflow-y-auto text-white">
         <div className="qc-profile-card flex flex-col items-center text-center">
           <div className="relative mb-3">
-            <div className="rounded-full p-1 bg-gradient-to-br from-violet-400 via-fuchsia-400 to-indigo-500 shadow-lg shadow-violet-500/20">
+            <button
+              type="button"
+              onClick={() => setActiveImage({
+                url: selectedUser.profilePic || assets.avatar_icon,
+                alt: `${selectedUser.fullName}'s profile picture`,
+              })}
+              aria-label={`View ${selectedUser.fullName}'s profile picture`}
+              title="View profile picture"
+              className="group cursor-zoom-in rounded-full p-1 bg-gradient-to-br from-violet-400 via-fuchsia-400 to-indigo-500 shadow-lg shadow-violet-500/20 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
+            >
               <img
                 src={selectedUser.profilePic || assets.avatar_icon}
                 alt={`${selectedUser.fullName}'s profile picture`}
                 className="h-24 w-24 rounded-full border-4 border-[#11101b] object-cover"
                 loading="lazy"
               />
-            </div>
+            </button>
             <span
               aria-label={isOnline ? "Online" : "Offline"}
               className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-[3px] border-[#11101b] ${isOnline ? "bg-emerald-400" : "bg-slate-500"}`}
@@ -176,7 +185,7 @@ const RightSidebar = () => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Shared image preview"
+          aria-label={activeImage.alt || "Image preview"}
           onClick={() => setActiveImage(null)}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
         >
@@ -191,7 +200,7 @@ const RightSidebar = () => {
           </button>
           <img
             src={activeImage.url}
-            alt="Shared image preview"
+            alt={activeImage.alt || "Image preview"}
             onClick={(event) => event.stopPropagation()}
             className="max-h-[88vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
           />
