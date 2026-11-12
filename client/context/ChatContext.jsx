@@ -20,6 +20,7 @@ export const ChatProvider = ({ children }) => {
     const messagesRef = useRef(messages);
     const usersRef = useRef(users);
     const typingTimersRef = useRef({});
+    const loadingOlderLock = useRef(false);
     messagesRef.current = messages;
     usersRef.current = users;
 
@@ -106,7 +107,8 @@ export const ChatProvider = ({ children }) => {
     const loadOlderMessages = async () => {
         const userId = selectedRef.current?._id;
         const oldest = messagesRef.current[0];
-        if (!userId || !oldest?._id || !hasMoreMessages || loadingOlderMessages) return;
+        if (!userId || !oldest?._id || !hasMoreMessages || loadingOlderLock.current) return;
+        loadingOlderLock.current = true;
         setLoadingOlderMessages(true);
         try {
             const { data } = await axios.get(`/api/messages/${userId}`, {
@@ -123,6 +125,7 @@ export const ChatProvider = ({ children }) => {
         } catch (error) {
             toast.error(error.response?.data?.message || "Unable to load older messages");
         } finally {
+            loadingOlderLock.current = false;
             setLoadingOlderMessages(false);
         }
     };
@@ -391,6 +394,8 @@ export const ChatProvider = ({ children }) => {
     // Existing contact-selection behavior - unchanged
     useEffect(() => {
         if (selectedUser?._id) {
+            setMessages([]);
+            setHasMoreMessages(false);
             setUnseenMessages(prev => ({
                 ...prev,
                 [selectedUser._id]: 0
