@@ -3047,3 +3047,27 @@ body {
 .qc-app[data-theme="light"] .qc-theme-item-copy small{color:#77718b}
 @keyframes qc-theme-menu-in{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:420px){.qc-chat-theme-trigger{gap:5px;min-height:35px;padding:0 8px}.qc-theme-trigger-label{font-size:10px}.qc-chat-theme-menu{right:-42px;width:220px}}
+
+
+/* Layer the conversation header above the scrolling message stack.
+   The header's backdrop-filter creates a stacking context, so the menu's
+   z-index alone cannot lift it above message bubbles in sibling layers. */
+.qc-app .qc-chat > .qc-chat-header{
+  position:relative!important;
+  z-index:80!important;
+  isolation:isolate;
+  overflow:visible!important;
+}
+.qc-app .qc-chat .qc-chat-theme-picker{
+  position:relative!important;
+  z-index:100!important;
+}
+.qc-app .qc-chat .qc-chat-theme-menu{
+  position:absolute!important;
+  z-index:110!important;
+  isolation:isolate;
+}
+.qc-app .qc-chat > .qc-message-list{
+  position:relative;
+  z-index:0;
+}
