@@ -79,7 +79,7 @@ app.use("/api/messages", ensureDatabase, messageRouter);
 
 app.use((req, res) => res.status(404).json({
     success: false,
-    message: \`Route not found: \${req.method} \${req.originalUrl}\`,
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
 }));
 
 app.use((error, _req, res, _next) => {
@@ -96,11 +96,11 @@ initializeSocket(httpServer, allowedOrigins);
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(\`QuickChat API + Socket.IO listening on port \${PORT}\`);
+    console.log(`QuickChat API + Socket.IO listening on port ${PORT}`);
 });
 
 const shutdown = async (signal) => {
-    console.log(\`\${signal} received; shutting down gracefully\`);
+    console.log(`${signal} received; shutting down gracefully`);
     httpServer.close(async () => {
         try {
             await mongoose.connection.close();
