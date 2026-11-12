@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
 import toast from "react-hot-toast";
 import ProfileImagePreview from "./ProfileImagePreview";
+import SettingsPanel from "./SettingsPanel";
 
 const formatContactTime = (date) => {
   if (!date) return "";
@@ -40,6 +41,7 @@ const Sidebar = () => {
   const [showDiscover, setShowDiscover] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
 
   const loadRequests = async () => {
@@ -197,6 +199,16 @@ const Sidebar = () => {
                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"
                 >
                   <span>♙</span> Edit profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAccountMenu(false);
+                    setShowSettings(true);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"
+                >
+                  <span>⚙</span> Settings
                 </button>
                 <button
                   type="button"
@@ -507,6 +519,7 @@ const Sidebar = () => {
           </div>
         )}
       </div>
+      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
     </aside>
   );
 };
