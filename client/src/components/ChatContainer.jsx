@@ -68,6 +68,7 @@ const ChatContainer = () => {
   const composerInputRef = useRef(null);
   const typingTimer = useRef(null);
   const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -80,12 +81,19 @@ const ChatContainer = () => {
   const [showContactAbout, setShowContactAbout] = useState(false);
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
-    if (!input.trim()) return;
-    await sendMessage({ text: input.trim(), replyTo: replyTo?._id || null });
-    setInput("");
-    setReplyTo(null);
-    setShowEmoji(false);
-    sendTyping(selectedUser._id, false);
+    const text = input.trim();
+    if (!text || sending) return;
+    setSending(true);
+    try {
+      const sent = await sendMessage({ text, replyTo: replyTo?._id || null });
+      if (!sent) return;
+      setInput("");
+      setReplyTo(null);
+      setShowEmoji(false);
+      sendTyping(selectedUser._id, false);
+    } finally {
+      setSending(false);
+    }
   };
   const handleSendImage = async (e) => {
     const file = e.target.files?.[0];
@@ -102,11 +110,11 @@ const ChatContainer = () => {
     }
     const reader = new FileReader();
     reader.onloadend = async () => {
-      await sendMessage({
+      const sent = await sendMessage({
         image: reader.result,
         replyTo: replyTo?._id || null,
       });
-      setReplyTo(null);
+      if (sent) setReplyTo(null);
       e.target.value = "";
     };
     reader.readAsDataURL(file);
@@ -668,11 +676,11 @@ const ChatContainer = () => {
           </label>
           <button
             type="submit"
-            disabled={!input.trim()}
+            disabled={!input.trim() || sending}
             className="qc-send-btn"
             aria-label="Send message"
           >
-            ➤
+            {sending ? "…" : "➤"}
           </button>
         </div>
       </form>
