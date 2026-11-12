@@ -281,35 +281,43 @@ const ChatContainer = () => {
           </button>
           {wallpaperMenuOpen && (
             <div className="qc-chat-theme-menu" role="group" aria-label="Conversation themes">
-              {[
-                { id: "default", label: "Classic", detail: "Original QuickChat look" },
-                { id: "midnight", label: "Midnight", detail: "Violet after dark" },
-                { id: "ocean", label: "Ocean", detail: "Cool blue atmosphere" },
-                { id: "forest", label: "Forest", detail: "Soft green tones" },
-                { id: "sunset", label: "Sunset", detail: "Warm evening colors" },
-                { id: "aurora", label: "Aurora", detail: "Northern-light gradients" },
-                { id: "stardust", label: "Stardust", detail: "A quiet cosmic night" },
-                { id: "geometry", label: "Geometry", detail: "Structured color fields" },
-                { id: "glass", label: "Glass", detail: "Cool translucent layers" },
-                { id: "minimal", label: "Minimal", detail: "Soft graphite and ink" },
-                { id: "dreamscape", label: "Dreamscape", detail: "Lavender and rose haze" },
-                { id: "ember", label: "Ember", detail: "Copper and warm charcoal" },
-              ].map((item) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  className={`qc-chat-theme-item ${(wallpapers[selectedUser._id] || "default") === item.id ? "active" : ""}`}
-                  onClick={() => {
-                    updateWallpaper(selectedUser._id, item.id);
-                    setWallpaperMenuOpen(false);
-                  }}
-                  aria-pressed={(wallpapers[selectedUser._id] || "default") === item.id}
-                >
-                  <span className={`qc-theme-item-swatch ${item.id}`} />
-                  <span className="qc-theme-item-copy"><b>{item.label}</b><small>{item.detail}</small></span>
-                  <span className="qc-theme-item-check">{(wallpapers[selectedUser._id] || "default") === item.id ? "✓" : ""}</span>
-                </button>
-              ))}
+              <div className="qc-theme-menu-heading">
+                <div><b>Choose a look</b><small>Conversation theme</small></div>
+                <span>12 THEMES</span>
+              </div>
+              <div className="qc-chat-theme-grid">
+                {[
+                  { id: "default", label: "Classic" },
+                  { id: "midnight", label: "Midnight" },
+                  { id: "ocean", label: "Ocean" },
+                  { id: "forest", label: "Forest" },
+                  { id: "sunset", label: "Sunset" },
+                  { id: "aurora", label: "Aurora" },
+                  { id: "stardust", label: "Stardust" },
+                  { id: "geometry", label: "Geometry" },
+                  { id: "glass", label: "Glass" },
+                  { id: "minimal", label: "Minimal" },
+                  { id: "dreamscape", label: "Dreamscape" },
+                  { id: "ember", label: "Ember" },
+                ].map((item) => (
+                  <button
+                    type="button"
+                    key={item.id}
+                    className={`qc-chat-theme-tile ${(wallpapers[selectedUser._id] || "default") === item.id ? "active" : ""}`}
+                    onClick={() => {
+                      updateWallpaper(selectedUser._id, item.id);
+                      setWallpaperMenuOpen(false);
+                    }}
+                    aria-pressed={(wallpapers[selectedUser._id] || "default") === item.id}
+                    aria-label={item.label}
+                    title={item.label}
+                  >
+                    <span className={`qc-theme-tile-art ${item.id}`} />
+                    <span>{item.label}</span>
+                    {(wallpapers[selectedUser._id] || "default") === item.id && <i aria-hidden="true">✓</i>}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
