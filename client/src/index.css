@@ -3093,3 +3093,102 @@ body {
   position:relative;
   z-index:0;
 }
+
+
+/* QuickChat premium wallpaper collection — CSS-only, low-overhead themes */
+.qc-app .qc-chat[data-wallpaper="aurora"]{
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(70,220,190,.24),transparent 34%),
+    radial-gradient(ellipse at 82% 8%,rgba(125,91,226,.32),transparent 38%),
+    radial-gradient(ellipse at 65% 88%,rgba(45,143,177,.18),transparent 42%),
+    linear-gradient(145deg,#091b25 0%,#17132d 54%,#0b1826 100%)!important;
+}
+.qc-app .qc-chat[data-wallpaper="stardust"]{
+  background:
+    radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.7) 99%,transparent),
+    radial-gradient(1px 1px at 32% 68%,rgba(194,180,255,.65) 99%,transparent),
+    radial-gradient(2px 2px at 78% 24%,rgba(255,255,255,.55) 99%,transparent),
+    radial-gradient(1px 1px at 88% 78%,rgba(255,255,255,.6) 99%,transparent),
+    radial-gradient(ellipse at 75% 5%,rgba(100,78,157,.2),transparent 42%),
+    linear-gradient(145deg,#090d1b,#151329 58%,#090e1a)!important;
+}
+.qc-app .qc-chat[data-wallpaper="geometry"]{
+  background:
+    linear-gradient(135deg,transparent 48%,rgba(160,143,255,.055) 49%,rgba(160,143,255,.055) 50%,transparent 51%) 0 0/34px 34px,
+    linear-gradient(45deg,transparent 48%,rgba(160,143,255,.045) 49%,rgba(160,143,255,.045) 50%,transparent 51%) 0 0/34px 34px,
+    radial-gradient(ellipse at 80% 0%,rgba(108,87,181,.24),transparent 45%),
+    linear-gradient(145deg,#101020,#17162b 58%,#0d1320)!important;
+}
+.qc-app .qc-chat[data-wallpaper="glass"]{
+  background:
+    radial-gradient(ellipse at 15% 15%,rgba(70,195,210,.22),transparent 38%),
+    radial-gradient(ellipse at 90% 80%,rgba(140,112,230,.24),transparent 42%),
+    linear-gradient(135deg,#0d1d2c,#172238 50%,#121629)!important;
+}
+.qc-app .qc-chat[data-wallpaper="minimal"]{
+  background:
+    radial-gradient(ellipse at 85% 0%,rgba(160,165,185,.10),transparent 44%),
+    linear-gradient(145deg,#111319,#191b22 58%,#101217)!important;
+}
+.qc-app .qc-chat[data-wallpaper="dreamscape"]{
+  background:
+    radial-gradient(ellipse at 12% 10%,rgba(180,133,235,.24),transparent 40%),
+    radial-gradient(ellipse at 88% 78%,rgba(225,126,165,.2),transparent 42%),
+    linear-gradient(145deg,#1b1428,#24172c 55%,#151827)!important;
+}
+.qc-app .qc-chat[data-wallpaper="ember"]{
+  background:
+    radial-gradient(ellipse at 85% 8%,rgba(222,132,83,.25),transparent 40%),
+    radial-gradient(ellipse at 10% 90%,rgba(151,69,57,.2),transparent 44%),
+    linear-gradient(145deg,#1b1214,#2b1b20 58%,#171317)!important;
+}
+
+/* Matching message surfaces keep contrast readable across every wallpaper. */
+.qc-app .qc-chat[data-wallpaper="aurora"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="stardust"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="geometry"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="glass"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="minimal"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message.theirs,
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message.theirs{
+  background:rgba(255,255,255,.09)!important;
+  border-color:rgba(255,255,255,.11)!important;
+  color:#f5f2ff!important;
+}
+.qc-app .qc-chat[data-wallpaper="aurora"] .qc-message.mine{background:linear-gradient(135deg,#477e91,#6555a7)!important}
+.qc-app .qc-chat[data-wallpaper="stardust"] .qc-message.mine{background:linear-gradient(135deg,#5a568f,#353e69)!important}
+.qc-app .qc-chat[data-wallpaper="geometry"] .qc-message.mine{background:linear-gradient(135deg,#6356a1,#3f4d7c)!important}
+.qc-app .qc-chat[data-wallpaper="glass"] .qc-message.mine{background:linear-gradient(135deg,#367f91,#565b9d)!important}
+.qc-app .qc-chat[data-wallpaper="minimal"] .qc-message.mine{background:linear-gradient(135deg,#555d6a,#353b48)!important}
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message.mine{background:linear-gradient(135deg,#8a68ba,#a45e87)!important}
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message.mine{background:linear-gradient(135deg,#b66d4c,#81434a)!important}
+
+/* Theme swatches in the picker and settings preview */
+.qc-theme-trigger-swatch.aurora,.qc-theme-item-swatch.aurora,.qc-wallpaper-option.aurora .qc-wallpaper-art{background:linear-gradient(135deg,#4acbb5,#6653a9 55%,#152c43)}
+.qc-theme-trigger-swatch.stardust,.qc-theme-item-swatch.stardust,.qc-wallpaper-option.stardust .qc-wallpaper-art{background:radial-gradient(circle at 70% 25%,#b4a7e9 0 2px,transparent 3px),radial-gradient(circle at 30% 65%,#8f9bd5 0 1px,transparent 2px),linear-gradient(135deg,#35304f,#090e1b)}
+.qc-theme-trigger-swatch.geometry,.qc-theme-item-swatch.geometry,.qc-wallpaper-option.geometry .qc-wallpaper-art{background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(190,175,255,.3) 10px 11px),linear-gradient(135deg,#6e5aa6,#17172a)}
+.qc-theme-trigger-swatch.glass,.qc-theme-item-swatch.glass,.qc-wallpaper-option.glass .qc-wallpaper-art{background:linear-gradient(135deg,#4eabb4,#6974ad 55%,#1a283d)}
+.qc-theme-trigger-swatch.minimal,.qc-theme-item-swatch.minimal,.qc-wallpaper-option.minimal .qc-wallpaper-art{background:linear-gradient(135deg,#858b98,#272b34 60%,#111319)}
+.qc-theme-trigger-swatch.dreamscape,.qc-theme-item-swatch.dreamscape,.qc-wallpaper-option.dreamscape .qc-wallpaper-art{background:linear-gradient(135deg,#b99ae9,#d38eae 55%,#33243f)}
+.qc-theme-trigger-swatch.ember,.qc-theme-item-swatch.ember,.qc-wallpaper-option.ember .qc-wallpaper-art{background:linear-gradient(135deg,#e49b6e,#a95755 55%,#29191b)}
+.qc-chat-theme-menu{max-height:min(70vh,520px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.qc-wallpaper-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.qc-wallpaper-art{height:68px}
+.qc-wallpaper-option.aurora .qc-wallpaper-art{background:linear-gradient(135deg,#4acbb5,#6653a9 55%,#152c43)}
+.qc-wallpaper-option.stardust .qc-wallpaper-art{background:radial-gradient(circle at 70% 25%,#b4a7e9 0 2px,transparent 3px),linear-gradient(135deg,#35304f,#090e1b)}
+.qc-wallpaper-option.geometry .qc-wallpaper-art{background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(190,175,255,.3) 10px 11px),linear-gradient(135deg,#6e5aa6,#17172a)}
+.qc-wallpaper-option.glass .qc-wallpaper-art{background:linear-gradient(135deg,#4eabb4,#6974ad 55%,#1a283d)}
+.qc-wallpaper-option.minimal .qc-wallpaper-art{background:linear-gradient(135deg,#858b98,#272b34 60%,#111319)}
+.qc-wallpaper-option.dreamscape .qc-wallpaper-art{background:linear-gradient(135deg,#b99ae9,#d38eae 55%,#33243f)}
+.qc-wallpaper-option.ember .qc-wallpaper-art{background:linear-gradient(135deg,#e49b6e,#a95755 55%,#29191b)}
+
+/* Light interface variants remain soft while preserving message contrast. */
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="aurora"]{background:radial-gradient(ellipse at 12% 18%,rgba(70,190,170,.17),transparent 38%),radial-gradient(ellipse at 82% 8%,rgba(125,91,226,.14),transparent 40%),linear-gradient(145deg,#e8f5f3,#f0ebfa)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="stardust"]{background:radial-gradient(ellipse at 75% 5%,rgba(120,100,175,.12),transparent 42%),linear-gradient(145deg,#f0eff8,#e8eaf4)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="geometry"]{background:linear-gradient(135deg,transparent 48%,rgba(100,80,160,.05) 49%,rgba(100,80,160,.05) 50%,transparent 51%) 0 0/34px 34px,linear-gradient(145deg,#f0eef8,#e9edf6)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="glass"]{background:radial-gradient(ellipse at 15% 15%,rgba(70,195,210,.15),transparent 38%),linear-gradient(135deg,#e8f4f5,#edf0fa)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="minimal"]{background:linear-gradient(145deg,#f1f2f4,#e9ebef)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="dreamscape"]{background:radial-gradient(ellipse at 12% 10%,rgba(180,133,235,.16),transparent 40%),linear-gradient(145deg,#f3eefa,#f8eaf0)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper="ember"]{background:radial-gradient(ellipse at 85% 8%,rgba(222,132,83,.15),transparent 40%),linear-gradient(145deg,#f7eee9,#f4e9eb)!important}
+.qc-app[data-theme="light"] .qc-chat[data-wallpaper] .qc-message.theirs{background:rgba(255,255,255,.88)!important;color:#282438!important;border-color:rgba(80,70,110,.12)!important}
+@media(max-width:640px){.qc-wallpaper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
