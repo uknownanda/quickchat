@@ -110,8 +110,24 @@ export const AuthProvider = ({ children }) => {
             console.error("Socket connection error:", error.message);
         });
 
-        newSocket.on("getOnlineUsers", (userIds) => {
-            setOnlineUsers(userIds);
+        newSocket.on("getOnlineUsers", (userIds = []) => {
+            setOnlineUsers(Array.isArray(userIds) ? userIds.map(String) : []);
+        });
+
+        // Keep the sidebar and active chat in sync with incremental presence events.
+        newSocket.on("presenceUpdated", ({ userId, online } = {}) => {
+            if (!userId) return;
+            const normalizedId = String(userId);
+            setOnlineUsers((current) => {
+                const next = new Set(current.map(String));
+                if (online) next.add(normalizedId);
+                else next.delete(normalizedId);
+                return Array.from(next);
+            });
+        });
+
+        newSocket.on("connect", () => {
+            newSocket.emit("requestOnlineUsers");
         });
 
         newSocket.on("conversationWallpaperUpdated", ({ userIds = [], wallpaper } = {}) => {
