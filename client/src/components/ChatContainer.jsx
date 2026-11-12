@@ -61,7 +61,7 @@ const ChatContainer = () => {
     searchMessages,
     togglePinMessage,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, preferences } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const messageListRef = useRef(null);
   const previousScrollHeight = useRef(null);
@@ -137,6 +137,10 @@ const ChatContainer = () => {
     );
     return () => clearTimeout(t);
   }, [search, searchOpen, selectedUser?._id]);
+  useEffect(() => {
+    if (selectedUser?._id) loadWallpaper(selectedUser._id);
+  }, [selectedUser?._id]);
+
   useEffect(() => () => clearTimeout(typingTimer.current), []);
   useEffect(() => {
     if (replyTo) composerInputRef.current?.focus();
