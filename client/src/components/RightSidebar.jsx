@@ -187,13 +187,13 @@ const RightSidebar = () => {
           aria-modal="true"
           aria-label={activeImage.alt || "Image preview"}
           onClick={() => setActiveImage(null)}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-black p-0"
         >
           <button
             ref={closeButtonRef}
             type="button"
             onClick={() => setActiveImage(null)}
-            className="absolute right-5 top-5 rounded-full bg-white/10 px-3 py-2 text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
+            className="fixed right-5 top-5 z-[101] flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/60 text-xl text-white shadow-lg backdrop-blur-md transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
             aria-label="Close image preview"
           >
             ✕
@@ -202,7 +202,7 @@ const RightSidebar = () => {
             src={activeImage.url}
             alt={activeImage.alt || "Image preview"}
             onClick={(event) => event.stopPropagation()}
-            className="max-h-[88vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
+            className="h-full w-full select-none object-contain object-center"
           />
         </div>
       )}
