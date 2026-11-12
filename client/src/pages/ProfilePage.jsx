@@ -15,6 +15,7 @@ const ProfilePage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(authUser?.profilePic || assets.avatar_icon);
   const [saving, setSaving] = useState(false);
+  const [activeSection, setActiveSection] = useState("profile");
 
   useEffect(() => {
     setName(authUser?.fullName || "");
@@ -113,94 +114,123 @@ const ProfilePage = () => {
             <div className="qc-profile-heading-icon" aria-hidden="true">✳</div>
           </div>
 
+          <nav className="qc-profile-tabs" aria-label="Profile settings sections">
+            <button type="button" className={activeSection === "profile" ? "qc-profile-tab active" : "qc-profile-tab"} onClick={() => setActiveSection("profile")} aria-current={activeSection === "profile" ? "step" : undefined}>
+              <span className="qc-profile-tab-number">01</span>
+              <span><strong>Profile</strong><small>Photo &amp; display name</small></span>
+              {activeSection === "profile" && <span className="qc-profile-tab-indicator" />}
+            </button>
+            <button type="button" className={activeSection === "personal" ? "qc-profile-tab active" : "qc-profile-tab"} onClick={() => setActiveSection("personal")} aria-current={activeSection === "personal" ? "step" : undefined}>
+              <span className="qc-profile-tab-number">02</span>
+              <span><strong>Personal info</strong><small>Username &amp; about you</small></span>
+              {activeSection === "personal" && <span className="qc-profile-tab-indicator" />}
+            </button>
+          </nav>
+
           <div className="qc-profile-layout">
             <form onSubmit={handleSubmit} className="qc-profile-form">
-              <section className="qc-profile-section">
-                <div className="qc-profile-section-heading">
-                  <div>
-                    <h2>Profile photo</h2>
-                    <p>Choose an image that people will recognize.</p>
-                  </div>
-                  <span className="qc-profile-step">01</span>
-                </div>
-
-                <div className="qc-profile-avatar-row">
-                  <div className="qc-profile-avatar-wrap">
-                    <img src={previewUrl} alt="Profile preview" className="qc-profile-photo" />
-                    <label htmlFor="qc-profile-avatar" className="qc-profile-avatar-edit" title="Choose profile photo" aria-label="Choose profile photo">
-                      <span aria-hidden="true">↗</span>
+              {activeSection === "profile" ? (
+                <div className="qc-profile-tab-content">
+                  <section className="qc-profile-section">
+                    <div className="qc-profile-section-heading">
+                      <div>
+                        <h2>Profile photo</h2>
+                        <p>Choose an image that people will recognize.</p>
+                      </div>
+                      <span className="qc-profile-step">01 / 02</span>
+                    </div>
+                    <div className="qc-profile-avatar-row">
+                      <div className="qc-profile-avatar-wrap">
+                        <img src={previewUrl} alt="Profile preview" className="qc-profile-photo" />
+                        <label htmlFor="qc-profile-avatar" className="qc-profile-avatar-edit" title="Choose profile photo" aria-label="Choose profile photo">
+                          <span aria-hidden="true">↗</span>
+                        </label>
+                      </div>
+                      <div className="qc-profile-upload-copy">
+                        <label htmlFor="qc-profile-avatar" className="qc-profile-upload">Upload new photo</label>
+                        <input id="qc-profile-avatar" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} className="sr-only" />
+                        <p>PNG, JPG or WEBP. Maximum file size 5 MB.</p>
+                        {selectedImg && (
+                          <button type="button" onClick={() => setSelectedImg(null)} className="qc-profile-remove">
+                            Remove selected photo
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+                  <div className="qc-profile-divider" />
+                  <section className="qc-profile-section">
+                    <div className="qc-profile-section-heading">
+                      <div>
+                        <h2>Display name</h2>
+                        <p>This is the name your contacts will see.</p>
+                      </div>
+                    </div>
+                    <label className="qc-profile-field">
+                      <span>Full name</span>
+                      <input
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                        type="text"
+                        required
+                        maxLength={60}
+                        placeholder="Enter your name"
+                        autoComplete="name"
+                        className="qc-profile-input"
+                      />
+                      <small>Use the name your friends know you by.</small>
                     </label>
-                  </div>
-                  <div className="qc-profile-upload-copy">
-                    <label htmlFor="qc-profile-avatar" className="qc-profile-upload">Upload new photo</label>
-                    <input id="qc-profile-avatar" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} className="sr-only" />
-                    <p>PNG, JPG or WEBP. Maximum file size 5 MB.</p>
-                    {selectedImg && (
-                      <button type="button" onClick={() => setSelectedImg(null)} className="qc-profile-remove">
-                        Remove selected photo
-                      </button>
-                    )}
-                  </div>
+                  </section>
                 </div>
-              </section>
-
-              <div className="qc-profile-divider" />
-
-              <section className="qc-profile-section">
-                <div className="qc-profile-section-heading">
-                  <div>
-                    <h2>Personal information</h2>
-                    <p>These details are visible to your QuickChat contacts.</p>
-                  </div>
-                  <span className="qc-profile-step">02</span>
+              ) : (
+                <div className="qc-profile-tab-content">
+                  <section className="qc-profile-section">
+                    <div className="qc-profile-section-heading">
+                      <div>
+                        <h2>Personal information</h2>
+                        <p>Manage the details visible to your QuickChat contacts.</p>
+                      </div>
+                      <span className="qc-profile-step">02 / 02</span>
+                    </div>
+                    <div className="qc-profile-field">
+                      <span>Username</span>
+                      <div className="qc-profile-username-field">
+                        <span className="qc-profile-at">@</span>
+                        <span className="qc-profile-username-value">{authUser?.username || "username"}</span>
+                        <span className="qc-profile-locked"><span aria-hidden="true">⌑</span> Fixed</span>
+                      </div>
+                      <small>Your unique username cannot be changed from this page.</small>
+                    </div>
+                    <label className="qc-profile-field">
+                      <span>About you <small className="qc-profile-optional">OPTIONAL</small></span>
+                      <textarea
+                        value={bio}
+                        onChange={(event) => setBio(event.target.value)}
+                        placeholder="Share a little about yourself..."
+                        maxLength={300}
+                        rows={4}
+                        className="qc-profile-input qc-profile-textarea"
+                      />
+                      <div className="qc-profile-field-foot">
+                        <small>A short introduction helps people get to know you.</small>
+                        <small className={bio.length >= 280 ? "qc-profile-count near-limit" : "qc-profile-count"}>{bio.length}/300</small>
+                      </div>
+                    </label>
+                  </section>
                 </div>
-
-                <label className="qc-profile-field">
-                  <span>Display name</span>
-                  <input
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    type="text"
-                    required
-                    maxLength={60}
-                    placeholder="Enter your name"
-                    autoComplete="name"
-                    className="qc-profile-input"
-                  />
-                  <small>Use the name your friends know you by.</small>
-                </label>
-
-                <div className="qc-profile-field">
-                  <span>Username</span>
-                  <div className="qc-profile-username-field">
-                    <span className="qc-profile-at">@</span>
-                    <span className="qc-profile-username-value">{authUser?.username || "username"}</span>
-                    <span className="qc-profile-locked"><span aria-hidden="true">⌑</span> Fixed</span>
-                  </div>
-                  <small>Your unique username cannot be changed from this page.</small>
-                </div>
-
-                <label className="qc-profile-field">
-                  <span>About you <small className="qc-profile-optional">OPTIONAL</small></span>
-                  <textarea
-                    value={bio}
-                    onChange={(event) => setBio(event.target.value)}
-                    placeholder="Share a little about yourself..."
-                    maxLength={300}
-                    rows={4}
-                    className="qc-profile-input qc-profile-textarea"
-                  />
-                  <div className="qc-profile-field-foot">
-                    <small>A short introduction helps people get to know you.</small>
-                    <small className={bio.length >= 280 ? "qc-profile-count near-limit" : "qc-profile-count"}>{bio.length}/300</small>
-                  </div>
-                </label>
-              </section>
+              )}
 
               <div className="qc-profile-actions">
-                <button type="button" onClick={() => navigate("/")} className="qc-profile-cancel" disabled={saving}>Cancel</button>
+                <button type="button" onClick={() => activeSection === "personal" ? setActiveSection("profile") : navigate("/")} className="qc-profile-cancel" disabled={saving}>
+                  {activeSection === "personal" ? "Back" : "Cancel"}
+                </button>
+                {activeSection === "profile" && (
+                  <button type="button" onClick={() => setActiveSection("personal")} className="qc-profile-next" disabled={saving}>
+                    Continue <span aria-hidden="true">→</span>
+                  </button>
+                )}
                 <button type="submit" disabled={saving || !hasChanges} className="qc-profile-save">
-                  {saving ? <><span className="qc-profile-spinner" /> Saving changes...</> : <>Save changes <span aria-hidden="true">↗</span></>}
+                  {saving ? <><span className="qc-profile-spinner" /> Saving...</> : <>Save changes <span aria-hidden="true">↗</span></>}
                 </button>
               </div>
             </form>
