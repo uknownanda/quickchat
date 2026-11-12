@@ -170,35 +170,32 @@ const Sidebar = () => {
             <p className="qc-sidebar-tagline mt-0.5 text-xs text-white/45">Your conversations, closer.</p>
           </div>
           <div className="relative">
-            <button type="button" onClick={() => setShowAccountMenu((open) => !open)} className="qc-profile-trigger flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] p-1.5 transition hover:border-violet-300/25 hover:bg-white/[0.08]" aria-label="Open account menu" aria-expanded={showAccountMenu}>
-              <span className="relative">
-                <img src={authUser?.profilePic || assets.avatar_icon} alt="Your profile" className="h-10 w-10 rounded-full object-cover" />
-                <i className="qc-online-dot online" />
-              </span>
-              <span className="min-w-0 text-left">
-                <span className="block max-w-[112px] truncate text-xs font-semibold">{authUser?.fullName || "Your account"}</span>
-                <span className="block text-[10px] text-emerald-300">Online</span>
-              </span>
-              <span className="px-1 text-sm text-white/55">⌄</span>
+            <button type="button" onClick={() => setShowAccountMenu((open) => !open)} className="qc-menu-trigger" aria-label="Open main menu" aria-expanded={showAccountMenu}>
+              <span className="qc-menu-trigger-lines"><i></i><i></i><i></i></span>
+              <span>Menu</span>
+              <span className="qc-menu-chevron">{showAccountMenu ? "⌃" : "⌄"}</span>
             </button>
             {showAccountMenu && (
               <>
-                <button type="button" aria-label="Close account menu" className="fixed inset-0 z-20 cursor-default" onClick={() => setShowAccountMenu(false)} />
-                <div className="qc-account-menu absolute right-0 top-full z-30 mt-2 w-48 rounded-xl border border-white/10 bg-[#211b35] p-2 shadow-2xl">
-                  <button type="button" onClick={openProfile} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"><span>♙</span> Edit profile</button>
-                  <button type="button" onClick={() => { setShowAccountMenu(false); setShowSettings(true); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-white/85 hover:bg-white/[0.07]"><span>⚙</span> Settings</button>
-                  <button type="button" onClick={() => { setShowAccountMenu(false); logout(); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-rose-300 hover:bg-rose-400/10"><span>↪</span> Log out</button>
+                <button type="button" aria-label="Close main menu" className="fixed inset-0 z-20 cursor-default" onClick={() => setShowAccountMenu(false)} />
+                <div className="qc-account-menu qc-main-menu absolute right-0 top-full z-30 mt-2 w-56 rounded-xl border border-white/10 bg-[#211b35] p-2 shadow-2xl">
+                  <div className="qc-menu-user flex items-center gap-2 px-2 py-2">
+                    <img src={authUser?.profilePic || assets.avatar_icon} alt="" className="h-9 w-9 rounded-full object-cover" />
+                    <span className="min-w-0 flex-1"><strong className="block truncate text-xs">{authUser?.fullName || "Your account"}</strong><small className="text-[10px] text-emerald-300">Online</small></span>
+                  </div>
+                  <div className="qc-menu-divider"></div>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); setShowDiscover((open) => !open); if (!showDiscover) setActiveFilter("all"); }} className="qc-main-menu-item"><span>＋</span> Find people</button>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); setShowRequests((open) => !open); }} className="qc-main-menu-item"><span>✉</span> Requests {requests.received.length > 0 && <b>{requests.received.length}</b>}</button>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); setShowSettings(true); }} className="qc-main-menu-item"><span>⚙</span> Settings</button>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); openProfile(); }} className="qc-main-menu-item"><span>♙</span> Edit profile</button>
+                  <div className="qc-menu-divider"></div>
+                  <button type="button" onClick={() => { setShowAccountMenu(false); logout(); }} className="qc-main-menu-item danger"><span>↪</span> Log out</button>
                 </div>
               </>
             )}
           </div>
         </div>
-        <div className="qc-sidebar-nav grid grid-cols-4 gap-2" aria-label="Sidebar navigation">
-          <button type="button" className="qc-sidebar-nav-item active" aria-current="page"><span>▤</span><small>Chats</small></button>
-          <button type="button" className="qc-sidebar-nav-item" onClick={() => setShowDiscover((open) => { if (open) setQuery(""); else setActiveFilter("all"); return !open; })} aria-expanded={showDiscover}><span>＋</span><small>Find people</small></button>
-          <button type="button" className={`qc-sidebar-nav-item ${showRequests ? "active" : ""}`} onClick={() => setShowRequests((open) => !open)} aria-expanded={showRequests}><span>✉</span><small>Requests{requests.received.length ? ` · ${requests.received.length}` : ""}</small></button>
-          <button type="button" className="qc-sidebar-nav-item" onClick={() => setShowSettings(true)}><span>⚙</span><small>Settings</small></button>
-        </div>
+
       </div>
 
       {showDiscover && (
