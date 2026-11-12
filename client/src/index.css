@@ -3314,3 +3314,84 @@ body {
 .qc-theme-tile-art.minimal{background:radial-gradient(ellipse at 90% 0%,#aab3c4,transparent 55%),linear-gradient(145deg,#20232b,#11141a)!important}
 .qc-theme-tile-art.dreamscape{background:radial-gradient(ellipse at 10% 10%,#d0afff,transparent 55%),radial-gradient(ellipse at 90% 90%,#ed9fc2,transparent 55%),linear-gradient(145deg,#302039,#1a142b)!important}
 .qc-theme-tile-art.ember{background:radial-gradient(ellipse at 90% 5%,#ffb078,transparent 55%),linear-gradient(145deg,#332024,#1a1113)!important}
+
+
+/* ── Premium polish pass: visual theme previews + lighter rendering ── */
+/* Avoid applying backdrop-filter to every message: it is costly on long chats. */
+.qc-app .qc-chat[data-wallpaper] .qc-message{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.qc-app .qc-chat[data-wallpaper] .qc-chat-header,
+.qc-app .qc-chat[data-wallpaper] .qc-composer-wrap{-webkit-backdrop-filter:blur(18px) saturate(125%)!important;backdrop-filter:blur(18px) saturate(125%)!important}
+
+/* Theme cards preview both wallpaper and message colors, not just a flat swatch. */
+.qc-app .qc-chat .qc-theme-tile-art{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  height:39px;
+  border-radius:8px;
+  box-shadow:inset 0 1px rgba(255,255,255,.22),0 2px 7px rgba(0,0,0,.12);
+}
+.qc-app .qc-chat .qc-theme-tile-art::before,
+.qc-app .qc-chat .qc-theme-tile-art::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  display:block;
+  height:6px;
+  border-radius:5px;
+  box-shadow:0 1px 3px rgba(0,0,0,.18);
+}
+.qc-app .qc-chat .qc-theme-tile-art::before{
+  width:31%;
+  left:7px;
+  bottom:7px;
+  background:rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.2);
+}
+.qc-app .qc-chat .qc-theme-tile-art::after{
+  width:38%;
+  right:7px;
+  top:7px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.35);
+}
+.qc-app .qc-chat .qc-chat-theme-tile{overflow:hidden}
+.qc-app .qc-chat .qc-chat-theme-tile.active::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(190,170,255,.18),inset 0 -18px 28px rgba(151,125,231,.055);
+}
+.qc-app .qc-chat .qc-chat-theme-tile:focus-visible{
+  outline:2px solid #a995f4;
+  outline-offset:2px;
+}
+.qc-app .qc-chat .qc-chat-theme-tile:active{transform:scale(.975)}
+
+/* Individual corner language gives each preset a more deliberate personality. */
+.qc-app .qc-chat[data-wallpaper="default"] .qc-message{border-radius:17px 17px 17px 5px!important}
+.qc-app .qc-chat[data-wallpaper="default"] .qc-message.mine{border-radius:17px 17px 5px 17px!important}
+.qc-app .qc-chat[data-wallpaper="midnight"] .qc-message,
+.qc-app .qc-chat[data-wallpaper="geometry"] .qc-message{border-radius:13px!important}
+.qc-app .qc-chat[data-wallpaper="ocean"] .qc-message,
+.qc-app .qc-chat[data-wallpaper="glass"] .qc-message{border-radius:19px!important}
+.qc-app .qc-chat[data-wallpaper="forest"] .qc-message{border-radius:16px 16px 16px 6px!important}
+.qc-app .qc-chat[data-wallpaper="forest"] .qc-message.mine{border-radius:16px 16px 6px 16px!important}
+.qc-app .qc-chat[data-wallpaper="sunset"] .qc-message,
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message{border-radius:20px 20px 20px 7px!important}
+.qc-app .qc-chat[data-wallpaper="sunset"] .qc-message.mine,
+.qc-app .qc-chat[data-wallpaper="dreamscape"] .qc-message.mine{border-radius:20px 20px 7px 20px!important}
+.qc-app .qc-chat[data-wallpaper="stardust"] .qc-message{border-radius:14px 18px 14px 18px!important}
+.qc-app .qc-chat[data-wallpaper="minimal"] .qc-message{border-radius:11px!important}
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message{border-radius:16px 16px 6px 16px!important}
+.qc-app .qc-chat[data-wallpaper="ember"] .qc-message.mine{border-radius:16px 16px 16px 6px!important}
+
+/* Keep the theme menu crisp and compact on touch screens. */
+@media(hover:hover){
+  .qc-app .qc-chat .qc-chat-theme-tile:hover .qc-theme-tile-art{filter:saturate(1.14) brightness(1.08)}
+}
+@media(prefers-reduced-motion:reduce){
+  .qc-app .qc-chat .qc-chat-theme-tile{transition:none!important}
+}
