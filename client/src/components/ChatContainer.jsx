@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import assets from "../assets/assets";
 import { formatMessageTime } from "../lib/utils";
 import { ChatContext } from "../../context/ChatContext";
@@ -532,7 +533,7 @@ const ChatContainer = () => {
                         }}
                       >＋</button>
                     </div>
-                    {reactionPickerMessageId === msg._id && (
+                    {reactionPickerMessageId === msg._id && createPortal(
                       <div className="qc-reaction-picker" role="dialog" aria-label="Choose a message reaction" onClick={(e) => e.stopPropagation()}>
                         <div className="qc-reaction-picker-head">
                           <strong>Add reaction</strong>
@@ -558,7 +559,7 @@ const ChatContainer = () => {
                               >{category.icon}</button>
                             ))}
                           </div>
-                        )}
+                    , document.body)}
                         <div className="qc-reaction-picker-grid">
                           {(emojiSearch
                             ? emojiCategories.flatMap((category) => category.emojis).filter((emoji, index, all) => all.indexOf(emoji) === index && emoji.includes(emojiSearch.trim()))
