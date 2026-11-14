@@ -579,7 +579,8 @@ const ChatContainer = () => {
                           ))}
                         </div>
                       </div>
-                    )}
+                    , document.body)}
+
                     <button
                       onClick={() => togglePinMessage(msg._id)}
                       title={msg.isPinned ? "Unpin message" : "Pin message"}
