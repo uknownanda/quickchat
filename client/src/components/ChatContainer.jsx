@@ -534,7 +534,7 @@ const ChatContainer = () => {
                       >＋</button>
                     </div>
                     {reactionPickerMessageId === msg._id && createPortal(
-                      <div className="qc-reaction-picker" role="dialog" aria-label="Choose a message reaction" onClick={(e) => e.stopPropagation()}>
+                      <div className="qc-reaction-picker qc-reaction-picker-portal" role="dialog" aria-label="Choose a message reaction" onClick={(e) => e.stopPropagation()}>
                         <div className="qc-reaction-picker-head">
                           <strong>Add reaction</strong>
                           <button type="button" onClick={() => setReactionPickerMessageId(null)} aria-label="Close reaction picker">×</button>
