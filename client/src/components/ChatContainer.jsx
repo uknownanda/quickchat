@@ -66,6 +66,7 @@ const ChatContainer = () => {
   const [sending, setSending] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [reactionPickerMessageId, setReactionPickerMessageId] = useState(null);
   const [emojiCategory, setEmojiCategory] = useState("smileys");
   const [emojiSearch, setEmojiSearch] = useState("");
   const [dragActive, setDragActive] = useState(false);
@@ -507,13 +508,77 @@ const ChatContainer = () => {
                     <div className="qc-reaction-menu">
                       {reactions.map((em) => (
                         <button
+                          type="button"
                           key={em}
-                          onClick={() => updateMessage(msg._id, { emoji: em })}
+                          title={`React with ${em}`}
+                          onClick={() => {
+                            updateMessage(msg._id, { emoji: em });
+                            setReactionPickerMessageId(null);
+                          }}
                         >
                           {em}
                         </button>
                       ))}
+                      <button
+                        type="button"
+                        className="qc-reaction-more"
+                        title="Choose any emoji"
+                        aria-label="Choose any emoji reaction"
+                        aria-expanded={reactionPickerMessageId === msg._id}
+                        onClick={() => {
+                          setReactionPickerMessageId((current) => current === msg._id ? null : msg._id);
+                          setEmojiCategory("smileys");
+                          setEmojiSearch("");
+                        }}
+                      >＋</button>
                     </div>
+                    {reactionPickerMessageId === msg._id && (
+                      <div className="qc-reaction-picker" role="dialog" aria-label="Choose a message reaction" onClick={(e) => e.stopPropagation()}>
+                        <div className="qc-reaction-picker-head">
+                          <strong>Add reaction</strong>
+                          <button type="button" onClick={() => setReactionPickerMessageId(null)} aria-label="Close reaction picker">×</button>
+                        </div>
+                        <input
+                          type="search"
+                          value={emojiSearch}
+                          onChange={(e) => setEmojiSearch(e.target.value)}
+                          placeholder="Search emoji…"
+                          aria-label="Search reaction emoji"
+                        />
+                        {!emojiSearch && (
+                          <div className="qc-reaction-picker-categories">
+                            {emojiCategories.map((category) => (
+                              <button
+                                type="button"
+                                key={category.id}
+                                className={emojiCategory === category.id ? "active" : ""}
+                                onClick={() => setEmojiCategory(category.id)}
+                                title={category.label}
+                                aria-label={category.label}
+                              >{category.icon}</button>
+                            ))}
+                          </div>
+                        )}
+                        <div className="qc-reaction-picker-grid">
+                          {(emojiSearch
+                            ? emojiCategories.flatMap((category) => category.emojis).filter((emoji, index, all) => all.indexOf(emoji) === index && emoji.includes(emojiSearch.trim()))
+                            : emojiCategories.find((category) => category.id === emojiCategory)?.emojis || []
+                          ).map((em, index) => (
+                            <button
+                              type="button"
+                              key={em + index}
+                              title={`React with ${em}`}
+                              aria-label={`React with ${em}`}
+                              onClick={() => {
+                                updateMessage(msg._id, { emoji: em });
+                                setReactionPickerMessageId(null);
+                                setSelectedMessageId(null);
+                              }}
+                            >{em}</button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     <button
                       onClick={() => togglePinMessage(msg._id)}
                       title={msg.isPinned ? "Unpin message" : "Pin message"}
