@@ -4227,3 +4227,79 @@ body {
 @media(prefers-reduced-motion:reduce){
   .qc-settings-nav-item,.qc-accent-option,.qc-wallpaper-option,.qc-settings-close{transition:none!important}
 }
+
+
+/* ── Expanded categorized emoji picker ── */
+.qc-emoji-popover{
+  width:min(340px,calc(100vw - 28px))!important;
+  max-height:min(430px,calc(100dvh - 120px))!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:9px!important;
+  padding:13px!important;
+  overflow:hidden!important;
+  border:1px solid rgba(137,157,222,.25)!important;
+  border-radius:18px!important;
+  background:linear-gradient(155deg,rgba(25,31,55,.99),rgba(16,19,37,.99))!important;
+  box-shadow:0 22px 65px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.07)!important;
+  backdrop-filter:blur(24px);
+}
+.qc-emoji-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.qc-emoji-header strong{display:block;color:#f2f5ff;font-size:13px;font-weight:750}
+.qc-emoji-header small{display:block;margin-top:2px;color:#8f9dbc;font-size:9px}
+.qc-emoji-close{
+  display:grid;place-items:center;width:27px;height:27px;border-radius:9px;
+  color:#aab6d0;background:rgba(255,255,255,.06);font-size:18px;
+}
+.qc-emoji-search{
+  width:100%;height:36px;flex-shrink:0;padding:0 11px;
+  border:1px solid rgba(142,161,218,.17);border-radius:10px;
+  outline:none;background:rgba(5,11,26,.48);color:#eef3ff;font-size:11px;
+}
+.qc-emoji-search::placeholder{color:#7887a7}
+.qc-emoji-search:focus{border-color:rgba(103,157,255,.6);box-shadow:0 0 0 3px rgba(74,139,239,.11)}
+.qc-emoji-categories{
+  display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;
+  padding:3px;border-radius:11px;background:rgba(255,255,255,.045);
+}
+.qc-emoji-categories button{
+  display:grid;place-items:center;min-width:0;height:29px;border-radius:8px;
+  font-size:16px;transition:background .15s ease,transform .15s ease;
+}
+.qc-emoji-categories button:hover{background:rgba(255,255,255,.10);transform:scale(1.06)}
+.qc-emoji-categories button.active{background:linear-gradient(135deg,rgba(112,98,230,.35),rgba(46,139,215,.25));box-shadow:inset 0 0 0 1px rgba(145,151,255,.25)}
+.qc-emoji-section-label{
+  color:#91a2c5;font-size:9px;font-weight:750;letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.qc-emoji-grid{
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;
+  min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:rgba(133,151,203,.35) transparent;
+}
+.qc-emoji-grid button{
+  display:grid;place-items:center;aspect-ratio:1;min-width:0;
+  border-radius:9px;font-size:22px;line-height:1;
+  transition:background .14s ease,transform .14s ease;
+}
+.qc-emoji-grid button:hover{background:rgba(132,145,255,.17);transform:scale(1.12)}
+.qc-emoji-no-results{padding:22px 8px;color:#91a0bf;text-align:center;font-size:11px}
+.qc-app[data-theme="light"] .qc-emoji-popover{
+  border-color:#dce4f2!important;
+  background:linear-gradient(155deg,rgba(255,255,255,.99),rgba(243,247,255,.99))!important;
+  box-shadow:0 22px 55px rgba(43,61,100,.20),inset 0 1px #fff!important;
+}
+.qc-app[data-theme="light"] .qc-emoji-header strong{color:#293958}
+.qc-app[data-theme="light"] .qc-emoji-header small,.qc-app[data-theme="light"] .qc-emoji-section-label{color:#7d8ba6}
+.qc-app[data-theme="light"] .qc-emoji-close{color:#647391;background:#edf1f8}
+.qc-app[data-theme="light"] .qc-emoji-search{background:#f7f9fd;border-color:#dfe6f1;color:#293958}
+.qc-app[data-theme="light"] .qc-emoji-search::placeholder{color:#9aa6b9}
+.qc-app[data-theme="light"] .qc-emoji-categories{background:#edf1f8}
+.qc-app[data-theme="light"] .qc-emoji-categories button.active{background:linear-gradient(135deg,#e5e6ff,#e3f2ff)}
+.qc-app[data-theme="light"] .qc-emoji-grid button:hover{background:#edf0ff}
+@media(max-width:480px){
+  .qc-emoji-popover{width:min(320px,calc(100vw - 24px))!important;max-height:min(390px,calc(100dvh - 105px))!important;padding:10px!important}
+  .qc-emoji-categories button{height:27px;font-size:15px}
+  .qc-emoji-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .qc-emoji-grid button{font-size:21px}
+}
