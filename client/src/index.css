@@ -4652,3 +4652,37 @@ body {
     min-height:225px!important;
   }
 }
+
+
+/* Portal-rendered reaction picker: fixed to the chat viewport, not message coordinates */
+.qc-reaction-picker-portal{
+  position:fixed!important;
+  top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;
+  z-index:2000!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(370px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  height:min(390px,72dvh)!important;
+  max-height:72dvh!important;min-height:240px!important;
+  margin:0!important;box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-rows:auto 36px 38px minmax(0,1fr)!important;
+  gap:8px!important;padding:12px!important;overflow:hidden!important;
+  border:1px solid rgba(153,166,220,.25)!important;border-radius:18px!important;
+  background:linear-gradient(150deg,rgba(29,37,62,.99),rgba(15,21,40,.99))!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.58),0 0 0 100vmax rgba(3,7,18,.32)!important;
+  backdrop-filter:blur(22px);
+}
+.qc-reaction-picker-portal .qc-reaction-picker-grid{
+  min-height:0!important;height:100%!important;overflow-y:auto!important;
+}
+.qc-app[data-theme="light"] .qc-reaction-picker-portal{
+  background:linear-gradient(150deg,rgba(255,255,255,.99),rgba(241,246,255,.99))!important;
+  border-color:#dce4f2!important;box-shadow:0 24px 70px rgba(39,54,89,.24),0 0 0 100vmax rgba(18,29,51,.18)!important;
+}
+@media(max-width:480px){
+  .qc-reaction-picker-portal{
+    width:min(350px,calc(100vw - 28px))!important;
+    height:min(370px,68dvh)!important;max-height:68dvh!important;min-height:225px!important;
+  }
+}
