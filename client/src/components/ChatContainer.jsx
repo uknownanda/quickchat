@@ -491,7 +491,7 @@ const ChatContainer = () => {
               >
                 {selectedMessageId === msg._id && (
                   <div
-                    className={`qc-message-actions ${reactionPickerMessageId === msg._id ? "reaction-picker-open" : ""}`}
+                    className="qc-message-actions"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
