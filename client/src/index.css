@@ -4393,3 +4393,79 @@ body {
   .qc-emoji-categories button{height:28px!important;min-height:28px!important;max-height:28px!important}
   .qc-emoji-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-auto-rows:34px!important}
 }
+
+
+/* Final emoji picker repair — keep the panel as a vertical stack.
+   The old four-column popover rule was leaking into the new picker layout. */
+.qc-composer .qc-emoji-popover,
+.qc-composer-wrap .qc-emoji-popover,
+.qc-emoji-popover{
+  position:absolute!important;
+  inset-inline-start:0!important;
+  inset-block-end:calc(100% + 12px)!important;
+  z-index:999!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-flow:column nowrap!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:9px!important;
+  width:min(332px,calc(100vw - 28px))!important;
+  min-width:0!important;
+  height:min(430px,calc(100dvh - 120px))!important;
+  max-height:min(430px,calc(100dvh - 120px))!important;
+  padding:13px!important;
+  overflow:hidden!important;
+}
+.qc-emoji-popover>*{flex:0 0 auto!important;width:100%!important;min-width:0!important}
+.qc-emoji-popover .qc-emoji-header{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  justify-content:space-between!important;min-height:34px!important;
+}
+.qc-emoji-popover .qc-emoji-search{
+  display:block!important;flex:0 0 36px!important;width:100%!important;
+  height:36px!important;min-height:36px!important;max-height:36px!important;
+}
+.qc-emoji-popover .qc-emoji-categories{
+  display:grid!important;flex:0 0 auto!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;grid-auto-rows:30px!important;
+  width:100%!important;height:auto!important;min-height:0!important;
+  padding:3px!important;gap:3px!important;
+}
+.qc-emoji-popover .qc-emoji-categories button{
+  display:grid!important;place-items:center!important;
+  width:100%!important;height:30px!important;min-height:30px!important;
+  max-height:30px!important;padding:0!important;margin:0!important;
+  font-size:16px!important;line-height:1!important;
+}
+.qc-emoji-popover .qc-emoji-section-label{
+  display:block!important;flex:0 0 12px!important;
+  width:100%!important;height:12px!important;min-height:12px!important;
+}
+.qc-emoji-popover .qc-emoji-grid{
+  display:grid!important;flex:1 1 auto!important;
+  grid-template-columns:repeat(8,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;grid-auto-rows:34px!important;
+  align-content:start!important;align-items:stretch!important;justify-items:stretch!important;
+  width:100%!important;height:auto!important;min-height:0!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  gap:3px!important;padding:0 3px 3px 0!important;
+}
+.qc-emoji-popover .qc-emoji-grid button{
+  display:grid!important;place-items:center!important;
+  width:100%!important;height:34px!important;min-height:34px!important;
+  max-height:34px!important;aspect-ratio:auto!important;
+  padding:0!important;margin:0!important;font-size:22px!important;line-height:1!important;
+}
+@media(max-width:480px){
+  .qc-composer .qc-emoji-popover,.qc-composer-wrap .qc-emoji-popover,.qc-emoji-popover{
+    width:min(320px,calc(100vw - 24px))!important;
+    height:min(390px,calc(100dvh - 105px))!important;
+    max-height:min(390px,calc(100dvh - 105px))!important;
+    padding:10px!important;
+  }
+  .qc-emoji-popover .qc-emoji-categories{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-auto-rows:28px!important}
+  .qc-emoji-popover .qc-emoji-categories button{height:28px!important;min-height:28px!important;max-height:28px!important}
+  .qc-emoji-popover .qc-emoji-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-auto-rows:34px!important}
+}
