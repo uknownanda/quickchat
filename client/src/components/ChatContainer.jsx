@@ -65,7 +65,9 @@ const ChatContainer = () => {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
-  const [showEmoji, setShowEmoji] = useState(false);\n  const [emojiCategory, setEmojiCategory] = useState("smileys");\n  const [emojiSearch, setEmojiSearch] = useState("");
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [emojiCategory, setEmojiCategory] = useState("smileys");
+  const [emojiSearch, setEmojiSearch] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
