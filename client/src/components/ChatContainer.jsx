@@ -7,23 +7,18 @@ import { formatLastSeen } from "../lib/utils";
 import toast from "react-hot-toast";
 import ProfileImagePreview from "./ProfileImagePreview";
 
-const emojiSet = [
-  "😀",
-  "😂",
-  "🥹",
-  "😍",
-  "🥰",
-  "😎",
-  "😭",
-  "🤔",
-  "👍",
-  "👏",
-  "❤️",
-  "🔥",
-  "🎉",
-  "🙏",
-  "✨",
-  "💯",
+const emojiCategories = [
+  { id: "smileys", label: "Smileys", icon: "😀", emojis: "😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 ☺️ 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😝 😜 🤪 🤨 🧐 🤓 😎 🥸 🤩 🥳 🙂‍↕️ 😏 😒 🙂‍↔️ 😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😶‍🌫️ 😱 😨 😰 😥 😓 🤗 🤔 🫣 🤭 🫢 🫡 🤫 🫠 🤥 😶 🫥 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵 😵‍💫 🫨 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑 🤠".split(" ") },
+  { id: "gestures", label: "Gestures", icon: "👋", emojis: "👋 🤚 🖐️ ✋ 🖖 🫱 🫲 🫳 🫴 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ☝️ 🫵 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 🫶 👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦿 🦵 🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀 👁️ 👅 👄 🫦".split(" ") },
+  { id: "hearts", label: "Hearts", icon: "❤️", emojis: "❤️ 🩷 🧡 💛 💚 💙 🩵 💜 🤎 🖤 🩶 🤍 💔 ❤️‍🔥 ❤️‍🩹 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ♥️ 💌 💋 🫂".split(" ") },
+  { id: "animals", label: "Animals", icon: "🐻", emojis: "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🦍 🦧 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🫎 🐝 🪱 🦋 🐌 🐞 🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🦈 🐊 🐅 🐆 🦓 🦍 🦣 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🦬 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐈 🐓 🦃 🦚 🦜 🦢 🪿 🦩 🕊️ 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁 🐀 🐿️ 🦔".split(" ") },
+  { id: "nature", label: "Nature", icon: "🌿", emojis: "🌵 🎄 🌲 🌳 🌴 🪵 🌱 🌿 ☘️ 🍀 🎍 🪴 🎋 🍃 🍂 🍁 🪺 🪻 🌾 💐 🌷 🌹 🥀 🪷 🌺 🌸 🌼 🌻 🌞 🌝 🌛 🌜 🌚 🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔 🌙 🌎 🌍 🌏 🪐 💫 ⭐ 🌟 ✨ 🌠 🌌 ☀️ 🌤️ ⛅ 🌥️ ☁️ 🌦️ 🌧️ ⛈️ 🌩️ 🌨️ ❄️ ☃️ ⛄ 🌬️ 💨 💧 💦 ☔ ☂️ 🌊 🔥".split(" ") },
+  { id: "food", label: "Food", icon: "🍕", emojis: "🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🌶️ 🫑 🌽 🥕 🫒 🧄 🧅 🥔 🍠 🫘 🥐 🥯 🍞 🥖 🥨 🧀 🥚 🍳 🧈 🥞 🧇 🥓 🥩 🍗 🍖 🌭 🍔 🍟 🍕 🫓 🥪 🥙 🧆 🌮 🌯 🫔 🥗 🥘 🫕 🍝 🍜 🍲 🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥 🥠 🥮 🍢 🍡 🍧 🍨 🍦 🥧 🧁 🍰 🎂 🍮 🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜 🍯 🥛 🍼 ☕ 🫖 🍵 🧃 🥤 🧋 🍶 🍺 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🧊".split(" ") },
+  { id: "activities", label: "Activity", icon: "⚽", emojis: "⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌 🎿 ⛷️ 🏂 🏋️ 🤼 🤸 ⛹️ 🤺 🏇 🧘 🏄 🏊 🚴 🚵 🧗 🏆 🥇 🥈 🥉 🏅 🎖️ 🏵️ 🎗️ 🎫 🎟️ 🎪 🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁 🪘 🎷 🎺 🪗 🎸 🪕 🎻 🪇 🎮 🕹️ 🎲 ♟️ 🎯 🎳 🎰 🧩".split(" ") },
+  { id: "travel", label: "Travel", icon: "🚀", emojis: "🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🛻 🚚 🚛 🚜 🛵 🏍️ 🛺 🚲 🛴 🛹 🛼 🚏 🛣️ 🛤️ 🛢️ ⛽ 🛞 🚨 🚥 🚦 🚧 ⚓ 🛟 ⛵ 🛶 🚤 🛳️ ⛴️ 🛥️ 🚢 ✈️ 🛩️ 🛫 🛬 🪂 💺 🚁 🚟 🚠 🚡 🛰️ 🚀 🛸 🌍 🏔️ ⛰️ 🌋 🗻 🏕️ 🏖️ 🏜️ 🏝️ 🏞️ 🏟️ 🏛️ 🏗️ 🧱 🪨 🪵 🏘️ 🏚️ 🏠 🏡 🏢 🏣 🏤 🏥 🏦 🏨 🏩 🏪 🏫 🏬 🏭 🏯 🏰 💒 🗼 🗽 ⛪ 🕌 🛕 🕍 ⛩️ 🕋 ⛲ 🌁 🌃 🌆 🌇 🌉 🌌 🎠 🎡 🎢".split(" ") },
+  { id: "objects", label: "Objects", icon: "💡", emojis: "⌚ 📱 📲 💻 ⌨️ 🖥️ 🖨️ 🖱️ 🖲️ 🕹️ 💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽️ 🎞️ 📞 ☎️ 📟 📠 📺 📻 🎙️ 🎚️ 🎛️ 🧭 ⏱️ ⏲️ ⏰ 🕰️ ⌛ ⏳ 📡 🔋 🪫 🔌 💡 🔦 🕯️ 🪔 🧯 🛢️ 💸 💵 💴 💶 💷 🪙 💰 💳 🧾 💎 ⚖️ 🪜 🧰 🪛 🔧 🔨 ⚒️ 🛠️ ⛏️ 🪚 🔩 ⚙️ 🧱 ⛓️ 🧲 🔫 💣 🧨 🪓 🔪 🗡️ ⚔️ 🛡️ 🚬 ⚰️ 🪦 ⚱️ 🏺 🔮 📿 🧿 🪬 💈 ⚗️ 🔭 🔬 🕳️ 🩻 💊 💉 🩹 🩼 🩺 🩸 🧬 🦠 🧫 🧪 🌡️ 🧹 🪠 🧺 🧻 🚽 🚿 🛁 🧼 🪥 🪒 🧽 🪣 🧴 🛎️ 🔑 🗝️ 🚪 🪑 🛋️ 🛏️ 🛌 🧸 🪆 🖼️ 🪞 🪟 🛍️ 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉 🎎 🏮 🎐".split(" ") },
+  { id: "symbols", label: "Symbols", icon: "💯", emojis: "💯 🔢 🔣 🔠 🔡 🔤 🅰️ 🆎 🅱️ 🆑 🆒 🆓 ℹ️ 🆔 Ⓜ️ 🆕 🆖 🅾️ 🆗 🆘 🆙 🆚 🈁 🈂️ 🈷️ 🈶 🈯 🉐 🈹 🈚 🈲 🉑 🈸 🈴 🈳 🈺 🈵 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ 🟥 🟧 🟨 🟩 🟦 🟪 🟫 ⬛ ⬜ ◼️ ◻️ ◾ ◽ ▪️ ▫️ 🔶 🔷 🔸 🔹 🔺 🔻 💠 🔘 🔳 🔲 ➕ ➖ ➗ ✖️ ♾️ ‼️ ⁉️ ❓ ❔ ❕ ❗ 〰️ 💱 💲 ⚕️ ♻️ ⚜️ 🔱 📛 🔰 ⭕ ✅ ☑️ ✔️ ❌ ❎ ➰ ➿〽️ ✳️ ✴️ ❇️ ©️ ®️ ™️".split(" ") },
+  { id: "flags", label: "Flags", icon: "🏳️", emojis: "🏳️ 🏴 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️ 🇮🇳 🇺🇸 🇬🇧 🇨🇦 🇦🇺 🇳🇿 🇯🇵 🇰🇷 🇨🇳 🇸🇬 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇧🇷 🇲🇽 🇦🇷 🇿🇦 🇳🇬 🇪🇬 🇸🇦 🇦🇪 🇹🇷 🇷🇺 🇺🇦 🇵🇰 🇧🇩 🇱🇰 🇳🇵 🇹🇭 🇻🇳 🇮🇩 🇲🇾 🇵🇭 🇮🇪 🇳🇱 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇨🇭 🇬🇷 🇮🇱 🇵🇸 🇺🇳".split(" ") },
 ];
 const reactions = ["❤️", "😂", "👍", "🔥", "😮", "😢"];
 
@@ -70,7 +65,7 @@ const ChatContainer = () => {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
-  const [showEmoji, setShowEmoji] = useState(false);
+  const [showEmoji, setShowEmoji] = useState(false);\n  const [emojiCategory, setEmojiCategory] = useState("smileys");\n  const [emojiSearch, setEmojiSearch] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -674,16 +669,54 @@ const ChatContainer = () => {
               ☺
             </button>
             {showEmoji && (
-              <div className="qc-emoji-popover">
-                {emojiSet.map((em) => (
-                  <button
-                    type="button"
-                    key={em}
-                    onClick={() => setInput((v) => v + em)}
-                  >
-                    {em}
-                  </button>
-                ))}
+              <div className="qc-emoji-popover" role="dialog" aria-label="Emoji picker">
+                <div className="qc-emoji-header">
+                  <div><strong>Emoji</strong><small>Pick the perfect reaction</small></div>
+                  <button type="button" className="qc-emoji-close" onClick={() => setShowEmoji(false)} aria-label="Close emoji picker">×</button>
+                </div>
+                <input
+                  className="qc-emoji-search"
+                  type="search"
+                  value={emojiSearch}
+                  onChange={(e) => setEmojiSearch(e.target.value)}
+                  placeholder="Search emoji by name or symbol…"
+                  aria-label="Search emoji"
+                />
+                {!emojiSearch && (
+                  <div className="qc-emoji-categories" role="tablist" aria-label="Emoji categories">
+                    {emojiCategories.map((category) => (
+                      <button
+                        type="button"
+                        key={category.id}
+                        role="tab"
+                        aria-selected={emojiCategory === category.id}
+                        className={emojiCategory === category.id ? "active" : ""}
+                        onClick={() => setEmojiCategory(category.id)}
+                        title={category.label}
+                      >{category.icon}</button>
+                    ))}
+                  </div>
+                )}
+                <div className="qc-emoji-section-label">{emojiSearch ? "Matching emoji" : emojiCategories.find((category) => category.id === emojiCategory)?.label}</div>
+                <div className="qc-emoji-grid">
+                  {(emojiSearch
+                    ? emojiCategories.flatMap((category) => category.emojis).filter((emoji, index, all) => all.indexOf(emoji) === index && emoji.includes(emojiSearch.trim()))
+                    : emojiCategories.find((category) => category.id === emojiCategory)?.emojis || []
+                  ).map((em, index) => (
+                    <button
+                      type="button"
+                      key={em + index}
+                      onClick={() => {
+                        setInput((value) => value + em);
+                        composerInputRef.current?.focus();
+                      }}
+                      aria-label={`Insert ${em}`}
+                    >{em}</button>
+                  ))}
+                </div>
+                {emojiSearch && !emojiCategories.some((category) => category.emojis.some((emoji) => emoji.includes(emojiSearch.trim()))) && (
+                  <p className="qc-emoji-no-results">No matching emoji found.</p>
+                )}
               </div>
             )}
           </div>
