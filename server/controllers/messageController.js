@@ -449,7 +449,11 @@ export const togglePinMessage = async (req, res) => {
 };
 
 
-const allowedWallpapers = new Set(["default", "midnight", "ocean", "forest", "sunset", "aurora", "stardust", "geometry", "glass", "minimal", "dreamscape", "ember"]);
+const wallpaperThemes = new Set(["default","midnight","ocean","forest","sunset","aurora","stardust","geometry","glass","minimal","dreamscape","ember"]);
+const isAllowedWallpaper = (value) => {
+    const [theme, design = "0"] = String(value).split("|");
+    return wallpaperThemes.has(theme) && /^[0-2]$/.test(design);
+};
 
 export const getConversationWallpaper = async (req, res) => {
     try {
@@ -476,7 +480,7 @@ export const updateConversationWallpaper = async (req, res) => {
     try {
         const otherUserId = req.params.id;
         const wallpaper = String(req.body?.wallpaper || "");
-        if (!otherUserId || otherUserId === req.user._id.toString() || !allowedWallpapers.has(wallpaper)) {
+        if (!otherUserId || otherUserId === req.user._id.toString() || !isAllowedWallpaper(wallpaper)) {
             return res.status(400).json({ success: false, message: "Choose a valid conversation theme." });
         }
         const contact = await ContactRequest.findOneAndUpdate(
