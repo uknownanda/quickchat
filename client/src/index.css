@@ -4744,3 +4744,30 @@ body {
 .qc-app[data-theme="light"] .qc-chat .qc-chat-theme-menu{background:rgba(250,250,255,.98)!important;border-color:#dfe3ef!important;box-shadow:0 24px 60px rgba(37,48,77,.18)!important}
 .qc-app[data-theme="light"] .qc-chat .qc-chat-theme-tile .qc-theme-tile-copy small{color:#77819a!important}
 @media(max-width:520px){.qc-app .qc-chat .qc-chat-theme-menu{width:min(340px,calc(100vw - 22px))!important;padding:11px!important}.qc-chat-theme-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}.qc-app .qc-chat .qc-chat-theme-tile{min-height:78px!important;padding:7px!important}.qc-theme-tile-art{height:28px!important}.qc-app .qc-chat .qc-chat-theme-tile .qc-theme-tile-copy small{font-size:7px!important}}
+
+
+/* Rich illustrated wallpaper gallery */
+.qc-app .qc-chat[data-wallpaper]{
+  background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;
+  background-attachment:local!important;
+}
+.qc-app .qc-chat[data-wallpaper] .qc-message-list,
+.qc-app .qc-chat[data-wallpaper] .qc-chat-content{background:transparent!important}
+.qc-app .qc-chat .qc-chat-theme-menu{width:min(430px,calc(100vw - 24px))!important;max-height:min(76vh,720px)!important;overflow-y:auto!important}
+.qc-rich-theme-grid{display:flex!important;flex-direction:column!important;gap:11px!important}
+.qc-rich-theme-card{padding:10px!important;border:1px solid rgba(160,170,210,.13)!important;border-radius:15px!important;background:rgba(255,255,255,.035)!important}
+.qc-rich-theme-card.active{border-color:rgba(164,119,255,.55)!important;background:rgba(139,92,246,.075)!important}
+.qc-rich-theme-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin-bottom:9px!important;color:#f5f3ff!important}
+.qc-rich-theme-heading>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.qc-rich-theme-heading b{font-size:12px!important;font-weight:750!important}
+.qc-rich-theme-heading small{font-size:10px!important;color:#a6a3b8!important}
+.qc-rich-theme-heading>span{font-size:9px!important;color:#aaa5c1!important;white-space:nowrap}
+.qc-rich-theme-designs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+.qc-rich-wallpaper-option{position:relative!important;display:block!important;width:100%!important;aspect-ratio:16/9!important;min-width:0!important;border:1px solid rgba(255,255,255,.17)!important;border-radius:10px!important;background-size:cover!important;background-position:center!important;overflow:hidden!important;transition:transform .18s,border-color .18s,box-shadow .18s!important}
+.qc-rich-wallpaper-option:hover{transform:translateY(-2px)!important;border-color:rgba(196,166,255,.8)!important}
+.qc-rich-wallpaper-option.active{border:2px solid #b48aff!important;box-shadow:0 0 0 2px rgba(157,112,255,.2),0 5px 18px rgba(100,70,180,.24)!important}
+.qc-rich-wallpaper-option i{position:absolute!important;top:5px!important;right:5px!important;display:grid!important;place-items:center!important;width:19px!important;height:19px!important;border-radius:50%!important;background:#a875f5!important;color:white!important;font-size:12px!important;font-style:normal!important}
+.qc-app[data-theme="light"] .qc-rich-theme-card{background:rgba(255,255,255,.78)!important;border-color:#dce2ef!important}
+.qc-app[data-theme="light"] .qc-rich-theme-heading{color:#29344d!important}
+.qc-app[data-theme="light"] .qc-rich-theme-heading small,.qc-app[data-theme="light"] .qc-rich-theme-heading>span{color:#77819a!important}
+@media(max-width:520px){.qc-app .qc-chat .qc-chat-theme-menu{max-height:72vh!important}.qc-rich-theme-card{padding:8px!important}.qc-rich-theme-designs{gap:5px!important}}
