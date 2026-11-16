@@ -4771,3 +4771,10 @@ body {
 .qc-app[data-theme="light"] .qc-rich-theme-heading{color:#29344d!important}
 .qc-app[data-theme="light"] .qc-rich-theme-heading small,.qc-app[data-theme="light"] .qc-rich-theme-heading>span{color:#77819a!important}
 @media(max-width:520px){.qc-app .qc-chat .qc-chat-theme-menu{max-height:72vh!important}.qc-rich-theme-card{padding:8px!important}.qc-rich-theme-designs{gap:5px!important}}
+
+
+/* Keep the selected photographic wallpaper above every legacy theme gradient. */
+.qc-app[data-theme] .qc-chat[data-wallpaper]{
+  background-image:linear-gradient(180deg,rgba(7,10,22,.24),rgba(7,10,22,.52)),var(--qc-rich-wallpaper-image)!important;
+  background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;
+}
