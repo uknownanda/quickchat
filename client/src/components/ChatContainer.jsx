@@ -77,6 +77,11 @@ const ChatContainer = () => {
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [showContactAbout, setShowContactAbout] = useState(false);
   const [wallpaperMenuOpen, setWallpaperMenuOpen] = useState(false);
+  const savedWallpaper = wallpapers[selectedUser?._id] || "default";
+  const [savedTheme, savedDesign] = savedWallpaper.includes("|") ? savedWallpaper.split("|") : [savedWallpaper, "0"];
+  const activeWallpaperTheme = [{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}].find((theme) => theme.id === savedTheme) || [{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}][0];
+  const activeWallpaperUrl = `https://images.unsplash.com/${activeWallpaperTheme.images[Number(savedDesign) || 0]}?auto=format&fit=crop&w=1800&q=85`;
+
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
     const text = input.trim();
@@ -203,7 +208,321 @@ const ChatContainer = () => {
   return (
     <main
       className="qc-chat h-full relative flex flex-col min-w-0"
-      data-wallpaper={wallpapers[selectedUser._id] || "default"}
+      data-wallpaper={savedTheme}\n      data-wallpaper-design={savedDesign}\n      style={{ backgroundImage: `linear-gradient(180deg, rgba(8,12,25,.28), rgba(8,12,25,.58)), url("${activeWallpaperUrl}")` }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragActive(true);
+      }}
+      onDragLeave={() => setDragActive(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragActive(false);
+        const msg = replyMessage(e.dataTransfer.getData("text/message-id"));
+        if (msg) setReplyTo(msg);
+      }}
+    >
+      <header className="qc-chat-header flex items-center gap-3 px-4 md:px-5 py-3 md:py-4">
+        <button
+          onClick={() => setSelectedUser(null)}
+          className="md:hidden text-white/70 text-xl"
+          aria-label="Back to contacts"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowContactAbout(true)}
+          aria-label={`View ${selectedUser.fullName}'s profile`}
+          className="shrink-0 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-400"
+        >
+          <img
+            src={selectedUser.profilePic || assets.avatar_icon}
+            alt={`${selectedUser.fullName}'s profile picture`}
+            className="qc-chat-avatar w-10 h-10 rounded-full object-cover"
+          />
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowContactAbout(true)}
+          className="flex-1 min-w-0 text-left rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-400"
+          aria-label={`View ${selectedUser.fullName}'s profile`}
+        >
+          <p className="font-semibold text-white truncate">
+            {selectedUser.fullName}
+          </p>
+          <p className="qc-chat-presence text-xs text-white/45">
+  {socketStatus !== "connected" ? (
+    <span className="inline-flex items-center gap-1.5 text-amber-300">
+      <span className={`h-2 w-2 rounded-full ${socketStatus === "connecting" ? "animate-pulse bg-amber-300" : "bg-amber-400"}`} />
+      {socketStatus === "connecting" ? "Connecting…" : socketStatus === "reconnecting" ? "Reconnecting…" : "Offline"}
+    </span>
+  ) : typingUsers[selectedUser._id] ? (
+    <span className="text-violet-300">Typing…</span>
+  ) : onlineUsers.includes(selectedUser._id) ? (
+    <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium">
+      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+      Online
+    </span>
+  ) : (
+    lastSeenLabel
+  )}
+</p>
+        </button>
+        <div className="qc-chat-theme-picker">
+          <button
+            type="button"
+            className="qc-chat-theme-trigger"
+            aria-label="Change conversation theme"
+            aria-expanded={wallpaperMenuOpen}
+            onClick={() => setWallpaperMenuOpen((open) => !open)}
+            title="Change conversation theme"
+          >
+            <span className={`qc-theme-trigger-swatch ${wallpapers[selectedUser._id] || "default"}`} />
+            <span className="qc-theme-trigger-label">Theme</span>
+            <span className="qc-theme-trigger-chevron">⌄</span>
+          </button>
+          {wallpaperMenuOpen && (
+            <div className="qc-chat-theme-menu" role="group" aria-label="Conversation themes">
+              <div className="qc-theme-menu-heading">
+                <div><b>Choose a look</b><small>Conversation theme</small></div>
+                <span>12 THEMES</span>
+              </div>
+              <div className="qc-chat-theme-grid qc-rich-theme-grid">
+                {[{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}].map((item) => (
+                  <section className={`qc-rich-theme-card ${savedTheme === item.id ? "active" : ""}`} key={item.id}>
+                    <div className="qc-rich-theme-heading">
+                      <div><b>{item.label}</b><small>{item.description}</small></div>
+                      <span>3 wallpapers</span>
+                    </div>
+                    <div className="qc-rich-theme-designs">
+                      {item.images.map((imageId, index) => {
+                        const selected = savedTheme === item.id && Number(savedDesign) === index;
+                        const imageUrl = `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=420&q=75`;
+                        return (
+                          <button type="button" key={imageId + index}
+                            className={`qc-rich-wallpaper-option ${selected ? "active" : ""}`}
+                            style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(4,8,18,.24)), url("${imageUrl}")` }}
+                            onClick={() => updateWallpaper(selectedUser._id, `${item.id}|${index}`)}
+                            aria-label={`${item.label} wallpaper ${index + 1}`} aria-pressed={selected}
+                            title={`${item.label} design ${index + 1}`}>
+                            {selected && <i aria-hidden="true">✓</i>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+              </div>Context, useEffect, useRef, useState } from "react";
+import assets from "../assets/assets";
+import { formatMessageTime } from "../lib/utils";
+import { ChatContext } from "../../context/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
+import { formatLastSeen } from "../lib/utils";
+import toast from "react-hot-toast";
+import ProfileImagePreview from "./ProfileImagePreview";
+
+const emojiCategories = [
+  { id: "smileys", label: "Smileys", icon: "😀", emojis: "😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 ☺️ 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😝 😜 🤪 🤨 🧐 🤓 😎 🥸 🤩 🥳 🙂‍↕️ 😏 😒 🙂‍↔️ 😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😶‍🌫️ 😱 😨 😰 😥 😓 🤗 🤔 🫣 🤭 🫢 🫡 🤫 🫠 🤥 😶 🫥 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵 😵‍💫 🫨 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑 🤠".split(" ") },
+  { id: "gestures", label: "Gestures", icon: "👋", emojis: "👋 🤚 🖐️ ✋ 🖖 🫱 🫲 🫳 🫴 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ☝️ 🫵 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 🫶 👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦿 🦵 🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀 👁️ 👅 👄 🫦".split(" ") },
+  { id: "hearts", label: "Hearts", icon: "❤️", emojis: "❤️ 🩷 🧡 💛 💚 💙 🩵 💜 🤎 🖤 🩶 🤍 💔 ❤️‍🔥 ❤️‍🩹 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ♥️ 💌 💋 🫂".split(" ") },
+  { id: "animals", label: "Animals", icon: "🐻", emojis: "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🦍 🦧 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🫎 🐝 🪱 🦋 🐌 🐞 🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🦈 🐊 🐅 🐆 🦓 🦍 🦣 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🦬 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐈 🐓 🦃 🦚 🦜 🦢 🪿 🦩 🕊️ 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁 🐀 🐿️ 🦔".split(" ") },
+  { id: "nature", label: "Nature", icon: "🌿", emojis: "🌵 🎄 🌲 🌳 🌴 🪵 🌱 🌿 ☘️ 🍀 🎍 🪴 🎋 🍃 🍂 🍁 🪺 🪻 🌾 💐 🌷 🌹 🥀 🪷 🌺 🌸 🌼 🌻 🌞 🌝 🌛 🌜 🌚 🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔 🌙 🌎 🌍 🌏 🪐 💫 ⭐ 🌟 ✨ 🌠 🌌 ☀️ 🌤️ ⛅ 🌥️ ☁️ 🌦️ 🌧️ ⛈️ 🌩️ 🌨️ ❄️ ☃️ ⛄ 🌬️ 💨 💧 💦 ☔ ☂️ 🌊 🔥".split(" ") },
+  { id: "food", label: "Food", icon: "🍕", emojis: "🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🌶️ 🫑 🌽 🥕 🫒 🧄 🧅 🥔 🍠 🫘 🥐 🥯 🍞 🥖 🥨 🧀 🥚 🍳 🧈 🥞 🧇 🥓 🥩 🍗 🍖 🌭 🍔 🍟 🍕 🫓 🥪 🥙 🧆 🌮 🌯 🫔 🥗 🥘 🫕 🍝 🍜 🍲 🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥 🥠 🥮 🍢 🍡 🍧 🍨 🍦 🥧 🧁 🍰 🎂 🍮 🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜 🍯 🥛 🍼 ☕ 🫖 🍵 🧃 🥤 🧋 🍶 🍺 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🧊".split(" ") },
+  { id: "activities", label: "Activity", icon: "⚽", emojis: "⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌 🎿 ⛷️ 🏂 🏋️ 🤼 🤸 ⛹️ 🤺 🏇 🧘 🏄 🏊 🚴 🚵 🧗 🏆 🥇 🥈 🥉 🏅 🎖️ 🏵️ 🎗️ 🎫 🎟️ 🎪 🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁 🪘 🎷 🎺 🪗 🎸 🪕 🎻 🪇 🎮 🕹️ 🎲 ♟️ 🎯 🎳 🎰 🧩".split(" ") },
+  { id: "travel", label: "Travel", icon: "🚀", emojis: "🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🛻 🚚 🚛 🚜 🛵 🏍️ 🛺 🚲 🛴 🛹 🛼 🚏 🛣️ 🛤️ 🛢️ ⛽ 🛞 🚨 🚥 🚦 🚧 ⚓ 🛟 ⛵ 🛶 🚤 🛳️ ⛴️ 🛥️ 🚢 ✈️ 🛩️ 🛫 🛬 🪂 💺 🚁 🚟 🚠 🚡 🛰️ 🚀 🛸 🌍 🏔️ ⛰️ 🌋 🗻 🏕️ 🏖️ 🏜️ 🏝️ 🏞️ 🏟️ 🏛️ 🏗️ 🧱 🪨 🪵 🏘️ 🏚️ 🏠 🏡 🏢 🏣 🏤 🏥 🏦 🏨 🏩 🏪 🏫 🏬 🏭 🏯 🏰 💒 🗼 🗽 ⛪ 🕌 🛕 🕍 ⛩️ 🕋 ⛲ 🌁 🌃 🌆 🌇 🌉 🌌 🎠 🎡 🎢".split(" ") },
+  { id: "objects", label: "Objects", icon: "💡", emojis: "⌚ 📱 📲 💻 ⌨️ 🖥️ 🖨️ 🖱️ 🖲️ 🕹️ 💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽️ 🎞️ 📞 ☎️ 📟 📠 📺 📻 🎙️ 🎚️ 🎛️ 🧭 ⏱️ ⏲️ ⏰ 🕰️ ⌛ ⏳ 📡 🔋 🪫 🔌 💡 🔦 🕯️ 🪔 🧯 🛢️ 💸 💵 💴 💶 💷 🪙 💰 💳 🧾 💎 ⚖️ 🪜 🧰 🪛 🔧 🔨 ⚒️ 🛠️ ⛏️ 🪚 🔩 ⚙️ 🧱 ⛓️ 🧲 🔫 💣 🧨 🪓 🔪 🗡️ ⚔️ 🛡️ 🚬 ⚰️ 🪦 ⚱️ 🏺 🔮 📿 🧿 🪬 💈 ⚗️ 🔭 🔬 🕳️ 🩻 💊 💉 🩹 🩼 🩺 🩸 🧬 🦠 🧫 🧪 🌡️ 🧹 🪠 🧺 🧻 🚽 🚿 🛁 🧼 🪥 🪒 🧽 🪣 🧴 🛎️ 🔑 🗝️ 🚪 🪑 🛋️ 🛏️ 🛌 🧸 🪆 🖼️ 🪞 🪟 🛍️ 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉 🎎 🏮 🎐".split(" ") },
+  { id: "symbols", label: "Symbols", icon: "💯", emojis: "💯 🔢 🔣 🔠 🔡 🔤 🅰️ 🆎 🅱️ 🆑 🆒 🆓 ℹ️ 🆔 Ⓜ️ 🆕 🆖 🅾️ 🆗 🆘 🆙 🆚 🈁 🈂️ 🈷️ 🈶 🈯 🉐 🈹 🈚 🈲 🉑 🈸 🈴 🈳 🈺 🈵 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ 🟥 🟧 🟨 🟩 🟦 🟪 🟫 ⬛ ⬜ ◼️ ◻️ ◾ ◽ ▪️ ▫️ 🔶 🔷 🔸 🔹 🔺 🔻 💠 🔘 🔳 🔲 ➕ ➖ ➗ ✖️ ♾️ ‼️ ⁉️ ❓ ❔ ❕ ❗ 〰️ 💱 💲 ⚕️ ♻️ ⚜️ 🔱 📛 🔰 ⭕ ✅ ☑️ ✔️ ❌ ❎ ➰ ➿〽️ ✳️ ✴️ ❇️ ©️ ®️ ™️".split(" ") },
+  { id: "flags", label: "Flags", icon: "🏳️", emojis: "🏳️ 🏴 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️ 🇮🇳 🇺🇸 🇬🇧 🇨🇦 🇦🇺 🇳🇿 🇯🇵 🇰🇷 🇨🇳 🇸🇬 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇧🇷 🇲🇽 🇦🇷 🇿🇦 🇳🇬 🇪🇬 🇸🇦 🇦🇪 🇹🇷 🇷🇺 🇺🇦 🇵🇰 🇧🇩 🇱🇰 🇳🇵 🇹🇭 🇻🇳 🇮🇩 🇲🇾 🇵🇭 🇮🇪 🇳🇱 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇨🇭 🇬🇷 🇮🇱 🇵🇸 🇺🇳".split(" ") },
+];
+const reactions = ["❤️", "😂", "👍", "🔥", "😮", "😢"];
+
+const formatDateSeparator = (value) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  const sameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+  if (sameDay(date, today)) return "Today";
+  if (sameDay(date, yesterday)) return "Yesterday";
+  return date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "long",
+    year: date.getFullYear() === today.getFullYear() ? undefined : "numeric",
+  });
+};
+const ChatContainer = () => {
+  const {
+    messages,
+    hasMoreMessages,
+    loadingOlderMessages,
+    loadOlderMessages,
+    selectedUser,
+    setSelectedUser,
+    sendMessage,
+    typingUsers,
+    sendTyping,
+    updateMessage,
+    deleteMessage,
+    searchMessages,
+    togglePinMessage,
+  } = useContext(ChatContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences } = useContext(AuthContext);
+  const scrollEnd = useRef(null);
+  const messageListRef = useRef(null);
+  const previousScrollHeight = useRef(null);
+  const composerInputRef = useRef(null);
+  const typingTimer = useRef(null);
+  const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [replyTo, setReplyTo] = useState(null);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [emojiCategory, setEmojiCategory] = useState("smileys");
+  const [emojiSearch, setEmojiSearch] = useState("");
+  const [dragActive, setDragActive] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [showContactAbout, setShowContactAbout] = useState(false);
+  const [wallpaperMenuOpen, setWallpaperMenuOpen] = useState(false);
+  const savedWallpaper = wallpapers[selectedUser?._id] || "default";
+  const [savedTheme, savedDesign] = savedWallpaper.includes("|") ? savedWallpaper.split("|") : [savedWallpaper, "0"];
+  const activeWallpaperTheme = [{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}].find((theme) => theme.id === savedTheme) || [{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}][0];
+  const activeWallpaperUrl = `https://images.unsplash.com/${activeWallpaperTheme.images[Number(savedDesign) || 0]}?auto=format&fit=crop&w=1800&q=85`;
+
+  const handleSendMessage = async (e) => {
+    e?.preventDefault?.();
+    const text = input.trim();
+    if (!text || sending) return;
+    setSending(true);
+    try {
+      const sent = await sendMessage({ text, replyTo: replyTo?._id || null });
+      if (!sent) return;
+      setInput("");
+      setReplyTo(null);
+      setShowEmoji(false);
+      sendTyping(selectedUser._id, false);
+    } finally {
+      setSending(false);
+    }
+  };
+  const handleSendImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5 MB");
+      e.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const sent = await sendMessage({
+        image: reader.result,
+        replyTo: replyTo?._id || null,
+      });
+      if (sent) setReplyTo(null);
+      e.target.value = "";
+    };
+    reader.readAsDataURL(file);
+  };
+  useEffect(() => {
+    const list = messageListRef.current;
+    if (previousScrollHeight.current !== null && list) {
+      const heightBefore = previousScrollHeight.current;
+      previousScrollHeight.current = null;
+      requestAnimationFrame(() => {
+        if (messageListRef.current) {
+          messageListRef.current.scrollTop += messageListRef.current.scrollHeight - heightBefore;
+        }
+      });
+      return;
+    }
+    scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  useEffect(() => {
+    if (!searchOpen || !selectedUser || !search.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const t = setTimeout(
+      async () =>
+        setSearchResults(await searchMessages(selectedUser._id, search)),
+      250,
+    );
+    return () => clearTimeout(t);
+  }, [search, searchOpen, selectedUser?._id]);
+  useEffect(() => {
+    if (selectedUser?._id) loadWallpaper(selectedUser._id);
+  }, [selectedUser?._id]);
+
+  useEffect(() => () => clearTimeout(typingTimer.current), []);
+  useEffect(() => {
+    if (replyTo) composerInputRef.current?.focus();
+  }, [replyTo]);
+  const replyMessage = (id) =>
+    messages.find((m) => m._id === (typeof id === "object" ? id?._id : id));
+  const onTyping = (value) => {
+    setInput(value);
+    if (!selectedUser) return;
+    sendTyping(selectedUser._id, Boolean(value.trim()));
+    clearTimeout(typingTimer.current);
+    typingTimer.current = setTimeout(
+      () => sendTyping(selectedUser._id, false),
+      900,
+    );
+  };
+  const beginEdit = (msg) => {
+    setEditingId(msg._id);
+    setEditText(msg.text || "");
+  };
+  const submitEdit = async (id) => {
+    await updateMessage(id, { text: editText });
+    setEditingId(null);
+  };
+  const scrollTo = (id) =>
+    document
+      .getElementById(`message-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  const lastSeenLabel = formatLastSeen(selectedUser?.lastSeen);
+  const pinnedMessages = messages
+    .filter((m) => m.isPinned && !m.deletedAt)
+    .sort(
+      (a, b) =>
+        new Date(b.pinnedAt || b.createdAt) -
+        new Date(a.pinnedAt || a.createdAt),
+    );
+
+  if (!selectedUser)
+    return (
+      <div className="qc-empty h-full flex flex-col items-center justify-center text-center p-8">
+        <img
+          src={assets.logo_big}
+          alt="QuickChat"
+          className="w-28 opacity-90 mb-5"
+        />
+        <h2 className="text-2xl font-semibold text-white">
+          Your conversations, your space.
+        </h2>
+        <p className="text-sm text-white/40 mt-2">
+          Choose a contact to start messaging.
+        </p>
+      </div>
+    );
+  return (
+    <main
+      className="qc-chat h-full relative flex flex-col min-w-0"
+      data-wallpaper={savedTheme}\n      data-wallpaper-design={savedDesign}\n      style={{ backgroundImage: `linear-gradient(180deg, rgba(8,12,25,.28), rgba(8,12,25,.58)), url("${activeWallpaperUrl}")` }}
       onDragOver={(e) => {
         e.preventDefault();
         setDragActive(true);
