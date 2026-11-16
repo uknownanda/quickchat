@@ -284,18 +284,18 @@ const ChatContainer = () => {
               </div>
               <div className="qc-chat-theme-grid">
                 {[
-                  { id: "default", label: "Classic" },
-                  { id: "midnight", label: "Midnight" },
-                  { id: "ocean", label: "Ocean" },
-                  { id: "forest", label: "Forest" },
-                  { id: "sunset", label: "Sunset" },
-                  { id: "aurora", label: "Aurora" },
-                  { id: "stardust", label: "Stardust" },
-                  { id: "geometry", label: "Geometry" },
-                  { id: "glass", label: "Glass" },
-                  { id: "minimal", label: "Minimal" },
-                  { id: "dreamscape", label: "Dreamscape" },
-                  { id: "ember", label: "Ember" },
+                  { id: "default", label: "Classic", description: "The signature QuickChat look" },
+                  { id: "midnight", label: "Midnight", description: "Deep violet, after hours" },
+                  { id: "ocean", label: "Ocean", description: "Calm blue, open skies" },
+                  { id: "forest", label: "Forest", description: "A softer, earthy retreat" },
+                  { id: "sunset", label: "Sunset", description: "Warm tones, golden hour" },
+                  { id: "aurora", label: "Aurora", description: "Northern-light gradients" },
+                  { id: "stardust", label: "Stardust", description: "A quiet cosmic night" },
+                  { id: "geometry", label: "Geometry", description: "Clean lines and structure" },
+                  { id: "glass", label: "Glass", description: "Cool translucent layers" },
+                  { id: "minimal", label: "Minimal", description: "Quiet, focused and clear" },
+                  { id: "dreamscape", label: "Dreamscape", description: "Soft lilac and rose haze" },
+                  { id: "ember", label: "Ember", description: "Rich, warm evening glow" },
                 ].map((item) => (
                   <button
                     type="button"
@@ -310,7 +310,7 @@ const ChatContainer = () => {
                     title={item.label}
                   >
                     <span className={`qc-theme-tile-art ${item.id}`} />
-                    <span>{item.label}</span>
+                    <span className="qc-theme-tile-copy"><b>{item.label}</b><small>{item.description}</small></span>
                     {(wallpapers[selectedUser._id] || "default") === item.id && <i aria-hidden="true">✓</i>}
                   </button>
                 ))}
