@@ -208,7 +208,9 @@ const ChatContainer = () => {
   return (
     <main
       className="qc-chat h-full relative flex flex-col min-w-0"
-      data-wallpaper={savedTheme}\n      data-wallpaper-design={savedDesign}\n      style={{ "--qc-rich-wallpaper-image": `url("${activeWallpaperUrl}")` }}
+      data-wallpaper={savedTheme}
+      data-wallpaper-design={savedDesign}
+      style={{ "--qc-rich-wallpaper-image": `url("${activeWallpaperUrl}")` }}
       onDragOver={(e) => {
         e.preventDefault();
         setDragActive(true);
