@@ -79,9 +79,9 @@ const ChatContainer = () => {
   const [wallpaperMenuOpen, setWallpaperMenuOpen] = useState(false);
   const savedWallpaper = wallpapers[selectedUser?._id] || "default";
   const [savedTheme, savedDesign] = savedWallpaper.includes("|") ? savedWallpaper.split("|") : [savedWallpaper, "0"];
-  const wallpaperThemes = [{"id":"default","label":"Classic","description":"The signature QuickChat look","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"midnight","label":"Midnight","description":"Deep violet, after hours","images":["photo-1519681393784-d120267933ba","photo-1462331940025-496dfbfc7564","photo-1475274047050-1d0c0975c63e"]},{"id":"ocean","label":"Ocean","description":"Calm blue, open skies","images":["photo-1518837695005-2083093ee35b","photo-1505118380757-91f5f5632de0","photo-1519046904884-53103b34b206"]},{"id":"forest","label":"Forest","description":"A softer, earthy retreat","images":["photo-1448375240586-882707db888b","photo-1441974231531-c6227db76b6e","photo-1473448912268-2022ce9509d8"]},{"id":"sunset","label":"Sunset","description":"Warm tones, golden hour","images":["photo-1470252649378-9c29740c9fa8","photo-1501973801540-537f08ccae7b","photo-1497250681960-ef046c08a56e"]},{"id":"aurora","label":"Aurora","description":"Northern-light gradients","images":["photo-1531366936337-7c912a4589a7","photo-1483347756197-71ef80e95f73","photo-1519681393784-d120267933ba"]},{"id":"stardust","label":"Stardust","description":"A quiet cosmic night","images":["photo-1462331940025-496dfbfc7564","photo-1419242902214-272b3f66ee7a","photo-1464802686167-b939a6910659"]},{"id":"geometry","label":"Geometry","description":"Clean lines and structure","images":["photo-1518005020951-eccb494ad742","photo-1487958449943-2429e8be8625","photo-1511818966892-d7d671e672a2"]},{"id":"glass","label":"Glass","description":"Cool translucent layers","images":["photo-1519608487953-e999c86e7455","photo-1518837695005-2083093ee35b","photo-1497250681960-ef046c08a56e"]},{"id":"minimal","label":"Minimal","description":"Quiet, focused and clear","images":["photo-1470770841072-f978cf4d019e","photo-1500530855697-b586d89ba3ee","photo-1501785888041-af3ef285b470"]},{"id":"dreamscape","label":"Dreamscape","description":"Soft lilac and rose haze","images":["photo-1470252649378-9c29740c9fa8","photo-1490750967868-88aa4486c946","photo-1507525428034-b723cf961d3e"]},{"id":"ember","label":"Ember","description":"Rich, warm evening glow","images":["photo-1509316785289-025f5b846b35","photo-1519681393784-d120267933ba","photo-1470252649378-9c29740c9fa8"]}];
+  const wallpaperThemes = [{"id":"default","label":"Classic","description":"Timeless illustrated landscapes","images":["/wallpapers/default.svg"]},{"id":"midnight","label":"Midnight","description":"Moonlit mountains and violet skies","images":["/wallpapers/midnight.svg"]},{"id":"ocean","label":"Ocean","description":"Underwater worlds and luminous waves","images":["/wallpapers/ocean.svg"]},{"id":"forest","label":"Forest","description":"Lush woodland and hidden waterfalls","images":["/wallpapers/forest.svg"]},{"id":"sunset","label":"Sunset","description":"Golden horizons and warm skies","images":["/wallpapers/sunset.svg"]},{"id":"aurora","label":"Aurora","description":"Northern lights over alpine peaks","images":["/wallpapers/aurora.svg"]},{"id":"stardust","label":"Stardust","description":"Galaxies, nebulae and deep space","images":["/wallpapers/stardust.svg"]},{"id":"geometry","label":"Geometry","description":"Neon forms and abstract structures","images":["/wallpapers/geometry.svg"]},{"id":"glass","label":"Glass","description":"Iridescent ribbons and refracted light","images":["/wallpapers/glass.svg"]},{"id":"minimal","label":"Minimal","description":"Soft hills and quiet gradients","images":["/wallpapers/minimal.svg"]},{"id":"dreamscape","label":"Dreamscape","description":"Floating islands and pastel clouds","images":["/wallpapers/dreamscape.svg"]},{"id":"ember","label":"Ember","description":"Volcanic peaks and molten rivers","images":["/wallpapers/ember.svg"]}];
   const activeWallpaperTheme = wallpaperThemes.find((theme) => theme.id === savedTheme) || wallpaperThemes[0];
-  const activeWallpaperUrl = `https://images.unsplash.com/${activeWallpaperTheme.images[Number(savedDesign) || 0]}?auto=format&fit=crop&w=1800&q=85`;
+  const activeWallpaperUrl = activeWallpaperTheme.images[0];
 
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
@@ -295,19 +295,19 @@ const ChatContainer = () => {
                   <section className={`qc-rich-theme-card ${savedTheme === item.id ? "active" : ""}`} key={item.id}>
                     <div className="qc-rich-theme-heading">
                       <div><b>{item.label}</b><small>{item.description}</small></div>
-                      <span>3 wallpapers</span>
+                      <span>Original artwork</span>
                     </div>
                     <div className="qc-rich-theme-designs">
                       {item.images.map((imageId, index) => {
                         const selected = savedTheme === item.id && Number(savedDesign) === index;
-                        const imageUrl = `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=420&q=75`;
+                        const imageUrl = imageId;
                         return (
                           <button type="button" key={imageId + index}
                             className={`qc-rich-wallpaper-option ${selected ? "active" : ""}`}
                             style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(4,8,18,.24)), url("${imageUrl}")` }}
                             onClick={() => updateWallpaper(selectedUser._id, `${item.id}|${index}`)}
-                            aria-label={`${item.label} wallpaper ${index + 1}`} aria-pressed={selected}
-                            title={`${item.label} design ${index + 1}`}>
+                            aria-label={`${item.label} illustrated wallpaper`} aria-pressed={selected}
+                            title={`${item.label} original artwork`}>
                             {selected && <i aria-hidden="true">✓</i>}
                           </button>
                         );
