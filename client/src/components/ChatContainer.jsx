@@ -79,9 +79,9 @@ const ChatContainer = () => {
   const [wallpaperMenuOpen, setWallpaperMenuOpen] = useState(false);
   const savedWallpaper = wallpapers[selectedUser?._id] || "default";
   const [savedTheme, savedDesign] = savedWallpaper.includes("|") ? savedWallpaper.split("|") : [savedWallpaper, "0"];
-  const wallpaperThemes = [{"id":"default","label":"Classic","description":"Timeless illustrated landscapes","images":["/wallpapers/classic.svg"]},{"id":"midnight","label":"Midnight","description":"Moonlit mountains and violet skies","images":["/wallpapers/midnight.svg"]},{"id":"ocean","label":"Ocean","description":"Underwater worlds and luminous waves","images":["/wallpapers/ocean.svg"]},{"id":"forest","label":"Forest","description":"Lush woodland and hidden waterfalls","images":["/wallpapers/forest.svg"]},{"id":"sunset","label":"Sunset","description":"Golden horizons and warm skies","images":["/wallpapers/sunset.svg"]},{"id":"aurora","label":"Aurora","description":"Northern lights over alpine peaks","images":["/wallpapers/aurora.svg"]},{"id":"stardust","label":"Stardust","description":"Galaxies, nebulae and deep space","images":["/wallpapers/stardust.svg"]},{"id":"geometry","label":"Geometry","description":"Neon forms and abstract structures","images":["/wallpapers/geometry.svg"]},{"id":"glass","label":"Glass","description":"Iridescent ribbons and refracted light","images":["/wallpapers/glass.svg"]},{"id":"minimal","label":"Minimal","description":"Soft hills and quiet gradients","images":["/wallpapers/minimal.svg"]},{"id":"dreamscape","label":"Dreamscape","description":"Floating islands and pastel clouds","images":["/wallpapers/dreamscape.svg"]},{"id":"ember","label":"Ember","description":"Volcanic peaks and molten rivers","images":["/wallpapers/ember.svg"]}];
+  const wallpaperThemes = [{"id":"default","label":"Classic","description":"Timeless illustrated landscapes","images":["/wallpapers/classic.svg","/wallpapers/classic-2.svg","/wallpapers/classic-3.svg"]},{"id":"midnight","label":"Midnight","description":"Moonlit mountains and violet skies","images":["/wallpapers/midnight.svg","/wallpapers/midnight-2.svg","/wallpapers/midnight-3.svg"]},{"id":"ocean","label":"Ocean","description":"Underwater worlds and luminous waves","images":["/wallpapers/ocean.svg","/wallpapers/ocean-2.svg","/wallpapers/ocean-3.svg"]},{"id":"forest","label":"Forest","description":"Lush woodland and hidden waterfalls","images":["/wallpapers/forest.svg","/wallpapers/forest-2.svg","/wallpapers/forest-3.svg"]},{"id":"sunset","label":"Sunset","description":"Golden horizons and warm skies","images":["/wallpapers/sunset.svg","/wallpapers/sunset-2.svg","/wallpapers/sunset-3.svg"]},{"id":"aurora","label":"Aurora","description":"Northern lights over alpine peaks","images":["/wallpapers/aurora.svg","/wallpapers/aurora-2.svg","/wallpapers/aurora-3.svg"]},{"id":"stardust","label":"Stardust","description":"Galaxies, nebulae and deep space","images":["/wallpapers/stardust.svg","/wallpapers/stardust-2.svg","/wallpapers/stardust-3.svg"]},{"id":"geometry","label":"Geometry","description":"Neon forms and abstract structures","images":["/wallpapers/geometry.svg","/wallpapers/geometry-2.svg","/wallpapers/geometry-3.svg"]},{"id":"glass","label":"Glass","description":"Iridescent ribbons and refracted light","images":["/wallpapers/glass.svg","/wallpapers/glass-2.svg","/wallpapers/glass-3.svg"]},{"id":"minimal","label":"Minimal","description":"Soft hills and quiet gradients","images":["/wallpapers/minimal.svg","/wallpapers/minimal-2.svg","/wallpapers/minimal-3.svg"]},{"id":"dreamscape","label":"Dreamscape","description":"Floating islands and pastel clouds","images":["/wallpapers/dreamscape.svg","/wallpapers/dreamscape-2.svg","/wallpapers/dreamscape-3.svg"]},{"id":"ember","label":"Ember","description":"Volcanic peaks and molten rivers","images":["/wallpapers/ember.svg","/wallpapers/ember-2.svg","/wallpapers/ember-3.svg"]}];
   const activeWallpaperTheme = wallpaperThemes.find((theme) => theme.id === savedTheme) || wallpaperThemes[0];
-  const activeWallpaperUrl = activeWallpaperTheme.images[0];
+  const activeWallpaperUrl = activeWallpaperTheme.images[Math.min(2, Math.max(0, Number(savedDesign) || 0))];
 
   const handleSendMessage = async (e) => {
     e?.preventDefault?.();
@@ -295,7 +295,7 @@ const ChatContainer = () => {
                   <section className={`qc-rich-theme-card ${savedTheme === item.id ? "active" : ""}`} key={item.id}>
                     <div className="qc-rich-theme-heading">
                       <div><b>{item.label}</b><small>{item.description}</small></div>
-                      <span>Original artwork</span>
+                      <span>3 designs</span>
                     </div>
                     <div className="qc-rich-theme-designs">
                       {item.images.map((imageId, index) => {
@@ -306,8 +306,8 @@ const ChatContainer = () => {
                             className={`qc-rich-wallpaper-option ${selected ? "active" : ""}`}
                             style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(4,8,18,.24)), url("${imageUrl}")` }}
                             onClick={() => updateWallpaper(selectedUser._id, `${item.id}|${index}`)}
-                            aria-label={`${item.label} illustrated wallpaper`} aria-pressed={selected}
-                            title={`${item.label} original artwork`}>
+                            aria-label={`${item.label} wallpaper ${index + 1}`} aria-pressed={selected}
+                            title={`${item.label} design ${index + 1}`}>
                             {selected && <i aria-hidden="true">✓</i>}
                           </button>
                         );
