@@ -336,3 +336,25 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
 .qc-sticker-grid{scrollbar-width:none!important;-ms-overflow-style:none!important}
 .qc-sticker-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 @media(max-width:520px){.qc-gif-grid{gap:8px!important}.qc-gif-image{min-height:100px!important;max-height:145px!important}}
+
+
+/* Further reduce the sticker picker control stack */
+.qc-media-header{padding:7px 13px!important;min-height:0!important;line-height:1.15!important}
+.qc-media-header strong{font-size:13px!important;line-height:1.2!important}
+.qc-media-header p{font-size:9px!important;line-height:1.15!important;margin-top:1px!important}
+.qc-media-close{width:28px!important;height:28px!important;display:grid!important;place-items:center!important;padding:0!important}
+.qc-media-tabs{margin:0 10px 2px!important;padding:3px!important;min-height:0!important}
+.qc-media-tabs button{height:32px!important;min-height:32px!important;padding:5px 8px!important;font-size:11px!important;line-height:1!important}
+.qc-media-categories{padding:5px 10px 3px!important;gap:5px!important;min-height:0!important}
+.qc-media-category{height:32px!important;min-height:32px!important;padding:0 9px!important;font-size:10px!important;line-height:1!important;white-space:nowrap!important}
+.qc-media-search-wrap{padding:4px 10px 7px!important}
+.qc-media-search-wrap .qc-media-search{height:34px!important;min-height:34px!important;padding:6px 10px!important;font-size:11px!important;line-height:1!important}
+.qc-sticker-grid{padding-top:5px!important}
+@media(max-width:520px){
+ .qc-media-header{padding:6px 12px!important}
+ .qc-media-tabs{margin:0 9px 2px!important}
+ .qc-media-categories{padding:4px 9px 3px!important}
+ .qc-media-category{height:30px!important;min-height:30px!important;padding:0 8px!important}
+ .qc-media-search-wrap{padding:3px 9px 6px!important}
+ .qc-media-search-wrap .qc-media-search{height:32px!important;min-height:32px!important}
+}
