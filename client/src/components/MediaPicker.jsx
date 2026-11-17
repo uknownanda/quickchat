@@ -51,7 +51,7 @@ export default function MediaPicker({ axios, stickers, onSendSticker, onSendGif,
   const chooseGif = (gif) => { onSendGif(gif.url); remember(`gif:${gif.id}`); };
 
   return (
-    <section className="qc-media-picker absolute bottom-14 left-0 z-50 flex w-[min(390px,calc(100vw-32px))] max-h-[min(560px,70vh)] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#171426] text-white shadow-2xl" role="dialog" aria-label="GIF and sticker picker">
+    <section className="qc-emoji-popover qc-media-picker absolute bottom-14 left-0 z-50 flex w-[min(390px,calc(100vw-32px))] max-h-[min(560px,70vh)] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#171426] text-white shadow-2xl" role="dialog" aria-label="GIF and sticker picker">
       <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div><strong className="text-sm">Media studio</strong><p className="mt-0.5 text-[10px] text-white/45">A little more expression</p></div>
         <button type="button" onClick={onClose} className="rounded-lg px-2 py-1 text-white/60 hover:bg-white/10" aria-label="Close media picker">×</button>
