@@ -445,9 +445,7 @@ const Sidebar = () => {
                       : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.sticker ? "✦ Sticker" : user.lastMessage.image ? "📷 Photo" : "Message"))
                     : isOnline ? "Online" : formatLastSeen(user.lastSeen)}
                 </span>
-                <span className={`mt-1 block text-[9px] ${isOnline ? "text-emerald-400" : "text-white/30"}`}>
-                  {isOnline ? "● Active now" : `Last seen ${formatLastSeen(user.lastSeen).toLowerCase()}`}
-                </span>
+
               </span>
             </div>
           );
