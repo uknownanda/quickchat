@@ -220,7 +220,7 @@ export const markMessageAsSeen = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     try {
-        const { text = "", image, replyTo } = req.body;
+        const { text = "", image, sticker, replyTo } = req.body;
         const receiverId = req.params.id;
         const senderId = req.user._id;
 
@@ -230,7 +230,11 @@ export const sendMessage = async (req, res) => {
                 message: "Accept this contact invitation before messaging",
             });
         }
-        if (typeof text !== "string" || (!text.trim() && !image)) {
+        const allowedStickers = new Set(["love-burst", "good-vibes", "party-time", "thinking", "laughing", "sending-hugs", "fire-mood", "you-rock", "sleepy-cat", "tiny-heart", "sparkles", "no-words"]);
+        if (sticker !== undefined && (typeof sticker !== "string" || !allowedStickers.has(sticker))) {
+            return res.status(400).json({ success: false, message: "Choose a valid sticker." });
+        }
+        if (typeof text !== "string" || (!text.trim() && !image && !sticker)) {
             return res.status(400).json({
                 success: false,
                 message: "A message or image is required",
@@ -265,6 +269,7 @@ export const sendMessage = async (req, res) => {
             receiverId,
             text: text.trim(),
             image: imageUrl,
+            sticker: sticker || "",
             replyTo: replyTo || null,
             deliveredAt: null,
         });
@@ -399,6 +404,7 @@ export const deleteMessage = async (req, res) => {
         }
         message.text = "";
         message.image = "";
+        message.sticker = "";
         message.deletedAt = new Date();
         message.reactions = [];
         await message.save();
@@ -407,6 +413,7 @@ export const deleteMessage = async (req, res) => {
             deletedAt: message.deletedAt,
             text: "",
             image: "",
+            sticker: "",
             reactions: [],
         });
         return res.json({ success: true, message });
