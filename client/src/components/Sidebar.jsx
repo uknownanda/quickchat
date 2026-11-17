@@ -35,7 +35,7 @@ const Sidebar = () => {
     unseenMessages,
     setUnseenMessages,
   } = useContext(ChatContext);
-  const { authUser, logout, onlineUsers, axios } = useContext(AuthContext);
+  const { authUser, logout, onlineUsers, socketStatus, axios } = useContext(AuthContext);
   const [query, setQuery] = useState(""); // Find people username query
   const [contactQuery, setContactQuery] = useState(""); // Existing contacts filter
   const [results, setResults] = useState([]);
@@ -182,7 +182,7 @@ const Sidebar = () => {
                 <div className="qc-account-menu qc-main-menu absolute right-0 top-full z-30 mt-2 w-56 rounded-xl border border-white/10 bg-[#211b35] p-2 shadow-2xl">
                   <div className="qc-menu-user flex items-center gap-2 px-2 py-2">
                     <img src={authUser?.profilePic || assets.avatar_icon} alt="" className="h-9 w-9 rounded-full object-cover" />
-                    <span className="min-w-0 flex-1"><strong className="block truncate text-xs">{authUser?.fullName || "Your account"}</strong><small className="text-[10px] text-emerald-300">Online</small></span>
+                    <span className="min-w-0 flex-1"><strong className="block truncate text-xs">{authUser?.fullName || "Your account"}</strong><small className={`text-[10px] ${socketStatus === "connected" ? "text-emerald-300" : "text-amber-300"}`}>{socketStatus === "connected" ? "Online" : socketStatus === "connecting" ? "Connecting…" : socketStatus === "reconnecting" ? "Reconnecting…" : "Offline"}</small></span>
                   </div>
                   <div className="qc-menu-divider"></div>
                   <button type="button" onClick={() => { setShowAccountMenu(false); setShowDiscover((open) => !open); if (!showDiscover) setActiveFilter("all"); }} className="qc-main-menu-item"><span>＋</span> Find people</button>
