@@ -83,6 +83,7 @@ export const getUsersForSidebar = async (req, res) => {
                                 _id: "$_id",
                                 text: "$text",
                                 image: "$image",
+                                sticker: "$sticker",
                                 deletedAt: "$deletedAt",
                                 senderId: "$senderId",
                                 createdAt: "$createdAt",
