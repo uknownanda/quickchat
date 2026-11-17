@@ -106,7 +106,7 @@ export default function MediaPicker({ stickers, onSendSticker, onSendGif, onClos
               <button type="button" disabled={sending} onClick={()=>chooseSticker(sticker)} title={sticker.label} className="qc-sticker-tile flex min-h-[82px] w-full flex-col items-center justify-center rounded-xl p-2 disabled:opacity-50"><span className="qc-sticker-art text-[27px] leading-none">{sticker.art}</span><span className="qc-sticker-label mt-1.5 text-center text-[9px] font-medium">{sticker.label}</span></button>
               <button type="button" onClick={()=>toggleFavorite(sticker.id)} aria-label={favorites.includes(sticker.id)?"Remove favorite":"Save sticker"} className="qc-sticker-favorite absolute right-1 top-1 rounded-full px-1 py-0.5 text-[10px]">{favorites.includes(sticker.id)?"★":"☆"}</button>
             </div>)}
-            {!visibleStickers.length && <p className="col-span-4 py-8 text-center text-xs text-white/45">No stickers found.</p>}
+            {!visibleStickers.length && <p className="col-span-full py-8 text-center text-xs text-white/45">No stickers found.</p>}
           </div>
         </>
       ) : (
