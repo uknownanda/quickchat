@@ -757,7 +757,7 @@ const ChatContainer = () => {
           <div className="relative">
             <button type="button" className="qc-tool-btn" onClick={() => { setShowStickers((value) => !value); setShowEmoji(false); }} aria-label="Sticker picker" title="Stickers">✦</button>
             {showStickers && (
-              <MediaPicker axios={axios} stickers={stickerPacks} onSendSticker={handleSendSticker} onSendGif={handleSendGif} onClose={() => setShowStickers(false)} sending={sending} />
+              <MediaPicker stickers={stickerPacks} onSendSticker={handleSendSticker} onSendGif={handleSendGif} onClose={() => setShowStickers(false)} sending={sending} />
             )}
           </div>
           <input
