@@ -131,10 +131,15 @@ export const AuthProvider = ({ children }) => {
         });
 
         newSocket.on("conversationWallpaperUpdated", ({ userIds = [], wallpaper } = {}) => {
-            const otherUserId = userIds.find((id) => id !== String(userData._id));
-            if (!otherUserId || !["default", "midnight", "ocean", "forest", "sunset", "aurora", "stardust", "geometry", "glass", "minimal", "dreamscape", "ember"].includes(wallpaper)) return;
+            const otherUserId = userIds.map(String).find((id) => id !== String(userData._id));
+            const [wallpaperTheme, design = "0"] = String(wallpaper || "").split("|");
+            const validThemes = ["default", "midnight", "ocean", "forest", "sunset", "aurora", "stardust", "geometry", "glass", "minimal", "dreamscape", "ember"];
+            if (!otherUserId || !validThemes.includes(wallpaperTheme) || !/^[0-2]$/.test(design)) return;
+
+            // Store the complete theme + design value so both participants render
+            // the exact same wallpaper variant, including older plain-theme values.
             setWallpapers((current) => {
-                const next = { ...current, [otherUserId]: wallpaper };
+                const next = { ...current, [otherUserId]: `${wallpaperTheme}|${design}` };
                 localStorage.setItem("qc-chat-wallpapers", JSON.stringify(next));
                 return next;
             });
