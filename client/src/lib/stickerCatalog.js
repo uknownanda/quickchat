@@ -7,14 +7,14 @@ export const stickers = [
     "label": "Love you"
   },
   {
-    "id": "love-note",
+    "id": "tiny-heart",
     "category": "love",
     "categoryLabel": "Love",
     "art": "💌",
     "label": "For you"
   },
   {
-    "id": "big-hugs",
+    "id": "sending-hugs",
     "category": "love",
     "categoryLabel": "Love",
     "art": "🫂",
@@ -77,7 +77,7 @@ export const stickers = [
     "label": "Oops"
   },
   {
-    "id": "clown",
+    "id": "no-words",
     "category": "funny",
     "categoryLabel": "Funny",
     "art": "🤡",
@@ -119,7 +119,7 @@ export const stickers = [
     "label": "Hmm…"
   },
   {
-    "id": "sleepy",
+    "id": "sleepy-cat",
     "category": "mood",
     "categoryLabel": "Mood",
     "art": "😴",
@@ -224,7 +224,7 @@ export const stickers = [
     "label": "Victory"
   },
   {
-    "id": "rainbow",
+    "id": "good-vibes",
     "category": "cute",
     "categoryLabel": "Cute",
     "art": "🌈",
