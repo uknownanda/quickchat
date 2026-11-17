@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
 import toast from "react-hot-toast";
 import ProfileImagePreview from "./ProfileImagePreview";
+import { formatLastSeen } from "../lib/utils";
 import SettingsPanel from "./SettingsPanel";
 
 const formatContactTime = (date) => {
@@ -441,8 +442,11 @@ const Sidebar = () => {
                   {user.lastMessage
                     ? user.lastMessage.deletedAt
                       ? "Message deleted"
-                      : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.image ? "📷 Photo" : "Message"))
-                    : isOnline ? "Online" : "Offline"}
+                      : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.sticker ? "✦ Sticker" : user.lastMessage.image ? "📷 Photo" : "Message"))
+                    : isOnline ? "Online" : formatLastSeen(user.lastSeen)}
+                </span>
+                <span className={`mt-1 block text-[9px] ${isOnline ? "text-emerald-400" : "text-white/30"}`}>
+                  {isOnline ? "● Active now" : `Last seen ${formatLastSeen(user.lastSeen).toLowerCase()}`}
                 </span>
               </span>
             </div>
