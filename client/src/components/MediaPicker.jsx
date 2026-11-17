@@ -46,7 +46,7 @@ export default function MediaPicker({ stickers, onSendSticker, onSendGif, onClos
         const params = new URLSearchParams({
           key: apiKey,
           limit: "24",
-          media_filter: "gif,preview",
+          media_filter: "gif,tinygif,mediumgif",
           contentfilter: "medium",
           country: "IN",
           locale: "en_IN",
@@ -59,9 +59,9 @@ export default function MediaPicker({ stickers, onSendSticker, onSendGif, onClos
           if (item.type === "ad") return [item];
           const formats = item.media_formats || {};
           const url = formats.gif?.url;
-          const preview = formats.preview?.url || url;
+          const preview = formats.tinygif?.url || formats.mediumgif?.url || url;
           if (!url || !preview) return [];
-          return [{ id: String(item.id), title: String(item.content_description || item.title || "").slice(0, 100), url, preview, slug: item.slug || "" }];
+          return [{ id: String(item.id), title: String(item.title || item.content_description || "").slice(0, 100), url, preview, slug: item.slug || "" }];
         });
         if (!controller.signal.aborted) setGifs(items);
       } catch (error) {
@@ -114,7 +114,7 @@ export default function MediaPicker({ stickers, onSendSticker, onSendGif, onClos
           <div className="flex gap-2 p-3"><input value={gifQuery} onChange={e=>setGifQuery(e.target.value)} placeholder="Search KLIPY" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs outline-none focus:border-violet-400/60" /><button type="button" onClick={()=>setGifQuery("")} className="rounded-lg bg-white/5 px-3 text-xs">Trending</button></div>
           {gifError && <p className="px-3 pb-2 text-xs text-amber-300">{gifError}</p>}
           <p className="px-3 pb-2 text-[10px] text-white/40">Powered by KLIPY</p>
-          {gifLoading ? <p className="py-10 text-center text-xs text-white/50">Finding GIFs…</p> : <div className="grid grid-cols-2 gap-2 overflow-y-auto p-3 pt-0">{gifs.filter(gif=>gif.type !== "ad").map(gif=><button key={gif.id} type="button" disabled={sending} onClick={()=>chooseGif(gif)} className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-left hover:border-violet-300/50"><img src={gif.preview || gif.url} alt={gif.title || "GIF"} loading="lazy" className="h-28 w-full object-cover"/><span className="block truncate px-2 py-1 text-[10px] text-white/55">GIF · {gif.title || "Tap to send"}</span></button>)}</div>}
+          {gifLoading ? <p className="py-10 text-center text-xs text-white/50">Finding GIFs…</p> : <div className="grid grid-cols-2 gap-2 overflow-y-auto p-3 pt-0">{gifs.map((gif,index)=>gif.type === "ad" ? <div key={gif.id || `klipy-ad-${index}`} className="flex min-h-28 flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 text-center"><span className="text-[10px] text-white/45">Sponsored</span><span className="mt-1 text-xs text-white/70">{gif.title || "KLIPY promotion"}</span></div> : <button key={gif.id} type="button" disabled={sending} onClick={()=>chooseGif(gif)} className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-left hover:border-violet-300/50"><img src={gif.preview || gif.url} alt={gif.title || "GIF"} loading="lazy" className="h-28 w-full object-cover"/><span className="block truncate px-2 py-1 text-[10px] text-white/55">GIF · {gif.title || "Tap to send"}</span></button>)}</div>}
         </>
       )}
     </section>
