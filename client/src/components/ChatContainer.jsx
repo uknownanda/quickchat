@@ -611,7 +611,7 @@ const ChatContainer = () => {
                       </div>
                     )}
                     {msg.gif && (
-                      <img src={msg.gif} loading="lazy" alt="Shared GIF" className="my-1 max-h-64 max-w-full rounded-xl object-contain" />
+                      <img src={msg.gif} loading="lazy" alt="Shared GIF" className="qc-chat-gif my-1 rounded-lg object-contain" />
                     )}
                     {msg.image && (
                       <img
