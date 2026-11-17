@@ -14,6 +14,7 @@ const messageSchema = new mongoose.Schema(
         receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         text: { type: String, default: "", maxlength: 5000 },
         image: { type: String, default: "" },
+        sticker: { type: String, default: "", maxlength: 40 },
         replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Message", default: null },
         reactions: { type: [reactionSchema], default: [] },
         seen: { type: Boolean, default: false },
