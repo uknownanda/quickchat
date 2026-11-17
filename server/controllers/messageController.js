@@ -3,6 +3,18 @@ import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getIO } from "../lib/socket.js";
 import ContactRequest from "../models/ContactRequest.js";
+import { stickerIds } from "../lib/stickerCatalog.js";
+
+const isAllowedTenorGif = (value) => {
+    if (typeof value !== "string" || value.length > 1000) return false;
+    try {
+        const url = new URL(value);
+        return url.protocol === "https:" &&
+            /^media(?:\d+)?\.tenor\.com$/i.test(url.hostname) &&
+            url.pathname.toLowerCase().endsWith(".gif") &&
+            !url.username && !url.password;
+    } catch { return false; }
+};
 
 const areContacts = async (a, b) => Boolean(
     await ContactRequest.exists({
@@ -84,6 +96,7 @@ export const getUsersForSidebar = async (req, res) => {
                                 text: "$text",
                                 image: "$image",
                                 sticker: "$sticker",
+                                gif: "$gif",
                                 deletedAt: "$deletedAt",
                                 senderId: "$senderId",
                                 createdAt: "$createdAt",
@@ -221,7 +234,7 @@ export const markMessageAsSeen = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     try {
-        const { text = "", image, sticker, replyTo } = req.body;
+        const { text = "", image, sticker, gif, replyTo } = req.body;
         const receiverId = req.params.id;
         const senderId = req.user._id;
 
@@ -231,11 +244,14 @@ export const sendMessage = async (req, res) => {
                 message: "Accept this contact invitation before messaging",
             });
         }
-        const allowedStickers = new Set(["love-burst", "good-vibes", "party-time", "thinking", "laughing", "sending-hugs", "fire-mood", "you-rock", "sleepy-cat", "tiny-heart", "sparkles", "no-words"]);
+        const allowedStickers = new Set(stickerIds);
         if (sticker !== undefined && (typeof sticker !== "string" || !allowedStickers.has(sticker))) {
             return res.status(400).json({ success: false, message: "Choose a valid sticker." });
         }
-        if (typeof text !== "string" || (!text.trim() && !image && !sticker)) {
+        if (gif !== undefined && !isAllowedTenorGif(gif)) {
+            return res.status(400).json({ success: false, message: "Choose a valid GIF from the picker." });
+        }
+        if (typeof text !== "string" || (!text.trim() && !image && !sticker && !gif)) {
             return res.status(400).json({
                 success: false,
                 message: "A message or image is required",
@@ -271,6 +287,7 @@ export const sendMessage = async (req, res) => {
             text: text.trim(),
             image: imageUrl,
             sticker: sticker || "",
+            gif: gif || "",
             replyTo: replyTo || null,
             deliveredAt: null,
         });
@@ -406,6 +423,7 @@ export const deleteMessage = async (req, res) => {
         message.text = "";
         message.image = "";
         message.sticker = "";
+        message.gif = "";
         message.deletedAt = new Date();
         message.reactions = [];
         await message.save();
@@ -415,6 +433,7 @@ export const deleteMessage = async (req, res) => {
             text: "",
             image: "",
             sticker: "",
+            gif: "",
             reactions: [],
         });
         return res.json({ success: true, message });
