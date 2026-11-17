@@ -283,3 +283,33 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
  .qc-sticker-tile{min-height:76px!important}
  .qc-sticker-art{font-size:25px!important}
 }
+
+
+/* Reliable independent scrolling for sticker and GIF result areas */
+.qc-media-picker{min-height:0!important}
+.qc-sticker-grid,.qc-gif-grid{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  max-height:100%!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(153,132,220,.48) transparent;
+}
+.qc-media-categories{
+  flex:0 0 auto!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none!important;
+  touch-action:pan-x;
+}
+.qc-media-categories::-webkit-scrollbar{display:none}
+.qc-sticker-grid::-webkit-scrollbar,.qc-gif-grid::-webkit-scrollbar{width:5px}
+.qc-sticker-grid::-webkit-scrollbar-thumb,.qc-gif-grid::-webkit-scrollbar-thumb{background:rgba(153,132,220,.42);border-radius:99px}
+.qc-sticker-grid::-webkit-scrollbar-track,.qc-gif-grid::-webkit-scrollbar-track{background:transparent}
+.qc-media-search-wrap,.qc-media-search-row,.qc-media-provider,.qc-media-header,.qc-media-tabs{flex-shrink:0!important}
