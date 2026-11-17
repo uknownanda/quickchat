@@ -373,3 +373,26 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
 @media(max-width:520px){
   .qc-chat-gif{max-width:min(185px,56vw)!important;max-height:145px!important}
 }
+
+
+/* Make every sticker category chip compact and consistent */
+.qc-media-categories .qc-media-category,
+.qc-media-categories button{
+  box-sizing:border-box!important;
+  height:27px!important;
+  min-height:27px!important;
+  max-height:27px!important;
+  padding:0 8px!important;
+  border-radius:9px!important;
+  font-size:9px!important;
+  line-height:1!important;
+  font-weight:500!important;
+}
+.qc-media-categories{gap:5px!important;padding:4px 10px 3px!important}
+@media(max-width:520px){
+ .qc-media-categories .qc-media-category,
+ .qc-media-categories button{
+   height:26px!important;min-height:26px!important;max-height:26px!important;
+   padding:0 7px!important;font-size:9px!important;
+ }
+}
