@@ -21,6 +21,20 @@ const emojiCategories = [
   { id: "flags", label: "Flags", icon: "🏳️", emojis: "🏳️ 🏴 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️ 🇮🇳 🇺🇸 🇬🇧 🇨🇦 🇦🇺 🇳🇿 🇯🇵 🇰🇷 🇨🇳 🇸🇬 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇧🇷 🇲🇽 🇦🇷 🇿🇦 🇳🇬 🇪🇬 🇸🇦 🇦🇪 🇹🇷 🇷🇺 🇺🇦 🇵🇰 🇧🇩 🇱🇰 🇳🇵 🇹🇭 🇻🇳 🇮🇩 🇲🇾 🇵🇭 🇮🇪 🇳🇱 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇨🇭 🇬🇷 🇮🇱 🇵🇸 🇺🇳".split(" ") },
 ];
 const reactions = ["❤️", "😂", "👍", "🔥", "😮", "😢"];
+const stickerPacks = [
+  { id: "love-burst", art: "💗", label: "Love you" },
+  { id: "good-vibes", art: "🌈", label: "Good vibes" },
+  { id: "party-time", art: "🥳", label: "Let's party" },
+  { id: "thinking", art: "🤔", label: "Hmm…" },
+  { id: "laughing", art: "🤣", label: "I'm dead" },
+  { id: "sending-hugs", art: "🫂", label: "Big hugs" },
+  { id: "fire-mood", art: "🔥", label: "On fire" },
+  { id: "you-rock", art: "🫶", label: "You rock" },
+  { id: "sleepy-cat", art: "😴", label: "Sleep well" },
+  { id: "tiny-heart", art: "💌", label: "For you" },
+  { id: "sparkles", art: "✨", label: "Amazing" },
+  { id: "no-words", art: "🙈", label: "No words" },
+];
 
 const formatDateSeparator = (value) => {
   const date = new Date(value);
@@ -66,6 +80,7 @@ const ChatContainer = () => {
   const [sending, setSending] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showStickers, setShowStickers] = useState(false);
   const [emojiCategory, setEmojiCategory] = useState("smileys");
   const [emojiSearch, setEmojiSearch] = useState("");
   const [dragActive, setDragActive] = useState(false);
@@ -98,6 +113,14 @@ const ChatContainer = () => {
     } finally {
       setSending(false);
     }
+  };
+  const handleSendSticker = async (sticker) => {
+    if (sending) return;
+    setSending(true);
+    try {
+      const sent = await sendMessage({ sticker: sticker.id, replyTo: replyTo?._id || null });
+      if (sent) { setReplyTo(null); setShowStickers(false); setShowEmoji(false); }
+    } finally { setSending(false); }
   };
   const handleSendImage = async (e) => {
     const file = e.target.files?.[0];
@@ -584,6 +607,12 @@ const ChatContainer = () => {
                   </div>
                 ) : (
                   <>
+                    {msg.sticker && (
+                      <div className="my-1 flex flex-col items-center gap-1 px-3 py-2" aria-label="Sticker message">
+                        <span className="text-6xl leading-tight drop-shadow-lg">{stickerPacks.find((item) => item.id === msg.sticker)?.art || "✨"}</span>
+                        <span className="text-[10px] font-medium text-white/55">{stickerPacks.find((item) => item.id === msg.sticker)?.label || "Sticker"}</span>
+                      </div>
+                    )}
                     {msg.image && (
                       <img
                         src={msg.image}
@@ -722,6 +751,24 @@ const ChatContainer = () => {
                 {emojiSearch && !emojiCategories.some((category) => category.emojis.some((emoji) => emoji.includes(emojiSearch.trim()))) && (
                   <p className="qc-emoji-no-results">No matching emoji found.</p>
                 )}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <button type="button" className="qc-tool-btn" onClick={() => { setShowStickers((value) => !value); setShowEmoji(false); }} aria-label="Sticker picker" title="Stickers">✦</button>
+            {showStickers && (
+              <div className="qc-emoji-popover absolute bottom-14 left-0 z-40 w-64 rounded-2xl border border-white/10 bg-[#171426] p-3 shadow-2xl" role="dialog" aria-label="Sticker picker">
+                <div className="mb-3 flex items-center justify-between">
+                  <div><strong className="text-sm">Stickers</strong><p className="text-[10px] text-white/45">Quick reactions, bigger feelings</p></div>
+                  <button type="button" className="qc-emoji-close" onClick={() => setShowStickers(false)} aria-label="Close sticker picker">×</button>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {stickerPacks.map((sticker) => (
+                    <button key={sticker.id} type="button" onClick={() => handleSendSticker(sticker)} disabled={sending} className="flex min-h-20 flex-col items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.035] p-2 transition hover:border-violet-300/40 hover:bg-violet-400/10 disabled:opacity-50" title={sticker.label}>
+                      <span className="text-3xl">{sticker.art}</span><span className="mt-1 text-[9px] text-white/55">{sticker.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
