@@ -7,7 +7,7 @@ const tabs = [
 const recentKey = "quickchat-media-recent";
 const favoriteKey = "quickchat-sticker-favorites";
 
-export default function MediaPicker({ axios, stickers, onSendSticker, onSendGif, onClose, sending }) {
+export default function MediaPicker({ stickers, onSendSticker, onSendGif, onClose, sending }) {
   const [tab, setTab] = useState("sticker");
   const [category, setCategory] = useState("all");
   const [query, setQuery] = useState("");
@@ -31,15 +31,51 @@ export default function MediaPicker({ axios, stickers, onSendSticker, onSendGif,
 
   useEffect(() => {
     if (tab !== "gif") return;
-    let active = true;
-    setGifLoading(true);
-    setGifError("");
-    axios.get("/api/messages/gifs", { params: { q: gifQuery, limit: 24 } })
-      .then(({ data }) => { if (active) setGifs(data.gifs || []); })
-      .catch((error) => { if (active) setGifError(error.response?.data?.message || "GIF search is unavailable. Configure TENOR_API_KEY on the backend."); })
-      .finally(() => { if (active) setGifLoading(false); });
-    return () => { active = false; };
-  }, [tab, gifQuery, axios]);
+    const apiKey = import.meta.env.VITE_KLIPY_API_KEY;
+    if (!apiKey) {
+      setGifError("Add VITE_KLIPY_API_KEY to the client environment to enable GIF search.");
+      setGifs([]);
+      return;
+    }
+    const controller = new AbortController();
+    const loadGifs = async () => {
+      setGifLoading(true);
+      setGifError("");
+      try {
+        const endpoint = gifQuery.trim() ? "search" : "featured";
+        const params = new URLSearchParams({
+          key: apiKey,
+          limit: "24",
+          media_filter: "gif,preview",
+          contentfilter: "medium",
+          country: "IN",
+          locale: "en_IN",
+        });
+        if (gifQuery.trim()) params.set("q", gifQuery.trim().slice(0, 80));
+        const response = await fetch(`https://api.klipy.com/v2/${endpoint}?${params}`, { signal: controller.signal });
+        if (!response.ok) throw new Error(response.status === 401 || response.status === 403 ? "KLIPY rejected this API key. Check your VITE_KLIPY_API_KEY." : "KLIPY GIF search is temporarily unavailable.");
+        const payload = await response.json();
+        const items = (payload.results || []).flatMap((item) => {
+          if (item.type === "ad") return [item];
+          const formats = item.media_formats || {};
+          const url = formats.gif?.url;
+          const preview = formats.preview?.url || url;
+          if (!url || !preview) return [];
+          return [{ id: String(item.id), title: String(item.content_description || item.title || "").slice(0, 100), url, preview, slug: item.slug || "" }];
+        });
+        if (!controller.signal.aborted) setGifs(items);
+      } catch (error) {
+        if (error.name !== "AbortError" && !controller.signal.aborted) {
+          setGifError(error.message || "Unable to search GIFs right now.");
+          setGifs([]);
+        }
+      } finally {
+        if (!controller.signal.aborted) setGifLoading(false);
+      }
+    };
+    loadGifs();
+    return () => controller.abort();
+  }, [tab, gifQuery]);
 
   const remember = (id) => {
     setRecent(old => { const next = [id, ...old.filter(x => x !== id)].slice(0, 18); localStorage.setItem(recentKey, JSON.stringify(next)); return next; });
@@ -75,9 +111,10 @@ export default function MediaPicker({ axios, stickers, onSendSticker, onSendGif,
         </>
       ) : (
         <>
-          <div className="flex gap-2 p-3"><input value={gifQuery} onChange={e=>setGifQuery(e.target.value)} placeholder="Search GIFs…" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs outline-none focus:border-violet-400/60" /><button type="button" onClick={()=>setGifQuery("")} className="rounded-lg bg-white/5 px-3 text-xs">Trending</button></div>
+          <div className="flex gap-2 p-3"><input value={gifQuery} onChange={e=>setGifQuery(e.target.value)} placeholder="Search KLIPY" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs outline-none focus:border-violet-400/60" /><button type="button" onClick={()=>setGifQuery("")} className="rounded-lg bg-white/5 px-3 text-xs">Trending</button></div>
           {gifError && <p className="px-3 pb-2 text-xs text-amber-300">{gifError}</p>}
-          {gifLoading ? <p className="py-10 text-center text-xs text-white/50">Finding GIFs…</p> : <div className="grid grid-cols-2 gap-2 overflow-y-auto p-3 pt-0">{gifs.map(gif=><button key={gif.id} type="button" disabled={sending} onClick={()=>chooseGif(gif)} className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-left hover:border-violet-300/50"><img src={gif.preview || gif.url} alt={gif.title || "GIF"} loading="lazy" className="h-28 w-full object-cover"/><span className="block truncate px-2 py-1 text-[10px] text-white/55">GIF · {gif.title || "Tap to send"}</span></button>)}</div>}
+          <p className="px-3 pb-2 text-[10px] text-white/40">Powered by KLIPY</p>
+          {gifLoading ? <p className="py-10 text-center text-xs text-white/50">Finding GIFs…</p> : <div className="grid grid-cols-2 gap-2 overflow-y-auto p-3 pt-0">{gifs.filter(gif=>gif.type !== "ad").map(gif=><button key={gif.id} type="button" disabled={sending} onClick={()=>chooseGif(gif)} className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-left hover:border-violet-300/50"><img src={gif.preview || gif.url} alt={gif.title || "GIF"} loading="lazy" className="h-28 w-full object-cover"/><span className="block truncate px-2 py-1 text-[10px] text-white/55">GIF · {gif.title || "Tap to send"}</span></button>)}</div>}
         </>
       )}
     </section>
