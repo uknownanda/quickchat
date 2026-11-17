@@ -2,11 +2,13 @@ import express from "express";
 import { protectRoute } from "../middleware/auth.js";
 import { deleteMessage, togglePinMessage, getMessages, getUsersForSidebar, getSharedMedia, markMessageAsSeen, searchMessages, sendMessage, updateMessage, getConversationWallpaper, updateConversationWallpaper } from "../controllers/messageController.js";
 import { createRateLimiter } from "../lib/security.js";
+import { searchGifs } from "../controllers/gifController.js";
 
 const messageRouter = express.Router();
 const sendLimiter = createRateLimiter({ windowMs: 60 * 1000, max: 60, message: "You are sending messages too quickly. Please wait a moment." });
 const searchLimiter = createRateLimiter({ windowMs: 60 * 1000, max: 30, message: "Too many searches. Please slow down." });
 messageRouter.get("/users", protectRoute, getUsersForSidebar);
+messageRouter.get("/gifs", protectRoute, searchLimiter, searchGifs);
 messageRouter.get("/wallpaper/:id", protectRoute, getConversationWallpaper);
 messageRouter.put("/wallpaper/:id", protectRoute, updateConversationWallpaper);
 messageRouter.get("/search/:id", protectRoute, searchLimiter, searchMessages);
