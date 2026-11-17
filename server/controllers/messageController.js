@@ -5,13 +5,13 @@ import { getIO } from "../lib/socket.js";
 import ContactRequest from "../models/ContactRequest.js";
 import { stickerIds } from "../lib/stickerCatalog.js";
 
-const isAllowedTenorGif = (value) => {
+const isAllowedKlipyGif = (value) => {
     if (typeof value !== "string" || value.length > 1000) return false;
     try {
         const url = new URL(value);
         return url.protocol === "https:" &&
-            /^media(?:\d+)?\.tenor\.com$/i.test(url.hostname) &&
-            url.pathname.toLowerCase().endsWith(".gif") &&
+            /^static(?:\d+)?\.klipy\.com$/i.test(url.hostname) &&
+            /\.(gif|webp)$/i.test(url.pathname) &&
             !url.username && !url.password;
     } catch { return false; }
 };
@@ -248,7 +248,7 @@ export const sendMessage = async (req, res) => {
         if (sticker !== undefined && (typeof sticker !== "string" || !allowedStickers.has(sticker))) {
             return res.status(400).json({ success: false, message: "Choose a valid sticker." });
         }
-        if (gif !== undefined && !isAllowedTenorGif(gif)) {
+        if (gif !== undefined && !isAllowedKlipyGif(gif)) {
             return res.status(400).json({ success: false, message: "Choose a valid GIF from the picker." });
         }
         if (typeof text !== "string" || (!text.trim() && !image && !sticker && !gif)) {
