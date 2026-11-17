@@ -274,7 +274,7 @@ export const ChatProvider = ({ children }) => {
                 Notification.permission === "granted" && !isViewingConversation) {
                 const sender = usersRef.current.find((user) => user._id === message.senderId);
                 new Notification(sender?.fullName || "New QuickChat message", {
-                    body: message.text || (message.image ? "Sent you a photo" : "New message"),
+                    body: message.text || (message.sticker ? "Sent you a sticker" : message.image ? "Sent you a photo" : "New message"),
                     tag: "quickchat-" + message._id,
                 });
             }
