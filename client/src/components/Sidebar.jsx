@@ -442,7 +442,7 @@ const Sidebar = () => {
                   {user.lastMessage
                     ? user.lastMessage.deletedAt
                       ? "Message deleted"
-                      : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.sticker ? "✦ Sticker" : user.lastMessage.image ? "📷 Photo" : "Message"))
+                      : (user.lastMessage.senderId?.toString() === authUser?._id?.toString() ? "You: " : "") + (user.lastMessage.text || (user.lastMessage.gif ? "▣ GIF" : user.lastMessage.sticker ? "✦ Sticker" : user.lastMessage.image ? "📷 Photo" : "Message"))
                     : isOnline ? "Online" : formatLastSeen(user.lastSeen)}
                 </span>
 
