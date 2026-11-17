@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { formatLastSeen } from "../lib/utils";
 import toast from "react-hot-toast";
 import ProfileImagePreview from "./ProfileImagePreview";
+import MediaPicker from "./MediaPicker";
 
 const emojiCategories = [
   { id: "smileys", label: "Smileys", icon: "😀", emojis: "😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 ☺️ 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😝 😜 🤪 🤨 🧐 🤓 😎 🥸 🤩 🥳 🙂‍↕️ 😏 😒 🙂‍↔️ 😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😶‍🌫️ 😱 😨 😰 😥 😓 🤗 🤔 🫣 🤭 🫢 🫡 🤫 🫠 🤥 😶 🫥 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤 😪 😵 😵‍💫 🫨 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑 🤠".split(" ") },
@@ -21,20 +22,8 @@ const emojiCategories = [
   { id: "flags", label: "Flags", icon: "🏳️", emojis: "🏳️ 🏴 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️ 🇮🇳 🇺🇸 🇬🇧 🇨🇦 🇦🇺 🇳🇿 🇯🇵 🇰🇷 🇨🇳 🇸🇬 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇧🇷 🇲🇽 🇦🇷 🇿🇦 🇳🇬 🇪🇬 🇸🇦 🇦🇪 🇹🇷 🇷🇺 🇺🇦 🇵🇰 🇧🇩 🇱🇰 🇳🇵 🇹🇭 🇻🇳 🇮🇩 🇲🇾 🇵🇭 🇮🇪 🇳🇱 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇨🇭 🇬🇷 🇮🇱 🇵🇸 🇺🇳".split(" ") },
 ];
 const reactions = ["❤️", "😂", "👍", "🔥", "😮", "😢"];
-const stickerPacks = [
-  { id: "love-burst", art: "💗", label: "Love you" },
-  { id: "good-vibes", art: "🌈", label: "Good vibes" },
-  { id: "party-time", art: "🥳", label: "Let's party" },
-  { id: "thinking", art: "🤔", label: "Hmm…" },
-  { id: "laughing", art: "🤣", label: "I'm dead" },
-  { id: "sending-hugs", art: "🫂", label: "Big hugs" },
-  { id: "fire-mood", art: "🔥", label: "On fire" },
-  { id: "you-rock", art: "🫶", label: "You rock" },
-  { id: "sleepy-cat", art: "😴", label: "Sleep well" },
-  { id: "tiny-heart", art: "💌", label: "For you" },
-  { id: "sparkles", art: "✨", label: "Amazing" },
-  { id: "no-words", art: "🙈", label: "No words" },
-];
+const stickerPacks = [{"id":"love-burst","category":"love","categoryLabel":"Love","art":"💗","label":"Love you"},{"id":"love-note","category":"love","categoryLabel":"Love","art":"💌","label":"For you"},{"id":"big-hugs","category":"love","categoryLabel":"Love","art":"🫂","label":"Big hugs"},{"id":"heart-eyes","category":"love","categoryLabel":"Love","art":"😍","label":"Heart eyes"},{"id":"kiss","category":"love","categoryLabel":"Love","art":"😘","label":"Kisses"},{"id":"forever","category":"love","categoryLabel":"Love","art":"💞","label":"Forever"},{"id":"crush","category":"love","categoryLabel":"Love","art":"🥰","label":"Crushing"},{"id":"heartbreak","category":"love","categoryLabel":"Love","art":"💔","label":"Heartbreak"},{"id":"laughing","category":"funny","categoryLabel":"Funny","art":"🤣","label":"I'm dead"},{"id":"lol","category":"funny","categoryLabel":"Funny","art":"😂","label":"LOL"},{"id":"oops","category":"funny","categoryLabel":"Funny","art":"🙈","label":"Oops"},{"id":"clown","category":"funny","categoryLabel":"Funny","art":"🤡","label":"Clown mode"},{"id":"silly","category":"funny","categoryLabel":"Funny","art":"🤪","label":"Silly"},{"id":"side-eye","category":"funny","categoryLabel":"Funny","art":"👀","label":"Side eye"},{"id":"facepalm","category":"funny","categoryLabel":"Funny","art":"🤦","label":"Facepalm"},{"id":"shrug","category":"funny","categoryLabel":"Funny","art":"🤷","label":"Whatever"},{"id":"thinking","category":"mood","categoryLabel":"Mood","art":"🤔","label":"Hmm…"},{"id":"sleepy","category":"mood","categoryLabel":"Mood","art":"😴","label":"Sleepy"},{"id":"crying","category":"mood","categoryLabel":"Mood","art":"😭","label":"Crying"},{"id":"angry","category":"mood","categoryLabel":"Mood","art":"😤","label":"Not happy"},{"id":"shocked","category":"mood","categoryLabel":"Mood","art":"😱","label":"Shocked"},{"id":"chill","category":"mood","categoryLabel":"Mood","art":"😎","label":"Chill"},{"id":"melting","category":"mood","categoryLabel":"Mood","art":"🫠","label":"Melting"},{"id":"pleading","category":"mood","categoryLabel":"Mood","art":"🥺","label":"Please"},{"id":"party-time","category":"celebrate","categoryLabel":"Celebrate","art":"🥳","label":"Let's party"},{"id":"fire-mood","category":"celebrate","categoryLabel":"Celebrate","art":"🔥","label":"On fire"},{"id":"sparkles","category":"celebrate","categoryLabel":"Celebrate","art":"✨","label":"Amazing"},{"id":"you-rock","category":"celebrate","categoryLabel":"Celebrate","art":"🫶","label":"You rock"},{"id":"trophy","category":"celebrate","categoryLabel":"Celebrate","art":"🏆","label":"Champion"},{"id":"confetti","category":"celebrate","categoryLabel":"Celebrate","art":"🎊","label":"Celebrate"},{"id":"cheers","category":"celebrate","categoryLabel":"Celebrate","art":"🥂","label":"Cheers"},{"id":"victory","category":"celebrate","categoryLabel":"Celebrate","art":"✌️","label":"Victory"},{"id":"rainbow","category":"cute","categoryLabel":"Cute","art":"🌈","label":"Good vibes"},{"id":"puppy","category":"cute","categoryLabel":"Cute","art":"🐶","label":"Puppy love"},{"id":"kitty","category":"cute","categoryLabel":"Cute","art":"🐱","label":"Meow"},{"id":"panda","category":"cute","categoryLabel":"Cute","art":"🐼","label":"Panda"},{"id":"bunny","category":"cute","categoryLabel":"Cute","art":"🐰","label":"Bunny"},{"id":"teddy","category":"cute","categoryLabel":"Cute","art":"🐻","label":"Bear hug"},{"id":"butterfly","category":"cute","categoryLabel":"Cute","art":"🦋","label":"Flutter"},{"id":"unicorn","category":"cute","categoryLabel":"Cute","art":"🦄","label":"Magic"},{"id":"thumbs-up","category":"reactions","categoryLabel":"Reactions","art":"👍","label":"Yes"},{"id":"thumbs-down","category":"reactions","categoryLabel":"Reactions","art":"👎","label":"No"},{"id":"wave","category":"reactions","categoryLabel":"Reactions","art":"👋","label":"Hey"},{"id":"pray","category":"reactions","categoryLabel":"Reactions","art":"🙏","label":"Please"},{"id":"hundred","category":"reactions","categoryLabel":"Reactions","art":"💯","label":"Perfect"},{"id":"okay","category":"reactions","categoryLabel":"Reactions","art":"👌","label":"Okay"},{"id":"tears-joy","category":"reactions","categoryLabel":"Reactions","art":"🥹","label":"So sweet"},{"id":"handshake","category":"reactions","categoryLabel":"Reactions","art":"🤝","label":"Deal"}];
+
 
 const formatDateSeparator = (value) => {
   const date = new Date(value);
@@ -70,7 +59,7 @@ const ChatContainer = () => {
     searchMessages,
     togglePinMessage,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences, axios } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const messageListRef = useRef(null);
   const previousScrollHeight = useRef(null);
@@ -119,6 +108,14 @@ const ChatContainer = () => {
     setSending(true);
     try {
       const sent = await sendMessage({ sticker: sticker.id, replyTo: replyTo?._id || null });
+      if (sent) { setReplyTo(null); setShowStickers(false); setShowEmoji(false); }
+    } finally { setSending(false); }
+  };
+  const handleSendGif = async (gif) => {
+    if (sending) return;
+    setSending(true);
+    try {
+      const sent = await sendMessage({ gif, replyTo: replyTo?._id || null });
       if (sent) { setReplyTo(null); setShowStickers(false); setShowEmoji(false); }
     } finally { setSending(false); }
   };
@@ -613,6 +610,9 @@ const ChatContainer = () => {
                         <span className="text-[10px] font-medium text-white/55">{stickerPacks.find((item) => item.id === msg.sticker)?.label || "Sticker"}</span>
                       </div>
                     )}
+                    {msg.gif && (
+                      <img src={msg.gif} loading="lazy" alt="Shared GIF" className="my-1 max-h-64 max-w-full rounded-xl object-contain" />
+                    )}
                     {msg.image && (
                       <img
                         src={msg.image}
@@ -757,19 +757,7 @@ const ChatContainer = () => {
           <div className="relative">
             <button type="button" className="qc-tool-btn" onClick={() => { setShowStickers((value) => !value); setShowEmoji(false); }} aria-label="Sticker picker" title="Stickers">✦</button>
             {showStickers && (
-              <div className="qc-emoji-popover absolute bottom-14 left-0 z-40 w-64 rounded-2xl border border-white/10 bg-[#171426] p-3 shadow-2xl" role="dialog" aria-label="Sticker picker">
-                <div className="mb-3 flex items-center justify-between">
-                  <div><strong className="text-sm">Stickers</strong><p className="text-[10px] text-white/45">Quick reactions, bigger feelings</p></div>
-                  <button type="button" className="qc-emoji-close" onClick={() => setShowStickers(false)} aria-label="Close sticker picker">×</button>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {stickerPacks.map((sticker) => (
-                    <button key={sticker.id} type="button" onClick={() => handleSendSticker(sticker)} disabled={sending} className="flex min-h-20 flex-col items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.035] p-2 transition hover:border-violet-300/40 hover:bg-violet-400/10 disabled:opacity-50" title={sticker.label}>
-                      <span className="text-3xl">{sticker.art}</span><span className="mt-1 text-[9px] text-white/55">{sticker.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <MediaPicker axios={axios} stickers={stickerPacks} onSendSticker={handleSendSticker} onSendGif={handleSendGif} onClose={() => setShowStickers(false)} sending={sending} />
             )}
           </div>
           <input
