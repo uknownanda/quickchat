@@ -358,3 +358,18 @@ html,body,#root{min-height:100%;background:var(--qc-bg)}
  .qc-media-search-wrap{padding:3px 9px 6px!important}
  .qc-media-search-wrap .qc-media-search{height:32px!important;min-height:32px!important}
 }
+
+
+/* Compact GIFs shared inside chat bubbles */
+.qc-chat-gif{
+  display:block!important;
+  width:auto!important;
+  max-width:min(220px,58vw)!important;
+  max-height:170px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  border-radius:10px!important;
+}
+@media(max-width:520px){
+  .qc-chat-gif{max-width:min(185px,56vw)!important;max-height:145px!important}
+}
