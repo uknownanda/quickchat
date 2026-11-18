@@ -13,6 +13,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [authUser, setAuthUser] = useState(null);
+    const [authStatus, setAuthStatus] = useState(() => localStorage.getItem("token") ? "loading" : "unauthenticated");
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
     const [socketStatus, setSocketStatus] = useState("disconnected");
@@ -149,6 +150,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const clearSession = () => {
+        setAuthStatus("unauthenticated");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common.token;
         setToken(null);
@@ -162,6 +164,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const checkAuth = async () => {
+        setAuthStatus("loading");
         const savedToken = localStorage.getItem("token");
 
         if (!savedToken) {
@@ -178,6 +181,7 @@ export const AuthProvider = ({ children }) => {
 
             if (data.success && data.user) {
                 setAuthUser(data.user);
+                setAuthStatus("authenticated");
                 connectSocket(data.user, savedToken);
             } else {
                 clearSession();
@@ -188,6 +192,7 @@ export const AuthProvider = ({ children }) => {
                 // Remove stale tokens (for example, tokens issued before a JWT secret/database reset).
                 clearSession();
             } else {
+                setAuthStatus("error");
                 toast.error(
                     error.response?.data?.message ||
                     "Unable to verify your session. Please try again."
@@ -212,6 +217,7 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common.token = data.token;
             setToken(data.token);
             setAuthUser(data.userData);
+            setAuthStatus("authenticated");
             connectSocket(data.userData, data.token);
             toast.success(data.message || "Authentication successful");
         } catch (error) {
@@ -272,6 +278,8 @@ export const AuthProvider = ({ children }) => {
     const value = {
         axios,
         authUser,
+        authStatus,
+        checkAuth,
         onlineUsers,
         socket,
         socketStatus,
