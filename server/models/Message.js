@@ -12,6 +12,7 @@ const messageSchema = new mongoose.Schema(
     {
         senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        clientMessageId: { type: String, maxlength: 80 },
         text: { type: String, default: "", maxlength: 5000 },
         image: { type: String, default: "" },
         sticker: { type: String, default: "", maxlength: 40 },
@@ -33,6 +34,11 @@ const messageSchema = new mongoose.Schema(
 messageSchema.index({ senderId:  1, receiverId: 1, createdAt: -1, _id: -1 });
 messageSchema.index({ receiverId: 1, senderId: 1, createdAt: -1, _id: -1 });
 messageSchema.index({ receiverId: 1, seen: 1, senderId: 1 });
+// A retry with the same client ID from the same sender can create only one message.
+messageSchema.index(
+    { senderId: 1, clientMessageId: 1 },
+    { unique: true, partialFilterExpression: { clientMessageId: { $type: "string" } } }
+);
 
 const Message = mongoose.model("Message", messageSchema);
 export default Message;
