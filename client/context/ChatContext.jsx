@@ -161,13 +161,26 @@ export const ChatProvider = ({ children }) => {
         if (sendingMessageToRef.current.has(userId)) return false;
 
         sendingMessageToRef.current.add(userId);
+        // Keep one request ID across the automatic retry. If the server saved
+        // the message but the response was lost, the retry returns that record.
+        const clientMessageId = `qc_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 14)}`;
+        const payload = { ...messageData, clientMessageId };
         try {
-            const { data } = await axios.post(
-                `/api/messages/send/${userId}`,
-                messageData
-            );
+            let response;
+            for (let attempt = 0; attempt < 2; attempt += 1) {
+                try {
+                    response = await axios.post(`/api/messages/send/${userId}`, payload);
+                    break;
+                } catch (error) {
+                    const shouldRetry = attempt === 0 &&
+                        (!error.response || error.response.status >= 500);
+                    if (!shouldRetry) throw error;
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                }
+            }
+            const { data } = response || {};
 
-            if (!data.success || !data.newMessage?._id) {
+            if (!data?.success || !data.newMessage?._id) {
                 toast.error(data.message || "Message could not be sent");
                 return false;
             }
