@@ -4,6 +4,7 @@ import cloudinary from "../lib/cloudinary.js";
 import { getIO } from "../lib/socket.js";
 import ContactRequest from "../models/ContactRequest.js";
 import { stickerIds } from "../lib/stickerCatalog.js";
+import { isValidChatImage } from "../lib/security.js";
 
 const isAllowedKlipyGif = (value) => {
     if (typeof value !== "string" || value.length > 1000) return false;
@@ -266,10 +267,7 @@ export const sendMessage = async (req, res) => {
 
         let imageUrl = "";
         if (image) {
-            if (
-                typeof image !== "string" ||
-                !/^data:image\/(png|jpe?g|gif|webp);base64,/i.test(image)
-            ) {
+            if (!isValidChatImage(image)) {
                 return res.status(400).json({
                     success: false,
                     message: "Only image attachments are allowed",
