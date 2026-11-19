@@ -46,6 +46,9 @@ const formatDateSeparator = (value) => {
 const ChatContainer = () => {
   const {
     messages,
+    messagesLoading,
+    messagesError,
+    getMessages,
     hasMoreMessages,
     loadingOlderMessages,
     loadOlderMessages,
@@ -471,6 +474,25 @@ const ChatContainer = () => {
       >
         {loadingOlderMessages && (
           <p className="py-2 text-center text-xs text-white/40">Loading older messages…</p>
+        )}
+        {messagesLoading && !messages.length && (
+          <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 text-center" role="status" aria-live="polite">
+            <span className="h-7 w-7 animate-spin rounded-full border-2 border-white/15 border-t-violet-300" />
+            <p className="text-xs text-white/50">Loading messages…</p>
+          </div>
+        )}
+        {messagesError && !messages.length && !messagesLoading && (
+          <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 text-center" role="alert">
+            <p className="max-w-xs text-sm text-white/60">{messagesError}</p>
+            <button type="button" onClick={() => getMessages(selectedUser?._id)} className="rounded-lg border border-white/10 px-4 py-2 text-xs font-semibold text-violet-200 hover:bg-white/5">Try again</button>
+          </div>
+        )}
+        {!messagesLoading && !messagesError && !messages.length && (
+          <div className="flex min-h-[220px] flex-col items-center justify-center gap-2 text-center">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-violet-400/10 text-xl text-violet-200" aria-hidden="true">✦</span>
+            <p className="text-sm font-medium text-white/75">No messages yet</p>
+            <p className="text-xs text-white/40">Send a message to start the conversation.</p>
+          </div>
         )}
         {messages.map((msg, index) => {
           const mine =
