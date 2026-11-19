@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createRateLimiter, isValidChatImage, isValidEmail, isValidProfileImage, normalizeEmail, validateProfileFields } from "./security.js";
+import { createRateLimiter, isValidChatImage, isValidEmail, isValidObjectId, isValidProfileImage, normalizeEmail, validateProfileFields } from "./security.js";
 
 const response = () => {
   const headers = {};
@@ -73,4 +73,14 @@ test("chat image validator accepts supported base64 images up to 5 MiB", () => {
   assert.equal(isValidChatImage("data:image/png;base64,aGVsbG8"), false);
   const oversizedPayload = "A".repeat(Math.ceil((5 * 1024 * 1024 + 1) / 3) * 4);
   assert.equal(isValidChatImage("data:image/png;base64," + oversizedPayload), false);
+});
+
+
+test("ObjectId validator accepts only 24-character hexadecimal IDs", () => {
+  assert.equal(isValidObjectId("507f1f77bcf86cd799439011"), true);
+  assert.equal(isValidObjectId("507F1F77BCF86CD799439011"), true);
+  assert.equal(isValidObjectId("not-an-id"), false);
+  assert.equal(isValidObjectId("507f1f77bcf86cd79943901"), false);
+  assert.equal(isValidObjectId("507f1f77bcf86cd79943901100"), false);
+  assert.equal(isValidObjectId(507), false);
 });
