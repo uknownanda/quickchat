@@ -93,3 +93,14 @@ export const validateProfileFields = ({ fullName, bio }) => {
   }
   return null;
 };
+
+
+export const isValidObjectId = (value) =>
+  typeof value === "string" && /^[a-f\\d]{24}$/i.test(value);
+
+export const validateObjectIdParam = (paramName = "id") => (req, res, next) => {
+  if (!isValidObjectId(req.params[paramName])) {
+    return res.status(400).json({ success: false, message: "Invalid ID format." });
+  }
+  return next();
+};
