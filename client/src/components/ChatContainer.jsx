@@ -62,7 +62,7 @@ const ChatContainer = () => {
     searchMessages,
     togglePinMessage,
   } = useContext(ChatContext);
-  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences, axios } = useContext(AuthContext);
+  const { authUser, onlineUsers, socketStatus, wallpapers, updateWallpaper, loadWallpaper, preferences } = useContext(AuthContext);
   const scrollEnd = useRef(null);
   const messageListRef = useRef(null);
   const previousScrollHeight = useRef(null);
