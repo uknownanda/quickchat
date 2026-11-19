@@ -100,10 +100,17 @@ export const initializeSocket = (httpServer, allowedOrigins) => {
             if (activeSockets.size === 0) {
                 userSocketmap.delete(userId);
                 const lastSeen = new Date();
-                await User.findByIdAndUpdate(userId, { $set: { lastSeen } }).catch((error) => {
+
+                // Publish the offline transition before awaiting database I/O.
+                // If the user reconnects while lastSeen is being saved, the
+                // subsequent online event will remain the newest presence state.
+                io.emit("presenceUpdated", { userId, online: false, lastSeen });
+                broadcastOnlineUsers();
+
+                User.findByIdAndUpdate(userId, { $set: { lastSeen } }).catch((error) => {
                     console.error("Could not update last-seen timestamp:", error.message);
                 });
-                io.emit("presenceUpdated", { userId, online: false, lastSeen });
+                return;
             }
             broadcastOnlineUsers();
         });
