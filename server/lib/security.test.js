@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createRateLimiter, isValidEmail, isValidProfileImage, normalizeEmail, validateProfileFields } from "./security.js";
+import { createRateLimiter, isValidChatImage, isValidEmail, isValidProfileImage, normalizeEmail, validateProfileFields } from "./security.js";
 
 const response = () => {
   const headers = {};
@@ -62,4 +62,15 @@ test("profile fields enforce name and bio limits", () => {
   assert.match(validateProfileFields({ fullName: " " }), /Name must/);
   assert.match(validateProfileFields({ fullName: "A".repeat(61) }), /Name must/);
   assert.match(validateProfileFields({ fullName: "Nanda", bio: "x".repeat(161) }), /Bio must/);
+});
+
+
+test("chat image validator accepts supported base64 images up to 5 MiB", () => {
+  assert.equal(isValidChatImage("data:image/png;base64,aGVsbG8="), true);
+  assert.equal(isValidChatImage("data:image/svg+xml;base64,aGVsbG8="), false);
+  assert.equal(isValidChatImage("https://example.com/image.png"), false);
+  assert.equal(isValidChatImage("data:image/png;base64,not base64!"), false);
+  assert.equal(isValidChatImage("data:image/png;base64,aGVsbG8"), false);
+  const oversizedPayload = "A".repeat(Math.ceil((5 * 1024 * 1024 + 1) / 3) * 4);
+  assert.equal(isValidChatImage("data:image/png;base64," + oversizedPayload), false);
 });
