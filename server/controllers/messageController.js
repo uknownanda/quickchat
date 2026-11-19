@@ -4,7 +4,7 @@ import cloudinary from "../lib/cloudinary.js";
 import { getIO } from "../lib/socket.js";
 import ContactRequest from "../models/ContactRequest.js";
 import { stickerIds } from "../lib/stickerCatalog.js";
-import { isValidChatImage } from "../lib/security.js";
+import { isValidChatImage, isValidObjectId } from "../lib/security.js";
 
 const isAllowedKlipyGif = (value) => {
     if (typeof value !== "string" || value.length > 1000) return false;
@@ -157,7 +157,7 @@ export const getMessages = async (req, res) => {
         let query = pairQuery(myId, id);
         const cursor = after || before;
         if (cursor) {
-            if (!Message.db.base.Types.ObjectId.isValid(cursor)) return res.status(400).json({ success: false, message: "Invalid message cursor" });
+            if (!isValidObjectId(cursor)) return res.status(400).json({ success: false, message: "Invalid message cursor" });
             const cursorMessage = await Message.findOne({ _id: cursor, ...query }).select("_id createdAt").lean();
             if (!cursorMessage) return res.status(400).json({ success: false, message: "Message cursor was not found in this conversation" });
             const comparison = after ? "$gt" : "$lt";
@@ -257,6 +257,9 @@ export const sendMessage = async (req, res) => {
                 success: false,
                 message: "A message or image is required",
             });
+        }
+        if (replyTo !== undefined && replyTo !== null && replyTo !== "" && !isValidObjectId(replyTo)) {
+            return res.status(400).json({ success: false, message: "Invalid reply target." });
         }
         if (text.length > 5000) {
             return res.status(400).json({
