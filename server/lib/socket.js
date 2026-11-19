@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import ContactRequest from "../models/ContactRequest.js";
+import { isValidObjectId } from "./security.js";
 
 let io;
 
@@ -20,6 +21,12 @@ const broadcastOnlineUsers = () => {
 export const initializeSocket = (httpServer, allowedOrigins) => {
     io = new Server(httpServer, {
         cors: { origin: allowedOrigins, methods: ["GET", "POST"], credentials: true },
+        // Recover short network interruptions when the in-memory adapter can
+        // resume the same session. Client-side sync remains the fallback.
+        connectionStateRecovery: {
+            maxDisconnectionDuration: 2 * 60 * 1000,
+            skipMiddlewares: false,
+        },
     });
 
     io.use(async (socket, next) => {
@@ -59,7 +66,9 @@ export const initializeSocket = (httpServer, allowedOrigins) => {
         }
         broadcastOnlineUsers();
 
-        await User.findByIdAndUpdate(userId, { $set: { lastSeen: new Date() } }).catch((error) => {
+        // Do not await database I/O before registering disconnect handlers.
+        // A fast disconnect during a slow DB response must not leave stale presence.
+        User.findByIdAndUpdate(userId, { $set: { lastSeen: new Date() } }).catch((error) => {
             console.error("Could not update connection timestamp:", error.message);
         });
 
@@ -69,7 +78,7 @@ export const initializeSocket = (httpServer, allowedOrigins) => {
         });
 
         socket.on("typing", async ({ to, isTyping } = {}) => {
-            if (!to || to === userId) return;
+            if (!isValidObjectId(to) || to === userId) return;
             try {
                 const connected = await ContactRequest.exists({
                     status: "accepted",
