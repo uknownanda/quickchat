@@ -104,7 +104,11 @@ export const AuthProvider = ({ children }) => {
         newSocket.on("disconnect", (reason) => {
             setSocketStatus(reason === "io client disconnect" ? "disconnected" : "reconnecting");
         });
-        newSocket.on("reconnect_attempt", () => setSocketStatus("reconnecting"));
+        // Reconnection lifecycle events are emitted by Socket.IO's Manager,
+        // not by the individual Socket instance.
+        newSocket.io.on("reconnect_attempt", () => setSocketStatus("reconnecting"));
+        newSocket.io.on("reconnect", () => setSocketStatus("connected"));
+        newSocket.io.on("reconnect_error", () => setSocketStatus("reconnecting"));
         newSocket.on("connect_error", () => setSocketStatus("reconnecting"));
 
         newSocket.on("connect_error", (error) => {
