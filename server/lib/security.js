@@ -71,6 +71,19 @@ export const isValidProfileImage = (value) =>
   value.length <= 7 * 1024 * 1024 &&
   /^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/]+=*$/i.test(value);
 
+// Chat uploads are limited to 5 MiB before they are forwarded to Cloudinary.
+export const isValidChatImage = (value) => {
+  if (typeof value !== "string") return false;
+  const match = value.match(/^data:image\/(png|jpe?g|gif|webp);base64,([a-z0-9+/]+={0,2})$/i);
+  if (!match) return false;
+
+  const payload = match[2];
+  if (payload.length % 4 !== 0) return false;
+  const padding = payload.endsWith("==") ? 2 : payload.endsWith("=") ? 1 : 0;
+  const byteLength = (payload.length / 4) * 3 - padding;
+  return byteLength > 0 && byteLength <= 5 * 1024 * 1024;
+};
+
 export const validateProfileFields = ({ fullName, bio }) => {
   if (typeof fullName !== "string" || !fullName.trim() || fullName.trim().length > 60) {
     return "Name must contain 1–60 characters.";
