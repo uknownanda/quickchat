@@ -30,6 +30,8 @@ const Sidebar = () => {
   const {
     getUsers,
     users,
+    usersLoading,
+    usersError,
     selectedUser,
     setSelectedUser,
     unseenMessages,
@@ -399,7 +401,19 @@ const Sidebar = () => {
       </div>
 
       <div className="qc-sidebar-contact-list min-h-0 flex-1 space-y-1 overflow-y-auto">
-        {filteredUsers.map((user) => {
+        {usersLoading && !users.length && (
+          <div className="qc-sidebar-empty px-3 py-9 text-center" role="status" aria-live="polite">
+            <span className="mx-auto mb-3 block h-5 w-5 animate-spin rounded-full border-2 border-white/15 border-t-violet-300" />
+            <p className="text-xs text-white/55">Loading your conversations…</p>
+          </div>
+        )}
+        {usersError && !users.length && !usersLoading && (
+          <div className="qc-sidebar-empty px-3 py-8 text-center" role="alert">
+            <p className="text-xs font-medium text-white/75">{usersError}</p>
+            <button type="button" onClick={getUsers} className="mt-3 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-semibold text-violet-200 hover:bg-white/5">Try again</button>
+          </div>
+        )}
+        {!usersLoading && !usersError && filteredUsers.map((user) => {
           const isOnline = onlineUsers.includes(user._id);
           const unreadCount = Number(unseenMessages[user._id]) || 0;
           const isActive = selectedUser?._id === user._id;
@@ -450,7 +464,7 @@ const Sidebar = () => {
             </div>
           );
         })}
-        {!filteredUsers.length && (
+        {!usersLoading && !usersError && !filteredUsers.length && (
           <div className="qc-sidebar-empty px-3 py-9 text-center">
             <span className="mx-auto grid h-10 w-10 place-items-center rounded-2xl bg-violet-400/10 text-xl text-violet-200">
               {contactQuery.trim() ? "⌕" : activeFilter === "online" ? "◌" : activeFilter === "unread" ? "✓" : "✦"}
