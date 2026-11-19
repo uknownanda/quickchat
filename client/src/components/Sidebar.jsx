@@ -413,7 +413,13 @@ const Sidebar = () => {
             <button type="button" onClick={getUsers} className="mt-3 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-semibold text-violet-200 hover:bg-white/5">Try again</button>
           </div>
         )}
-        {!usersLoading && !usersError && filteredUsers.map((user) => {
+        {usersError && users.length > 0 && (
+          <div className="mx-2 mb-2 flex items-center justify-between gap-2 rounded-lg border border-amber-300/10 bg-amber-300/5 px-3 py-2" role="status">
+            <span className="text-[10px] text-white/55">Couldn't refresh conversations.</span>
+            <button type="button" onClick={getUsers} className="shrink-0 text-[10px] font-semibold text-violet-200 hover:text-white">Retry</button>
+          </div>
+        )}
+        {(!usersLoading || users.length > 0) && filteredUsers.map((user) => {
           const isOnline = onlineUsers.includes(user._id);
           const unreadCount = Number(unseenMessages[user._id]) || 0;
           const isActive = selectedUser?._id === user._id;
@@ -464,7 +470,7 @@ const Sidebar = () => {
             </div>
           );
         })}
-        {!usersLoading && !usersError && !filteredUsers.length && (
+        {!usersLoading && !filteredUsers.length && (!usersError || users.length > 0) && (
           <div className="qc-sidebar-empty px-3 py-9 text-center">
             <span className="mx-auto grid h-10 w-10 place-items-center rounded-2xl bg-violet-400/10 text-xl text-violet-200">
               {contactQuery.trim() ? "⌕" : activeFilter === "online" ? "◌" : activeFilter === "unread" ? "✓" : "✦"}
