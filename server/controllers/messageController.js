@@ -235,9 +235,14 @@ export const markMessageAsSeen = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     try {
-        const { text = "", image, sticker, gif, replyTo } = req.body;
+        const { text = "", image, sticker, gif, replyTo, clientMessageId } = req.body;
         const receiverId = req.params.id;
         const senderId = req.user._id;
+
+        if (clientMessageId !== undefined &&
+            (typeof clientMessageId !== "string" || !/^[a-zA-Z0-9_-]{12,80}$/.test(clientMessageId))) {
+            return res.status(400).json({ success: false, message: "Invalid message request ID." });
+        }
 
         if (!(await areContacts(senderId, receiverId))) {
             return res.status(403).json({
@@ -268,6 +273,15 @@ export const sendMessage = async (req, res) => {
             });
         }
 
+        // Return the already-created message before uploading media again. This
+        // handles a retry when the original response was lost in transit.
+        if (clientMessageId) {
+            const existingMessage = await Message.findOne({ senderId, clientMessageId });
+            if (existingMessage) {
+                return res.status(200).json({ success: true, newMessage: existingMessage, duplicate: true });
+            }
+        }
+
         let imageUrl = "";
         if (image) {
             if (!isValidChatImage(image)) {
@@ -290,6 +304,7 @@ export const sendMessage = async (req, res) => {
             sticker: sticker || "",
             gif: gif || "",
             replyTo: replyTo || null,
+            clientMessageId: clientMessageId || undefined,
             deliveredAt: null,
         });
 
@@ -304,6 +319,17 @@ export const sendMessage = async (req, res) => {
         getIO().to(`user:${receiverId}`).emit("newMessage", newMessage);
         return res.status(201).json({ success: true, newMessage });
     } catch (error) {
+        // Concurrent retries can both pass the pre-check. The unique index
+        // chooses one winner; the other request returns that same message.
+        if (error?.code === 11000 && req.body?.clientMessageId) {
+            const existingMessage = await Message.findOne({
+                senderId: req.user._id,
+                clientMessageId: req.body.clientMessageId,
+            }).catch(() => null);
+            if (existingMessage) {
+                return res.status(200).json({ success: true, newMessage: existingMessage, duplicate: true });
+            }
+        }
         console.error("Send Message Error:", error);
         return res.status(500).json({
             success: false,
