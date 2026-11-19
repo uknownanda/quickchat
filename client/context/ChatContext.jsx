@@ -13,6 +13,10 @@ export const ChatProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState({});
     const [hasMoreMessages, setHasMoreMessages] = useState(false);
     const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
+    const [usersLoading, setUsersLoading] = useState(true);
+    const [usersError, setUsersError] = useState("");
+    const [messagesLoading, setMessagesLoading] = useState(false);
+    const [messagesError, setMessagesError] = useState("");
 
     const { socket, axios, authUser, desktopNotifications } = useContext(AuthContext);
 
@@ -47,21 +51,33 @@ export const ChatProvider = ({ children }) => {
 
     // Get users and unread counts
     const getUsers = async () => {
+        setUsersLoading(true);
+        setUsersError("");
         try {
             const { data } = await axios.get("/api/messages/users");
 
             if (data.success) {
                 setUsers(data.users);
                 setUnseenMessages(data.unseenMessages || {});
+            } else {
+                throw new Error(data.message || "Unable to load contacts");
             }
         } catch (error) {
             console.error("Get Users Error:", error);
+            setUsersError(error.response?.data?.message || "Couldn't load your conversations.");
+        } finally {
+            setUsersLoading(false);
         }
     };
 
     // Get messages for a conversation
     const getMessages = async (userId, { sync = false } = {}) => {
         if (!userId) return;
+
+        if (!sync) {
+            setMessagesLoading(true);
+            setMessagesError("");
+        }
 
         try {
             const latestKnownMessage = messagesRef.current[messagesRef.current.length - 1];
@@ -99,9 +115,11 @@ export const ChatProvider = ({ children }) => {
                 setMessages([]);
             }
 
-            toast.error(
-                error.response?.data?.message || "Unable to load messages"
-            );
+            const message = error.response?.data?.message || "Couldn't load messages. Check your connection and try again.";
+            if (selectedRef.current?._id === userId) setMessagesError(message);
+            toast.error(message);
+        } finally {
+            if (!sync && selectedRef.current?._id === userId) setMessagesLoading(false);
         }
     };
 
@@ -468,6 +486,10 @@ export const ChatProvider = ({ children }) => {
         <ChatContext.Provider
             value={{
                 messages,
+                messagesLoading,
+                messagesError,
+                usersLoading,
+                usersError,
                 hasMoreMessages,
                 loadingOlderMessages,
                 loadOlderMessages,
