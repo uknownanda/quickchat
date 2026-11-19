@@ -96,7 +96,7 @@ export const validateProfileFields = ({ fullName, bio }) => {
 
 
 export const isValidObjectId = (value) =>
-  typeof value === "string" && /^[a-f\\d]{24}$/i.test(value);
+  typeof value === "string" && /^[a-f0-9]{24}$/i.test(value);
 
 export const validateObjectIdParam = (paramName = "id") => (req, res, next) => {
   if (!isValidObjectId(req.params[paramName])) {
