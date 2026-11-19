@@ -83,12 +83,36 @@ app.use((req, res) => res.status(404).json({
 }));
 
 app.use((error, _req, res, _next) => {
-    console.error("Unhandled backend error:", error);
     if (res.headersSent) return;
-    const status = error.status === 413 ? 413 : 500;
-    res.status(status).json({
+
+    // Treat expected client mistakes as 4xx responses instead of reporting them
+    // as backend failures. Keep unexpected error details out of API responses.
+    if (error.message === "Origin is not allowed by CORS") {
+        return res.status(403).json({
+            success: false,
+            message: "This origin is not allowed to access QuickChat.",
+        });
+    }
+
+    if (error.status === 413 || error.type === "entity.too.large") {
+        return res.status(413).json({
+            success: false,
+            message: "Request payload is too large.",
+        });
+    }
+
+    if (error.type === "entity.parse.failed" ||
+        (error instanceof SyntaxError && error.status === 400 && "body" in error)) {
+        return res.status(400).json({
+            success: false,
+            message: "Request body contains invalid JSON.",
+        });
+    }
+
+    console.error("Unhandled backend error:", error);
+    return res.status(500).json({
         success: false,
-        message: status === 413 ? "Request payload is too large" : "Internal server error",
+        message: "Internal server error",
     });
 });
 
